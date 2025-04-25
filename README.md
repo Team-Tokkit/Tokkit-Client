@@ -1,4 +1,9 @@
-# 🐰 Tokkit-Client (Next.js)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cea3445b-9f02-44b9-925c-dff472d896ae" width="180" alt="Tokkit Logo"/>
+</p>
+<p align="center"><i>“토큰이 있으면, 토킷이 있다.”</i></p>
+
+# 🐰 Tokkit-Client
 
 _“토큰이 있으면, 토킷이 있다.”_  
 **Tokkit**은 우리은행 예금 토큰 기반의 전자지갑 서비스입니다.  
