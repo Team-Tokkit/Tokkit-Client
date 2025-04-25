@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐰 Tokkit-Client (Next.js)
 
-## Getting Started
+_“토큰이 있으면, 토킷이 있다.”_  
+**Tokkit**은 우리은행 예금 토큰 기반의 전자지갑 서비스입니다.  
+이 저장소는 **프론트엔드(Next.js)** 클라이언트 코드로, 사용자 인터페이스와 이벤트형 UX 구현을 담당합니다.
 
-First, run the development server:
+---
+
+
+## ✨ 주요 기능 (프론트 주석 기준)
+
+- `/wallet` : 예금 토큰 잔액 확인 및 입출금 기능
+- `/store` : 바우처 카테고리별 탐색, 구매, 사용
+- `/mission` : 미션 달성 시 보상 시스템
+- `/admin` : 관리자용 바우처 및 사용자 관리
+- `/event` : 출석, 룰렛, 친구 초대 등 인터랙티브 이벤트
+
+---
+
+
+
+## 🌿 브랜치 규칙
+
+- `main` : 배포 브랜치
+- `dev` : 개발 통합 브랜치
+- `feature/FE-12-설명` : 기능 개발 브랜치 (클라 기준 FE-XX)
+- `fix/FE-21-버그수정` : 버그 수정 브랜치
+- `hotfix/FE-99-긴급수정` : 긴급 핫픽스
+
+---
+
+## 🧾 커밋 메시지 규칙
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[태그] #이슈번호 - 작업 내용 (영문 or 한글 자유)
+
+예:
+[FEAT] #12 - 로그인 화면 UI 구현
+[FIX] #21 - 바우처 미표시 버그 수정
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### ✅ 주요 태그
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 태그 | 의미 |
+|------|------|
+| `FEAT` | 기능 추가 |
+| `FIX` | 버그 수정 |
+| `STYLE` | 스타일, 포맷팅 |
+| `REFACTOR` | 코드 리팩토링 |
+| `CHORE` | 설정, 의존성 작업 |
+| `DOCS` | 문서 작업 |
+| `TEST` | 테스트 코드 추가 |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🏷️ 라벨 체계
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| 라벨 | 설명 | 
+|------|--------|
+| `FEAT` | 기능 추가 관련 PR/이슈 |
+| `FIX` | 버그 수정 관련 | 
+| `STYLE` | UI/스타일/레이아웃 관련 | 
+| `REFACTOR` | 리팩토링 관련 | 
+| `CHORE` | 기타 설정 및 패키지 |
+| `TEST` | 테스트 코드 작업 | 
+| `DOCS` | 문서/주석 관련 |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
