@@ -1,4 +1,3 @@
-// 공지 리스트 항목 컴포넌트
 "use client";
 
 import Link from "next/link";

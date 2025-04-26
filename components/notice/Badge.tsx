@@ -1,4 +1,3 @@
-// 공지 뱃지 컴포넌트
 import React from "react";
 
 export function Badge() {
