@@ -24,29 +24,29 @@
     --input: 0 0% 88%;
     --ring: 38 100% 70%;
     --radius: 1rem;
+
   }
 
-  .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 38 100% 83%;
-    --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 16%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 73%;
-    --accent: 38 100% 56%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 38 100% 56%;
-  }
+  /*.dark {*/
+  /*  !* 다크 모드 색상 설정 *!*/
+  /*  --background: 210 8% 20%; !* 어두운 회색 배경 *!*/
+  /*  --foreground: 0 0% 90%; !* 연한 회색 텍스트 *!*/
+  /*  --card: 210 6% 24%; !* 카드 배경 *!*/
+  /*  --card-foreground: 0 0% 95%; !* 카드 텍스트 *!*/
+  /*  --primary: 38 100% 75%; !* 주요 색 *!*/
+  /*  --primary-foreground: 0 0% 100%; !* 주요 텍스트 *!*/
+  /*  --secondary: 0 0% 20%; !* 보조 색 *!*/
+  /*  --secondary-foreground: 0 0% 95%; !* 보조 텍스트 *!*/
+  /*  --muted: 0 0% 28%; !* 약간의 배경색 *!*/
+  /*  --muted-foreground: 0 0% 80%; !* 약간의 텍스트 색 *!*/
+  /*  --accent: 38 100% 60%; !* 강조 색 *!*/
+  /*  --accent-foreground: 0 0% 100%; !* 강조 텍스트 *!*/
+  /*  --destructive: 0 62.8% 30.6%; !* 경고 색 *!*/
+  /*  --destructive-foreground: 0 0% 98%; !* 경고 텍스트 *!*/
+  /*  --border: 0 0% 25%; !* 테두리 색 *!*/
+  /*  --input: 0 0% 25%; !* 입력 필드 색 *!*/
+  /*  --ring: 38 100% 50%; !* 링 색상 *!*/
+  /*}*/
 }
 
 @layer base {
@@ -69,28 +69,28 @@
   border-radius: 10px;
 }
 
-.dark ::-webkit-scrollbar-track {
-  background-color: #2a2a2a;
-  border-radius: 10px;
-}
+/*.dark ::-webkit-scrollbar-track {*/
+/*  background-color: #2a2a2a;*/
+/*  border-radius: 10px;*/
+/*}*/
 
 ::-webkit-scrollbar-thumb {
   background-color: #cccccc;
   border-radius: 10px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background-color: #444444;
-  border-radius: 10px;
-}
+/*.dark ::-webkit-scrollbar-thumb {*/
+/*  background-color: #444444;*/
+/*  border-radius: 10px;*/
+/*}*/
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #aaaaaa;
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-  background-color: #666666;
-}
+/*.dark ::-webkit-scrollbar-thumb:hover {*/
+/*  background-color: #666666;*/
+/*}*/
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
