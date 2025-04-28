@@ -19,6 +19,9 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { recommendedVouchers } from "@/data/dashboard/recommendedVouchers";
+import { notices } from "@/data/dashboard/notices";
+import { currentEvents } from "@/data/dashboard/currentEvents";
 
 interface Notice {
   id: string
@@ -36,90 +39,12 @@ export default function DashboardPage() {
   const autoSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
   const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
   const paymentDrawerRef = useRef<HTMLDivElement>(null)
+
   const userName = "이정민" // 사용자 이름
   const router = useRouter()
 
-  // 추천 바우처 데이터
-  const recommendedVouchers = [
-    {
-      department: "고용노동부",
-      title: "취업 지원 바우처",
-      description: "구직활동 및 직업훈련 비용 지원",
-      deadline: "2023.10.31",
-      amount: "월 250,000원",
-      color: "#FFB020",
-      icon: "💼",
-      image: "/images/voucher-job.png", // JOB 이미지
-    },
-    {
-      department: "문화체육관광부",
-      title: "문화누리 바우처",
-      description: "문화, 여행, 스포츠 활동 지원",
-      deadline: "2023.12.15",
-      amount: "연 100,000원",
-      color: "#4F6EF7",
-      icon: "🎭",
-      image: "/images/voucher-culture.png", // 문화누리 이미지
-    },
-    {
-      department: "보건복지부",
-      title: "의료비 지원 바우처",
-      description: "저소득층 의료비 부담 경감",
-      deadline: "2023.11.30",
-      amount: "최대 500,000원",
-      color: "#10B981",
-      icon: "🏥",
-      image: "/images/voucher-medical.png", // 의료 지원 이미지
-    },
-  ]
 
-  // 공지사항 데이터
-  const notices: Notice[] = [
-    {
-      id: "1",
-      title: "서비스 점검 안내",
-      content: "2023년 9월 15일 오전 2시부터 6시까지 서비스 점검이 예정되어 있습니다. 이용에 참고 부탁드립니다.",
-      date: "2023.09.10",
-      isEvent: false,
-      isNew: true,
-    },
-    {
-      id: "2",
-      title: "추석 맞이 이벤트",
-      content: "추석을 맞이하여 특별 이벤트를 진행합니다. 최대 10만원 캐시백 혜택을 놓치지 마세요!",
-      date: "2023.09.08",
-      isEvent: true,
-      isNew: true,
-    },
-    {
-      id: "3",
-      title: "개인정보처리방침 개정 안내",
-      content: "2023년 10월 1일부터 개인정보처리방침이 개정됩니다. 자세한 내용은 공지사항을 확인해주세요.",
-      date: "2023.09.01",
-      isEvent: false,
-      isNew: false,
-    },
-  ]
 
-  // 이벤트 데이터
-  const currentEvents = [
-    {
-      title: "여름 맞이 할인 이벤트",
-      description: "선정된 가맹점에서 최대 30% 할인",
-      period: "2023.07.01 ~ 2023.08.31",
-      color: "#4F6EF7",
-      icon: <Tag className="h-5 w-5" />,
-      image: "/images/beach.png", // 바다 이미지
-    },
-    {
-      title: "신규 가입 이벤트",
-      description: "신규 가입자 첫 결제 시 5,000원 캐시백",
-      period: "2023.07.15 ~ 2023.09.15",
-      color: "#FF4A4A",
-      icon: <Gift className="h-5 w-5" />,
-      image: "/images/beach.png", // 바다 이미지
-    },
-  ]
 
   // 자동 슬라이드 기능
   useEffect(() => {
