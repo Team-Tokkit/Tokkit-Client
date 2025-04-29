@@ -1,32 +1,34 @@
 "use client";
 
-import Link from "next/link";
-import { Badge } from "@/components/notice/Badge";
-import { Notice } from "@/data/notice";
+import { useRouter } from "next/navigation";
 
-interface NoticeItemProps {
-  notice: Notice;
-}
+export default function NoticeItem({ notice }: { notice: any }) {
+  const router = useRouter();
 
-export default function NoticeItem({ notice }: NoticeItemProps) {
+  const handleClick = () => {
+    router.push(`/notice/${notice.noticeId}`);
+  };
+
   return (
     <>
-      <Link href={`/notices/${notice.id}`}>
-        <div className="group flex flex-col p-3 hover:bg-muted/50 rounded-md transition-colors cursor-pointer">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Badge />
-              <h3 className="font-semibold group-hover:text-primary transition-colors">
-                {notice.title}
-              </h3>
-            </div>
-            <span className="text-sm text-gray-500">{notice.createdAt}</span>
+      <div
+        onClick={handleClick}
+        className="group flex flex-col p-3 hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
+      >
+        <div className="flex justify-between items-start">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold group-hover:text-primary transition-colors">
+              {notice.title}
+            </h3>
           </div>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
-            {notice.content}
-          </p>
+          <span className="text-sm text-gray-400">
+            {notice.createdAt?.slice(0, 10)}
+          </span>
         </div>
-      </Link>
+        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
+          {notice.content}
+        </p>
+      </div>
     </>
   );
 }

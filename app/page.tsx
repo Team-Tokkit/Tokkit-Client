@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { motion, AnimatePresence, useAnimation } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import TokenInfoCard from "@/components/token-info-card"
-import PullHandle from "@/components/pull-handle"
-import MobileLayout from "./mobile-layout"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import TokenInfoCard from "@/components/token-info-card";
+import PullHandle from "@/components/pull-handle";
+import MobileLayout from "./mobile-layout";
 
 export default function Home() {
-  const router = useRouter()
-  const [isTabOpen, setIsTabOpen] = useState(false)
-  const [currentCard, setCurrentCard] = useState(0)
-  const mainControls = useAnimation()
-  const tabControls = useAnimation()
+  const router = useRouter();
+  const [isTabOpen, setIsTabOpen] = useState(false);
+  const [currentCard, setCurrentCard] = useState(0);
+  const mainControls = useAnimation();
+  const tabControls = useAnimation();
 
   const cardInfo = [
     {
@@ -41,32 +41,33 @@ export default function Home() {
     },
     {
       title: "금융 포용성",
-      description: "은행 계좌가 없는 사람들도 쉽게 금융 서비스를 이용할 수 있어 금융 포용성을 높입니다.",
+      description:
+        "은행 계좌가 없는 사람들도 쉽게 금융 서비스를 이용할 수 있어 금융 포용성을 높입니다.",
       color: "#10B981",
       icon: "🌍",
     },
-  ]
+  ];
 
   useEffect(() => {
     if (isTabOpen) {
-      mainControls.start({ x: "-100%" })
-      tabControls.start({ x: 0 })
+      mainControls.start({ x: "-100%" });
+      tabControls.start({ x: 0 });
     } else {
-      mainControls.start({ x: 0 })
-      tabControls.start({ x: "100%" })
+      mainControls.start({ x: 0 });
+      tabControls.start({ x: "100%" });
     }
-  }, [isTabOpen, mainControls, tabControls])
+  }, [isTabOpen, mainControls, tabControls]);
 
   const handleCardChange = (index: number) => {
-    setCurrentCard(index)
-  }
+    setCurrentCard(index);
+  };
 
   const handleSwipe = (direction: number) => {
-    const newIndex = currentCard + direction
+    const newIndex = currentCard + direction;
     if (newIndex >= 0 && newIndex < cardInfo.length) {
-      setCurrentCard(newIndex)
+      setCurrentCard(newIndex);
     }
-  }
+  };
 
   return (
     <MobileLayout>
@@ -98,7 +99,13 @@ export default function Home() {
                 },
               }}
             >
-              <Image src="/images/bunny-mascot.png" alt="Tokkit 마스코트" fill className="object-contain" priority />
+              <Image
+                src="/images/bunny-mascot.png"
+                alt="Tokkit 마스코트"
+                fill
+                className="object-contain"
+                priority
+              />
             </motion.div>
 
             <motion.h1
@@ -116,7 +123,8 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              중앙은행 디지털 화폐(CBDC)로 더 스마트하고 안전한 금융 생활을 시작하세요
+              중앙은행 디지털 화폐(CBDC)로 더 스마트하고 안전한 금융 생활을
+              시작하세요
             </motion.p>
 
             <motion.div
@@ -166,10 +174,17 @@ export default function Home() {
         >
           <div className="h-full flex flex-col p-6">
             <div className="flex items-center mb-6">
-              <Button variant="ghost" size="icon" className="mr-2" onClick={() => setIsTabOpen(false)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="mr-2"
+                onClick={() => setIsTabOpen(false)}
+              >
                 <ChevronLeft className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
               </Button>
-              <h2 className="text-xl font-semibold text-[#1A1A1A] dark:text-white">CBDC 알아보기</h2>
+              <h2 className="text-xl font-semibold text-[#1A1A1A] dark:text-white">
+                CBDC 알아보기
+              </h2>
             </div>
 
             <div className="flex-1 relative">
@@ -221,7 +236,9 @@ export default function Home() {
                 <button
                   key={index}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    currentCard === index ? "w-8 bg-[#FFB020] dark:bg-[#FFD485]" : "w-2 bg-[#E0E0E0] dark:bg-[#333333]"
+                    currentCard === index
+                      ? "w-8 bg-[#FFB020] dark:bg-[#FFD485]"
+                      : "w-2 bg-[#E0E0E0] dark:bg-[#333333]"
                   }`}
                   onClick={() => handleCardChange(index)}
                 />
@@ -231,5 +248,5 @@ export default function Home() {
         </motion.div>
       </div>
     </MobileLayout>
-  )
+  );
 }
