@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -5,15 +7,17 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
+interface PaginationProps {
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
 export default function Pagination({
   totalPages,
   currentPage,
   onPageChange,
-}: {
-  totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}) {
+}: PaginationProps) {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
