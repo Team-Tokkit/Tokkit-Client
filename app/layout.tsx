@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={nunito.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class"  >
           <MainLayout>{children}</MainLayout>
         </ThemeProvider>
       </body>

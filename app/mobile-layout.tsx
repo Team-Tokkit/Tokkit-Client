@@ -16,7 +16,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#121212] flex justify-center">
+    <div className="min-h-screen bg-[#F8F9FA]  flex justify-center">
       <div className="w-full max-w-md mx-auto">{children}</div>
     </div>
   )

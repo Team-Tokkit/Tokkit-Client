@@ -28,7 +28,7 @@ export function DatePicker({ selected, onSelect, placeholderText = "날짜 선�
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={selected || undefined} onSelect={onSelect} initialFocus />
+        <Calendar mode="single" selected={selected || undefined} onSelect={(date) => onSelect?.(date ?? null)} initialFocus />
       </PopoverContent>
     </Popover>
   )

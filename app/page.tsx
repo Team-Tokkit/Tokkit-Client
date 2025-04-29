@@ -109,7 +109,7 @@ export default function Home() {
             </motion.div>
 
             <motion.h1
-              className="text-3xl font-bold text-center text-[#1A1A1A] dark:text-white mb-4"
+              className="text-3xl font-bold text-center text-[#1A1A1A] mb-4"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -118,7 +118,7 @@ export default function Home() {
             </motion.h1>
 
             <motion.p
-              className="text-base text-center text-[#666666] dark:text-[#BBBBBB] mb-8 max-w-[280px]"
+              className="text-base text-center text-[#666666] mb-8 max-w-[280px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -134,7 +134,7 @@ export default function Home() {
               transition={{ delay: 0.4 }}
             >
               <Button
-                className="h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-xl shadow-md shadow-[#FFB020]/20 dark:shadow-[#FFD485]/10"
+                className="h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white font-medium rounded-xl shadow-md shadow-[#FFB020]/20"
                 onClick={() => router.push("/login")}
               >
                 로그인
@@ -142,7 +142,7 @@ export default function Home() {
 
               <Button
                 variant="outline"
-                className="h-12 border-[#FFB020] dark:border-[#FFD485] text-[#FFB020] dark:text-[#FFD485] hover:bg-[#FFB020]/10 dark:hover:bg-[#FFD485]/10 font-medium rounded-xl"
+                className="h-12 border-[#FFB020]  text-[#FFB020] hover:bg-[#FFB020]/10 font-medium rounded-xl"
                 onClick={() => router.push("/signup/wallet")}
               >
                 전자지갑 개설 및 회원가입
@@ -150,7 +150,7 @@ export default function Home() {
 
               <div className="text-center mt-4">
                 <button
-                  className="text-sm text-[#666666] dark:text-[#BBBBBB] hover:text-[#FFB020] dark:hover:text-[#FFD485] transition-colors"
+                  className="text-sm text-[#666666] hover:text-[#FFB020] transition-colors"
                   onClick={() => router.push("/merchant")}
                 >
                   가맹점주이신가요?
@@ -167,7 +167,7 @@ export default function Home() {
 
         {/* Slide-in Tab Content */}
         <motion.div
-          className="absolute inset-0 bg-white dark:bg-[#1E1E1E] z-10"
+          className="absolute inset-0 bg-white z-10"
           initial={{ x: "100%" }}
           animate={tabControls}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -180,9 +180,9 @@ export default function Home() {
                 className="mr-2"
                 onClick={() => setIsTabOpen(false)}
               >
-                <ChevronLeft className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
+                <ChevronLeft className="h-5 w-5 text-[#1A1A1A]" />
               </Button>
-              <h2 className="text-xl font-semibold text-[#1A1A1A] dark:text-white">
+              <h2 className="text-xl font-semibold text-[#1A1A1A]">
                 CBDC 알아보기
               </h2>
             </div>
@@ -211,10 +211,10 @@ export default function Home() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-[#1A1A1A]/80 rounded-full h-10 w-10 shadow-md"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 rounded-full h-10 w-10 shadow-md"
                   onClick={() => handleSwipe(-1)}
                 >
-                  <ChevronLeft className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
+                  <ChevronLeft className="h-5 w-5 text-[#1A1A1A]" />
                 </Button>
               )}
 
@@ -222,10 +222,10 @@ export default function Home() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-[#1A1A1A]/80 rounded-full h-10 w-10 shadow-md"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 rounded-full h-10 w-10 shadow-md"
                   onClick={() => handleSwipe(1)}
                 >
-                  <ChevronRight className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
+                  <ChevronRight className="h-5 w-5 text-[#1A1A1A]" />
                 </Button>
               )}
             </div>
@@ -237,8 +237,8 @@ export default function Home() {
                   key={index}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     currentCard === index
-                      ? "w-8 bg-[#FFB020] dark:bg-[#FFD485]"
-                      : "w-2 bg-[#E0E0E0] dark:bg-[#333333]"
+                      ? "w-8 bg-[#FFB020]"
+                      : "w-2 bg-[#E0E0E0]"
                   }`}
                   onClick={() => handleCardChange(index)}
                 />
