@@ -7,10 +7,9 @@ interface WalletData {
 }
 
 async function fetchWalletData(): Promise<WalletData> {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // mock delay
     return {
-        userName: "이정민",
-        balance: 0,
+        userName: "봄바르딜로 크로코딜로",
+        balance: 1000000,
         accountNumber: "우리 1020-9564-9584",
     };
 }

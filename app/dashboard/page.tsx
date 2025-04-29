@@ -12,9 +12,8 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-[#F8F9FA] flex flex-col max-w-md mx-auto">
         <header className="bg-[#F8F9FA] p-5 pt-8 pb-6">
           <Header />
-          <Suspense fallback={<div className="p-5">지갑 로딩중...</div>}>
+      
             <WalletFetcher />
-          </Suspense>
         </header>
         <div className="flex-1 flex flex-col p-5 px-6 pt-8 pb-24">
           <QuickMenuSection />
