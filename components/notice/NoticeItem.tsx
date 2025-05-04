@@ -12,7 +12,7 @@ export default function NoticeItem({ notice }: NoticeItemProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/notice/${notice.id}`);
+    router.push(`/notice/${notice.noticeId}`);
   };
 
   return (
