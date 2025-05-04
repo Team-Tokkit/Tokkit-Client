@@ -6,26 +6,28 @@ import axios from "axios";
 import { ArrowLeft, Calendar } from "lucide-react";
 import SkeletonDetail from "./SkeletonDetail";
 
-
 export default function NoticeDetailPage() {
   const { id } = useParams();
+  const noticeId = Array.isArray(id) ? id[0] : id;
   const [notice, setNotice] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
+    if (!noticeId) return;
     setLoading(true);
+
     axios
-      .get(`http://localhost:8080/api/notice/${id}`)
+      .get(`http://localhost:8080/api/notice/${noticeId}`)
       .then((response) => {
         setNotice(response.data.result);
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching notice:", error);
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [noticeId]);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-2xl">
