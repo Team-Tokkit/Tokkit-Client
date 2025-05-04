@@ -6,7 +6,7 @@ export default function NoticeItem({ notice }: { notice: any }) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/notice/${notice.noticeId}`);
+    router.push(`/notice/${notice.id}`);
   };
 
   return (

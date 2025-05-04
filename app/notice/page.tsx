@@ -6,7 +6,7 @@ import Pagination from "@/components/notice/Pagination";
 import { SkeletonList } from "@/components/notice/SkeletonList";
 
 interface Notice {
-  noticeId: number;
+  id: number;
   title: string;
   content: string;
   createdAt: string;
@@ -31,7 +31,7 @@ export default function NoticesPage() {
             },
           }
         );
-
+        console.log(response);
         if (response.ok) {
           const data = await response.json();
           setNotices(data.result.content || []);
