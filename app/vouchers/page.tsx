@@ -1,4 +1,3 @@
-// app/vouchers/page.tsx
 import VoucherHeader from "@/components/dashboard/voucher/VoucherHeader"
 import VoucherList from "@/components/dashboard/voucher/VoucherList"
 import VoucherCategoryWithFilter from "@/components/dashboard/voucher/VoucherCategoryWithFilter"
@@ -7,8 +6,8 @@ import VoucherSearchBar from "@/components/dashboard/voucher/VoucherSearchBar"
 
 export default function VouchersPage() {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <VoucherHeader title="바우처 신청하기" />
+    <div className="min-h-screen bg-[#F8F9FA] pb-5">
+      <VoucherHeader title="바우처 구매하기" />
 
       <div className="p-4 bg-white shadow-sm">
         <VoucherSearchBar />

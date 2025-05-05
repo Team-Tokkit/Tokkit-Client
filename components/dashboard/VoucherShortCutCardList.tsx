@@ -6,8 +6,8 @@ export default function VoucherShortcutList() {
         <div className="grid grid-cols-3 gap-4">
             <VoucherShortcutCard
                 icon={<FileText className="h-5 w-5 text-[#FFB020]" />}
-                title="바우처 신청하기"
-                description="새로운 바우처 신청"
+                title="바우처 구매하기"
+                description="새로운 바우처 구매"
                 href="/vouchers"
                 color="#FFB020"
             />
