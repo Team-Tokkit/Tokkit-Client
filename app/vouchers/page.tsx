@@ -12,8 +12,8 @@ export default function VouchersPage() {
       <div className="p-4 bg-white shadow-sm">
         <VoucherSearchBar />
         <div className="mt-4 flex items-center justify-start flex-wrap overflow-x-hidden">
-  <VoucherCategoryWithFilter />
-</div>
+          <VoucherCategoryWithFilter />
+        </div>
       </div>
 
       <div className="p-4">

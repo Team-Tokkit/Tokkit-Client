@@ -1,19 +1,49 @@
 "use client"
+
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import type { Voucher } from "@/types/voucher"
 
-export default function VoucherCard({ voucher }: { voucher: Voucher }) {
+interface Props {
+  voucher: Voucher
+  onCardClick?: (voucher: Voucher) => void
+  onActionClick?: (voucher: Voucher) => void
+  actionLabel?: string
+}
+
+export default function VoucherCard({
+  voucher,
+  onCardClick,
+  onActionClick,
+  actionLabel = "결제하기",
+}: Props) {
   const router = useRouter()
+
+  const handleCardClick = () => {
+    if (onCardClick) {
+      onCardClick(voucher)
+    } else {
+      router.push(`/vouchers/${voucher.id}`)
+    }
+  }
+
+  const handleActionClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (onActionClick) {
+      onActionClick(voucher)
+    } else {
+      router.push(`/vouchers/apply/${voucher.id}`)
+    }
+  }
 
   return (
     <motion.div
       className="bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer"
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      onClick={() => router.push(`/vouchers/${voucher.id}`)}
+      onClick={handleCardClick}
     >
       <div className="relative h-40">
         <Image src={voucher.image} alt={voucher.name} fill className="object-cover" />
@@ -36,12 +66,9 @@ export default function VoucherCard({ voucher }: { voucher: Voucher }) {
           <Button
             size="sm"
             className="rounded-lg bg-[#FFB020] hover:bg-[#FF9500] text-white"
-            onClick={(e) => {
-              e.stopPropagation()
-              router.push(`/vouchers/apply/${voucher.id}`)
-            }}
+            onClick={handleActionClick}
           >
-            결제하기
+            {actionLabel}
           </Button>
         </div>
       </div>
