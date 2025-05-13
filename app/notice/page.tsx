@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import NoticeList from "@/app/notice/components/NoticeList";
 import Pagination from "@/components/common/Pagination";
 import { SkeletonList } from "@/app/notice/components/SkeletonList";
@@ -8,6 +9,7 @@ import Header from "@/components/common/Header";
 import { getApiUrl } from "@/lib/getApiUrl";
 
 const API_URL = getApiUrl();
+
 interface Notice {
   id: number;
   title: string;
@@ -16,8 +18,12 @@ interface Notice {
 }
 
 export default function NoticesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
+
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [latestNoticeIds, setLatestNoticeIds] = useState<number[]>([]);
@@ -35,7 +41,7 @@ export default function NoticesPage() {
             },
           }
         );
-        console.log(response);
+
         if (response.ok) {
           const data = await response.json();
           const content = data.result.content || [];
@@ -44,7 +50,6 @@ export default function NoticesPage() {
 
           if (currentPage === 0) {
             const now = new Date();
-
             const latestIds = content
               .filter((notice: any) => {
                 const createdAt = new Date(notice.createdAt);
@@ -79,11 +84,15 @@ export default function NoticesPage() {
         <Header title="공지사항 🔔" />
       </div>
 
-      <NoticeList notices={notices} latestNoticeIds={latestNoticeIds} />
+      <NoticeList
+        notices={notices}
+        latestNoticeIds={latestNoticeIds}
+        currentPage={currentPage}
+      />
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage + 1}
-        onPageChange={(page) => setCurrentPage(page - 1)}
+        onPageChange={(page) => router.push(`/notice?page=${page}`)}
       />
     </div>
   );
