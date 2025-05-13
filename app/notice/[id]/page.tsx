@@ -6,7 +6,9 @@ import axios from "axios";
 import { Calendar } from "lucide-react";
 import SkeletonDetail from "../components/SkeletonDetail";
 import Header from "@/components/common/Header";
+import { getApiUrl } from "@/lib/getApiUrl";
 
+const API_URL = getApiUrl();
 export default function NoticeDetailPage() {
   const { id } = useParams();
   const noticeId = Array.isArray(id) ? id[0] : id;
@@ -18,7 +20,7 @@ export default function NoticeDetailPage() {
     setLoading(true);
 
     axios
-      .get(`http://localhost:8080/api/notice/${noticeId}`)
+      .get(`${API_URL}/api/notice/${noticeId}`)
       .then((response) => {
         setNotice(response.data.result);
       })

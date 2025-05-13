@@ -5,7 +5,9 @@ import NoticeList from "@/app/notice/components/NoticeList";
 import Pagination from "@/components/common/Pagination";
 import { SkeletonList } from "@/app/notice/components/SkeletonList";
 import Header from "@/components/common/Header";
+import { getApiUrl } from "@/lib/getApiUrl";
 
+const API_URL = getApiUrl();
 interface Notice {
   id: number;
   title: string;
@@ -25,7 +27,7 @@ export default function NoticesPage() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/notice?page=${currentPage}`,
+          `${API_URL}/api/notice?page=${currentPage}`,
           {
             method: "GET",
             headers: {
