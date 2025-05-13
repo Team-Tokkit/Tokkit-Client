@@ -1,7 +1,7 @@
-import VoucherHeader from "@/components/dashboard/voucher/VoucherHeader"
-import VoucherList from "@/components/dashboard/voucher/VoucherList"
-import VoucherCategoryWithFilter from "@/components/dashboard/voucher/VoucherCategoryWithFilter"
-import VoucherSearchBar from "@/components/dashboard/voucher/VoucherSearchBar"
+import VoucherHeader from "@/app/vouchers/components/VoucherHeader"
+import VoucherList from "@/app/vouchers/components/VoucherList"
+import VoucherCategoryWithFilter from "@/app/vouchers/components/VoucherCategoryWithFilter"
+import VoucherSearchBar from "@/app/vouchers/components/VoucherSearchBar"
 
 
 export default function VouchersPage() {
