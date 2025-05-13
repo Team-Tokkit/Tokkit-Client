@@ -3,8 +3,9 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, Calendar } from "lucide-react";
-import SkeletonDetail from "./SkeletonDetail";
+import { Calendar } from "lucide-react";
+import SkeletonDetail from "../components/SkeletonDetail";
+import Header from "@/components/common/Header";
 
 export default function NoticeDetailPage() {
   const { id } = useParams();
@@ -30,17 +31,10 @@ export default function NoticeDetailPage() {
   }, [noticeId]);
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-2xl">
-      <div className="flex items-center space-x-2 mb-6">
-        <button
-          onClick={() => window.history.back()}
-          className="p-2 rounded hover:bg-gray-100 transition"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <h1 className="text-2xl font-bold">공지사항</h1>
+    <div className="container mx-auto max-w-4xl">
+      <div className="py-2">
+        <Header title="공지사항 🔔" />
       </div>
-
       <div className="bg-white p-6 rounded-xl border space-y-6">
         {loading ? (
           <>
