@@ -4,7 +4,7 @@ import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Calendar } from "lucide-react";
-import SkeletonDetail from "../components/SkeletonDetail";
+import SkeletonDetail from "@/app/notice/components/SkeletonDetail";
 import Header from "@/components/common/Header";
 import { getApiUrl } from "@/lib/getApiUrl";
 
