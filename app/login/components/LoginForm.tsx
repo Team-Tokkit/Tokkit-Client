@@ -59,6 +59,7 @@ export default function LoginForm() {
             <button
                 type="button"
                 className="text-xs text-[#FFB020] hover:text-[#FF9500] dark:text-[#FFD485] dark:hover:text-[#FFE8CC] transition-colors"
+                onClick={() => router.push("/resetPassword")}
             >
               비밀번호 찾기
             </button>
