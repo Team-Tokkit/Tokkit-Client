@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import SimplePasswordStep from "@/app/signup/wallet/password/components/SimplePasswordStep";
-import { submitContactInfo } from "@/app/signup/wallet/contact/api/auth";
+import { submitContactInfo } from "@/app/signup/wallet/contact/api/register-auth";
 import Link from "next/link";
 import Image from "next/image";
 

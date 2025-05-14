@@ -12,7 +12,7 @@ import PasswordInputBlock from "@/app/signup/wallet/contact/components/PasswordI
 import PhoneInputBlock from "@/app/signup/wallet/contact/components/PhoneInputBlock";
 import FormFeedbackMessage from "@/app/signup/wallet/contact/components/FormFeedbackMessage";
 import SubmitButton from "@/app/signup/wallet/contact/components/SubmitButton";
-import { sendEmailVerificationCode, verifyEmailCode, submitContactInfo } from "@/app/signup/wallet/contact/api/auth";
+import { sendEmailVerificationCode, verifyEmailCode, submitContactInfo } from "@/app/signup/wallet/contact/api/register-auth";
 
 export default function WalletContactPage() {
     const router = useRouter();
