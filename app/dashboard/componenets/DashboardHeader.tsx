@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 export default function HeaderSection() {
     const router = useRouter()
     return (
-        <header className="bg-[#F9FAFB] p-5 pt-8 pb-6">
+        <header className="bg-[#F9FAFB] p-5 pt-8 pb-2">
             <div className="flex items-center justify-between mb-8 px-2">
                 <div className="relative">
                     <Button
@@ -19,7 +19,6 @@ export default function HeaderSection() {
                     >
                         <Bell className="h-5 w-5" />
                     </Button>
-                    <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
                 </div>
 
                 <div className="relative h-10 w-32">

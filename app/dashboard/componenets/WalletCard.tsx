@@ -33,19 +33,22 @@ export default function WalletCard({ userName }: WalletCardProps) {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-white">{userName} 님의 지갑</p>
-                        <p className="text-xs text-white/80 font-light">우리 1020-9564-9584</p>
+                        <p className="text-xs text-white/80 font-light">1020-9564-9584</p>
                     </div>
                 </div>
 
                 <div className="mt-6 flex items-end justify-between">
-                    <div>
+                    {/* 잔액 */}
+                    <div className="min-w-0">
                         <p className="text-xs text-white/80 font-light">예금 토큰 잔액</p>
                         <div className="flex items-baseline mt-1">
-                            <p className="text-3xl font-bold text-white">125,000</p>
+                            <p className="text-[28px] sm:text-3xl font-bold text-white truncate max-w-[160px]">1,000,000</p>
                             <p className="ml-1 text-lg text-white/90">원</p>
                         </div>
                     </div>
-                    <div className="flex gap-2">
+
+                    {/* 버튼 */}
+                    <div className="flex gap-2 flex-shrink-0">
                         <Button
                             size="sm"
                             className="bg-white/20 text-white hover:bg-white/30 rounded-lg text-xs px-4 py-1 h-9 shadow-sm flex items-center backdrop-blur-sm"
@@ -55,7 +58,6 @@ export default function WalletCard({ userName }: WalletCardProps) {
                             }}
                         >
                             <span>토큰 충전</span>
-                            <ArrowRight className="h-3 w-3 ml-1" />
                         </Button>
                         <Button
                             size="sm"
