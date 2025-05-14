@@ -15,8 +15,9 @@ export default function HeaderImage({ image, title, contact }: HeaderImageProps)
 
   return (
     <div className="relative h-64">
-      <Image src={image} alt={title} fill className="object-cover" />
+      <Image src={image} alt={title|| "이미지 설명 없음"} fill className="object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+      
 
       <button
         onClick={() => router.back()}

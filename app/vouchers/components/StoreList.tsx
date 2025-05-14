@@ -13,25 +13,26 @@ export function StoreList({ voucherId }: StoreListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    async function fetchPreviewStores() {
-      try {
-        const res = await getVoucherStores(voucherId, 0, 5) // 5개만 미리 보기로 가져오기
-        console.log("🔍 받은 사용처 목록:", res.content)
+  async function fetchPreviewStores() {
+    try {
+      const res = await getVoucherStores(voucherId, 0, 5)
+      console.log("🔍 받은 사용처 목록:", res.content)
 
-        const names = res.content.map((store: any) => {
-          console.log("👉 store 객체:", store)
-          return store.storeName
-        })
+      const names = res.content.map((store: any) => {
+        console.log("👉 store 객체:", store)
+        return store.storeName
+      })
 
-        setPreviewStores(names)
-      } catch (error) {
-        console.error("사용처 불러오기 실패:", error)
-        setPreviewStores([])
-      }
+      setPreviewStores(names)
+      console.log("✅ previewStores 상태:", names)
+    } catch (error) {
+      console.error("사용처 불러오기 실패:", error)
+      setPreviewStores([])
     }
+  }
 
-    fetchPreviewStores()
-  }, [voucherId])
+  fetchPreviewStores()
+}, [voucherId])
 
   return (
     <div>

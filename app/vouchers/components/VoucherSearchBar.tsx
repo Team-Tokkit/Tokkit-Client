@@ -3,21 +3,34 @@
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function VoucherSearchBar() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const query = searchParams.get("q") || ""
+  const initialValue = searchParams.get("searchKeyword") || ""
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [keyword, setKeyword] = useState(initialValue)
+  const [debounced, setDebounced] = useState(initialValue)
+
+  // 디바운싱
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounced(keyword)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [keyword])
+
+  // 디바운싱된 값 URL 반영
+  useEffect(() => {
     const params = new URLSearchParams(searchParams)
-    if (e.target.value) {
-      params.set("q", e.target.value)
+    if (debounced) {
+      params.set("searchKeyword", debounced)
     } else {
-      params.delete("q")
+      params.delete("searchKeyword")
     }
     router.push(`/vouchers?${params.toString()}`)
-  }
+  }, [debounced])
 
   return (
     <div className="relative">
@@ -25,8 +38,8 @@ export default function VoucherSearchBar() {
       <Input
         placeholder="바우처 검색"
         className="pl-10 pr-4 py-2 rounded-lg"
-        defaultValue={query}
-        onChange={handleSearch}
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
       />
     </div>
   )

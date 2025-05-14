@@ -21,13 +21,13 @@ export default function VoucherCard({
 }: Props) {
   const router = useRouter()
 
-  const handleCardClick = () => {
-    if (onCardClick) {
-      onCardClick(voucher)
-    } else {
-      router.push(`/vouchers/${voucher.id}`)
-    }
+const handleCardClick = () => {
+  if (onCardClick) {
+    onCardClick(voucher)
+  } else {
+    router.push(`/vouchers/details/${voucher.id}`)
   }
+}
 
   const handleActionClick = (e: React.MouseEvent) => {
     e.stopPropagation()

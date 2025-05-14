@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import VoucherCard from "./VoucherCard"
-import { filterVouchers } from "@/lib/api/voucher"
+import { getVouchers } from "@/lib/api/voucher"
 import type { Voucher } from "@/app/vouchers/types/voucher"
 import Pagination from "@/components/notice/Pagination"
 
@@ -14,39 +14,41 @@ export default function VoucherList() {
   const [totalPages, setTotalPages] = useState(1)
   const searchParams = useSearchParams()
 
-  useEffect(() => {
-    const storeCategory = searchParams.get("storeCategory")
-    const sortBy = searchParams.get("sortBy")
+useEffect(() => {
+  const storeCategory = searchParams.get("storeCategory")
+  const sort = searchParams.get("sort") || "createdAt"
+  const direction = searchParams.get("direction") || "desc"
+  const searchKeyword = searchParams.get("searchKeyword") || ""
 
-    const filters: Record<string, string> = {}
+  const params: Record<string, string | number> = {
+    sort,
+    direction,
+    page: page - 1,
+    size: 15,
+  }
 
-    if (storeCategory && storeCategory !== "all") {
-      filters.storeCategory = storeCategory.toUpperCase()
-    }
+  if (storeCategory && storeCategory !== "all") {
+    params.storeCategory = storeCategory.toUpperCase()
+  }
 
-    if (sortBy === "amountHigh") {
-      filters.sort = "price"
-      filters.direction = "desc"
-    } else if (sortBy === "amountLow") {
-      filters.sort = "price"
-      filters.direction = "asc"
-    } else if (sortBy === "newest") {
-      filters.sort = "createdAt"
-      filters.direction = "desc"
-    }
+  if (searchKeyword) {
+    params.searchKeyword = searchKeyword
+  }
 
-    setLoading(true)
-    filterVouchers(filters, page - 1, 15)
-      .then((res) => {
-        setVouchers(res.content)
-        setTotalPages(res.totalPages)
-      })
-      .catch(() => {
-        setVouchers([])
-        setTotalPages(1)
-      })
-      .finally(() => setLoading(false))
-  }, [searchParams, page])
+  setLoading(true)
+  getVouchers(params)
+    .then((res) => {
+      setVouchers(res.content)
+      setTotalPages(res.totalPages)
+    })
+    .catch(() => {
+      setVouchers([])
+      setTotalPages(1)
+    })
+    .finally(() => setLoading(false))
+}, [searchParams.toString(), page])
+
+
 
   if (loading) {
     return (
