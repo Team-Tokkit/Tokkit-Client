@@ -1,8 +1,11 @@
 import axios from "axios";
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
 
 export const requestTempPassword = async (email: string) => {
     try {
-        const response = await axios.post("/api/users/findPw", null, {
+        const response = await axios.post(`${API_URL}/api/users/findPw`, null, {
             params: { email },
         });
 

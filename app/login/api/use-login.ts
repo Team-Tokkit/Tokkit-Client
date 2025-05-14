@@ -1,6 +1,10 @@
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
+
 export const useLogin = () => {
     const login = async (email: string, password: string) => {
-        const res = await fetch("http://localhost:8080/api/users/login", {
+        const res = await fetch(`${API_URL}/api/users/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

@@ -1,8 +1,12 @@
 import axios from "axios";
 
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
+
 // 이메일 인증 요청: 쿼리 파라미터 사용
 export const sendEmailVerificationCode = async (email: string) => {
-    const response = await axios.post(`/api/users/emailCheck`, null, {
+    const response = await axios.post(`${API_URL}/api/users/emailCheck`, null, {
         params: { email },
     });
     return response.data;
@@ -10,7 +14,7 @@ export const sendEmailVerificationCode = async (email: string) => {
 
 // 이메일 인증번호 검증: JSON body 사용
 export const verifyEmailCode = async (email: string, code: string) => {
-    const response = await axios.post(`/api/users/verification`, {
+    const response = await axios.post(`${API_URL}/api/users/verification`, {
         email,
         verification: code,
     });
@@ -25,6 +29,6 @@ export const submitContactInfo = async (data: {
     phoneNumber: string;
     simplePassword: string;
 }) => {
-    const response = await axios.post("/api/users/register", data);
+    const response = await axios.post(`${API_URL}/api/users/register`, data);
     return response.data;
 };
