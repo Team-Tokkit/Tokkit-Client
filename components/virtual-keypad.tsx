@@ -224,7 +224,7 @@ export default function VirtualKeypad({
           whileHover={{ scale: 1.05 }}
           whileTap="pressed"
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="h-16 rounded-2xl bg-white dark:bg-[#2A2A2A] border border-[#E0E0E0] dark:border-[#333333] 
+          className="h-16 rounded-2xl bg-white dark:bg-[#2A2A2A] border border-[#E0E0E0] dark:border-[#333333]
                     text-xl font-medium text-[#1A1A1A] dark:text-white shadow-sm relative overflow-hidden"
           onClick={() => handleNumberClick(0)}
         >
