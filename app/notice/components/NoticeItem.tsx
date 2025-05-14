@@ -1,26 +1,27 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 
 export default function NoticeItem({
   notice,
   isNew = false,
+  currentPage,
 }: {
   notice: any;
   isNew?: boolean;
+  currentPage: number;
 }) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/notice/${notice.id}`);
+    router.push(`/notice/${notice.id}?page=${currentPage + 1}`);
   };
 
   return (
     <div
       onClick={handleClick}
-      className="bg-white rounded-lg shadow-sm p-4 m-2 flex justify-between items-center cursor-pointer hover:bg-[#FF9500]/65
- transition"
+      className="bg-white rounded-lg shadow-sm p-4 m-2 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition"
     >
       <div className="flex-1">
         <div className="flex items-center mb-1">
