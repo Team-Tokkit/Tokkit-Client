@@ -33,3 +33,12 @@ export interface VoucherDetail {
     last: boolean
   }
 }
+
+export interface VoucherSearchParams {
+  storeCategory?: string;
+  searchKeyword?: string;
+  sort?: string;
+  direction?: string;
+  page?: number;
+  size?: number;
+}
