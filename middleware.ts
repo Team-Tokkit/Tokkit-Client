@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // 보호 경로 설정
-const protectedPaths = ["/dashboard", "/mypage", "/notice", "/offline-stores"];
+const protectedPaths = ["/dashboard", "/mypage"];
 
 export function middleware(request: NextRequest) {
     const token = request.cookies.get("accessToken");
@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 
 // matcher 설정
 export const config = {
-    matcher: ["/dashboard/:path*", "/mypage/:path*", "/wallet/:path*"],
+    matcher: ["/dashboard/:path*", "/mypage/:path*"],
 };
