@@ -7,7 +7,6 @@ import QuickMenu from "@/app/dashboard/componenets/QuickMenu";
 import RecentTransactions from "@/app/dashboard/componenets/RecentTransactions";
 import NoticesSection from "@/app/dashboard/componenets/NoticeSection";
 import FloatingPaymentButton from "@/app/dashboard/componenets/PaymentButton";
-import withAuth from "@/components/common/WithAuth"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
 import { getCookie } from "@/lib/cookies";
 
@@ -21,7 +20,7 @@ interface Notice {
     isNew: boolean
 }
 
-function DashboardPage() {
+export default function DashboardPage() {
     const [currentNotice, setCurrentNotice] = useState(0)
     const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
     const [mounted, setMounted] = useState(false)
@@ -146,5 +145,3 @@ function DashboardPage() {
         </div>
     )
 }
-
-export default withAuth(DashboardPage);

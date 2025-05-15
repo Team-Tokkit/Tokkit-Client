@@ -6,11 +6,10 @@ import { Wallet, Ticket, CreditCard, Bell, FileText } from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
 import MenuList from "./components/MenuList"
 import LogoutDialog from "./components/LogoutDialog"
-import withAuth from "@/components/common/WithAuth"
 import {getUserInfo, UserInfo} from "@/app/mypage/api/user-info";
 import {getCookie} from "@/lib/cookies";
 
-function MyPage() {
+export default function MyPage() {
     const router = useRouter()
 
     const [user, setUser] = useState<UserInfo | null>(null)
@@ -75,5 +74,3 @@ function MyPage() {
         </div>
     )
 }
-
-export default withAuth(MyPage);

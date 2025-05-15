@@ -1,12 +1,16 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ProfileHeader from "@/app/mypage/edit/components/header/ProfileHeader";
 import ProfileCard from "@/app/mypage/edit/components/card/ProfileCard";
 import ProfileCardHeader from "@/app/mypage/edit/components/card/ProfileCardHeader";
 import SuccessNotice from "@/app/mypage/edit/components/SuccessNotice";
 import ProfileForm from "@/app/mypage/edit/components/card/ProfileForm";
+import {getCookie} from "@/lib/cookies";
+import {getUserInfo} from "@/app/mypage/api/user-info";
+import { requestEmailVerification, verifyEmailCode, updateEmail } from "@/app/mypage/edit/api/email";
+import {updateUserInfo} from "@/app/mypage/edit/api/update-user-info";
 
 
 export default function ProfileEditPage() {
@@ -15,9 +19,9 @@ export default function ProfileEditPage() {
     // 상태 정의
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [user, setUser] = useState({
-        name: "홍길동",
-        email: "user@example.com",
-        phone: "010-1234-5678",
+        name: "",
+        email: "",
+        phoneNumber: "",
     })
 
     const [newEmail, setNewEmail] = useState("")
@@ -25,6 +29,20 @@ export default function ProfileEditPage() {
     const [isVerificationSent, setIsVerificationSent] = useState(false)
     const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false)
     const [isSaveSuccess, setIsSaveSuccess] = useState(false)
+
+    useEffect(() => {
+        const token = getCookie("accessToken")
+        if (!token) return
+
+        getUserInfo(token)
+            .then((data) => {
+                setUser(data)
+            })
+            .catch((err) => {
+                console.error("유저 정보 불러오기 실패:", err)
+            })
+    }, [])
+
 
     // 이벤트 핸들러
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,33 +55,48 @@ export default function ProfileEditPage() {
         setIsSubmitting(true)
 
         try {
-            console.log("Submitting profile:", user)
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            const token = getCookie("accessToken")
+            if (!token) throw new Error("토큰 없음")
+
+            await updateUserInfo(token, {
+                name: user.name,
+                phoneNumber: user.phoneNumber,
+            });
+
             setIsSaveSuccess(true)
-            setTimeout(() => {
-                router.push("/mypage")
-            }, 1500)
+            setTimeout(() => router.push("/mypage"), 1500)
         } catch (error) {
-            console.error("Error updating profile:", error)
+            console.error("프로필 저장 실패:", error)
         } finally {
             setIsSubmitting(false)
         }
     }
 
     const handleSendVerification = async () => {
-        console.log("Sending verification to:", newEmail)
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setIsVerificationSent(true)
+        try {
+            await requestEmailVerification(newEmail)
+            setIsVerificationSent(true)
+        } catch (err) {
+            console.error("이메일 인증 요청 실패:", err)
+        }
     }
 
     const handleVerifyEmail = async () => {
-        console.log("Verifying code:", verificationCode)
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setUser((prev) => ({ ...prev, email: newEmail }))
-        setIsEmailDialogOpen(false)
-        setNewEmail("")
-        setVerificationCode("")
-        setIsVerificationSent(false)
+        try {
+            await verifyEmailCode(newEmail, verificationCode)
+
+            const token = getCookie("accessToken")
+            if (!token) throw new Error("토큰 없음")
+
+            await updateEmail(token, newEmail)
+            setUser((prev) => ({ ...prev, email: newEmail }))
+            setIsEmailDialogOpen(false)
+            setNewEmail("")
+            setVerificationCode("")
+            setIsVerificationSent(false)
+        } catch (err) {
+            console.error("이메일 인증 실패:", err)
+        }
     }
 
     return (
