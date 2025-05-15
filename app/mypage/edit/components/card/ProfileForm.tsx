@@ -11,7 +11,7 @@ interface ProfileFormProps {
     user: {
         name: string
         email: string
-        phone: string
+        phoneNumber: string
     }
     isSubmitting: boolean
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -42,6 +42,14 @@ const itemVariants = {
     },
 }
 
+function formatPhoneNumber(value: string): string {
+    const onlyNums = value.replace(/\D/g, "").slice(0, 11); // 최대 11자리 제한
+
+    if (onlyNums.length < 4) return onlyNums;
+    if (onlyNums.length < 8) return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`;
+    return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 7)}-${onlyNums.slice(7)}`;
+}
+
 export default function ProfileForm({
                                         user,
                                         isSubmitting,
@@ -50,6 +58,20 @@ export default function ProfileForm({
                                         onCancel,
                                         emailDialogProps,
                                     }: ProfileFormProps) {
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formatted = formatPhoneNumber(e.target.value);
+        const syntheticEvent = {
+            ...e,
+            target: {
+                ...e.target,
+                name: "phoneNumber",
+                value: formatted,
+            },
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        onChange(syntheticEvent);
+    };
+
     return (
         <form onSubmit={onSubmit} className="space-y-6 p-6">
         {/* 이름 */}
@@ -97,16 +119,16 @@ export default function ProfileForm({
             {/* 전화번호 */}
             <motion.div variants={itemVariants} className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="phone" className="flex items-center text-sm font-medium">
+                    <Label htmlFor="phoneNumber" className="flex items-center text-sm font-medium">
                         <Phone className="mr-2 h-4 w-4 text-gray-500" />
                         전화번호
                     </Label>
                     <Input
-                        id="phone"
-                        name="phone"
+                        id="phoneNumber"
+                        name="phoneNumber"
                         type="tel"
-                        value={user.phone}
-                        onChange={onChange}
+                        value={user.phoneNumber}
+                        onChange={handlePhoneChange}
                         className="border-gray-300 focus:border-amber-500 focus:ring-amber-500 transition-all"
                     />
                 </div>

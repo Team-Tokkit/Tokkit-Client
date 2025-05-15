@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
     Dialog,
@@ -8,23 +8,26 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Info } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface EmailChangeDialogProps {
-    isOpen: boolean
-    setIsOpen: (open: boolean) => void
-    newEmail: string
-    setNewEmail: (value: string) => void
-    verificationCode: string
-    setVerificationCode: (value: string) => void
-    isVerificationSent: boolean
-    handleSendVerification: () => void
-    handleVerifyEmail: () => void
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+    newEmail: string;
+    setNewEmail: (value: string) => void;
+    verificationCode: string;
+    setVerificationCode: (value: string) => void;
+    isVerificationSent: boolean;
+    accessToken: string;
+    setUser: (user: any) => void;
+    handleSendVerification: () => void;
+    handleVerifyEmail: () => void;
 }
 
 export default function EmailChangeDialog({
@@ -35,9 +38,27 @@ export default function EmailChangeDialog({
                                               verificationCode,
                                               setVerificationCode,
                                               isVerificationSent,
+                                              accessToken,
+                                              setUser,
                                               handleSendVerification,
                                               handleVerifyEmail,
                                           }: EmailChangeDialogProps) {
+    const router = useRouter();
+
+    const isValidEmail = (email: string) => {
+        return !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const handleConfirm = async () => {
+        await handleVerifyEmail();
+
+        // 쿠키 삭제
+        document.cookie = "accessToken=; path=/; max-age=0";
+        document.cookie = "refreshToken=; path=/; max-age=0";
+
+        router.push("/login");
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -73,7 +94,7 @@ export default function EmailChangeDialog({
                     {!isVerificationSent ? (
                         <Button
                             onClick={handleSendVerification}
-                            disabled={!newEmail}
+                            disabled={!isValidEmail(newEmail)}
                             className="w-full bg-amber-500 hover:bg-amber-600 text-white transition-all"
                         >
                             인증 코드 발송
@@ -110,7 +131,7 @@ export default function EmailChangeDialog({
                         취소
                     </Button>
                     <Button
-                        onClick={handleVerifyEmail}
+                        onClick={handleConfirm}
                         disabled={!isVerificationSent || !verificationCode}
                         className="bg-amber-500 hover:bg-amber-600 text-white"
                     >
@@ -119,5 +140,5 @@ export default function EmailChangeDialog({
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
