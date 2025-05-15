@@ -44,7 +44,7 @@ export default function MyPage() {
         {
             title: "간편 비밀번호 변경",
             icon: CreditCard,
-            action: () => router.push("/reset-pin"),
+            action: () => router.push("/mypage/change-pin"),
             color: "from-[#F43F5E]/10 to-[#D1365A]/10",
             iconColor: "text-[#F43F5E]",
         },
