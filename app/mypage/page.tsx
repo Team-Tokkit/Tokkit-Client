@@ -1,20 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { useRouter } from "next/navigation"
 import { Wallet, Ticket, CreditCard, Bell, FileText } from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
 import MenuList from "./components/MenuList"
 import LogoutDialog from "./components/LogoutDialog"
+import withAuth from "@/components/common/WithAuth"
+import {getUserInfo, UserInfo} from "@/app/mypage/api/user-info";
+import {getCookie} from "@/lib/cookies";
 
-export default function MyPage() {
+function MyPage() {
     const router = useRouter()
 
-    const [user] = useState({
-        name: "홍길동",
-        email: "user@example.com",
-        phone: "010-1234-5678",
-    })
+    const [user, setUser] = useState<UserInfo | null>(null)
+
+    useEffect(() => {
+        const token = getCookie("accessToken")
+        if (!token) return
+
+        getUserInfo(token)
+            .then((data) => setUser(data))
+            .catch((err) => {
+                console.error("유저 정보 요청 실패:", err)
+            })
+    }, [])
 
     const menuItems = [
         {
@@ -57,7 +67,7 @@ export default function MyPage() {
 
     return (
         <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
-            <MyPageHeader user={user} />
+            <MyPageHeader user={user || { name: '', email: '', phoneNumber: '' }} />
             <main className="flex-1 flex flex-col p-5 px-6 pt-4 pb-24">
                 <MenuList menuItems={menuItems} />
                 <LogoutDialog />
@@ -65,3 +75,5 @@ export default function MyPage() {
         </div>
     )
 }
+
+export default withAuth(MyPage);

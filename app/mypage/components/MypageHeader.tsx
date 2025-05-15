@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 
 interface Props {
-    user: { name: string; email: string; phone: string }
+    user: { name: string; email: string; phoneNumber: string }
 }
 
 export default function MyPageHeader({ user }: Props) {
@@ -43,7 +43,7 @@ export default function MyPageHeader({ user }: Props) {
                         <ChevronRight className="ml-auto h-5 w-5 text-gray-400" />
                     </div>
                     <div className="mt-2">
-                        <p className="text-sm text-gray-500">{user.phone}</p>
+                        <p className="text-sm text-gray-500">{user.phoneNumber}</p>
                     </div>
                 </div>
             </motion.div>
