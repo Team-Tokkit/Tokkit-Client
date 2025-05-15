@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 
 interface WalletCardProps {
-    userName: string
+    userName: string;
+    accountNumber: string;
+    tokenBalance: number;
 }
 
-export default function WalletCard({ userName }: WalletCardProps) {
+export default function WalletCard({ userName, accountNumber, tokenBalance }: WalletCardProps) {
     const router = useRouter()
 
     return (
@@ -33,7 +35,7 @@ export default function WalletCard({ userName }: WalletCardProps) {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-white">{userName} 님의 지갑</p>
-                        <p className="text-xs text-white/80 font-light">1020-9564-9584</p>
+                        <p className="text-xs text-white/80 font-light">{accountNumber}</p>
                     </div>
                 </div>
 
@@ -42,7 +44,7 @@ export default function WalletCard({ userName }: WalletCardProps) {
                     <div className="min-w-0">
                         <p className="text-xs text-white/80 font-light">예금 토큰 잔액</p>
                         <div className="flex items-baseline mt-1">
-                            <p className="text-[28px] sm:text-3xl font-bold text-white truncate max-w-[160px]">1,000,000</p>
+                            <p className="text-[28px] sm:text-3xl font-bold text-white truncate max-w-[160px]">{tokenBalance.toLocaleString()}</p>
                             <p className="ml-1 text-lg text-white/90">원</p>
                         </div>
                     </div>

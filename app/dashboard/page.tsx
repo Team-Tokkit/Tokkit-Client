@@ -7,6 +7,9 @@ import QuickMenu from "@/app/dashboard/componenets/QuickMenu";
 import RecentTransactions from "@/app/dashboard/componenets/RecentTransactions";
 import NoticesSection from "@/app/dashboard/componenets/NoticeSection";
 import FloatingPaymentButton from "@/app/dashboard/componenets/PaymentButton";
+import withAuth from "@/components/common/WithAuth"
+import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
+import { getCookie } from "@/lib/cookies";
 
 
 interface Notice {
@@ -18,12 +21,16 @@ interface Notice {
     isNew: boolean
 }
 
-export default function DashboardPage() {
+function DashboardPage() {
     const [currentNotice, setCurrentNotice] = useState(0)
     const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
     const [mounted, setMounted] = useState(false)
 
-    const userName = "이정민"
+    const [walletInfo, setWalletInfo] = useState<{
+        name: string;
+        accountNumber: string;
+        tokenBalance: number;
+    } | null>(null);
 
     const notices: Notice[] = [
         {
@@ -81,6 +88,17 @@ export default function DashboardPage() {
 
     useEffect(() => {
         setMounted(true)
+        const accessToken = getCookie("accessToken");
+        if (!accessToken) return;
+
+        fetchWalletInfo(accessToken)
+            .then((data) => {
+                setWalletInfo(data); // { name, accountNumber, tokenBalance }
+            })
+            .catch((err) => {
+                console.error("지갑 정보 로딩 실패:", err);
+            });
+
 
         const startNoticeSlide = () => {
             noticeSlideTimerRef.current = setInterval(() => {
@@ -114,7 +132,7 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
             <HeaderSection />
-            <WalletCard userName={userName} />
+            <WalletCard userName={walletInfo?.name ?? ""} accountNumber={walletInfo?.accountNumber ?? ""} tokenBalance={walletInfo?.tokenBalance ?? 0}  />
             <div className="flex-1 flex flex-col p-5 px-6 pt-8 pb-24">
                 <QuickMenu />
                 <RecentTransactions data={recentTransactions} />
@@ -128,3 +146,5 @@ export default function DashboardPage() {
         </div>
     )
 }
+
+export default withAuth(DashboardPage);
