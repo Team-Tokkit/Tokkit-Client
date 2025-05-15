@@ -1,4 +1,5 @@
 import { getApiUrl } from "@/lib/getApiUrl";
+import {fetchWithAuth} from "@/lib/fetchWithAuth";
 
 const API_URL = getApiUrl();
 
@@ -9,7 +10,7 @@ export interface UserInfo {
 }
 
 export async function getUserInfo(accessToken: string): Promise<UserInfo> {
-    const res = await fetch(`${API_URL}/api/users/info`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/info`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,

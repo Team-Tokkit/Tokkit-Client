@@ -1,9 +1,10 @@
 import { getApiUrl } from "@/lib/getApiUrl";
+import {fetchWithAuth} from "@/lib/fetchWithAuth";
 
 const API_URL = getApiUrl();
 
 export async function fetchWalletInfo(accessToken: string) {
-    const res = await fetch(`${API_URL}/api/users/wallet`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/wallet`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,

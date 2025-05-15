@@ -1,9 +1,10 @@
 import { getApiUrl } from "@/lib/getApiUrl";
+import {fetchWithAuth} from "@/lib/fetchWithAuth";
 
 const API_URL = getApiUrl();
 
 export const logout = async () => {
-    const res = await fetch(`${API_URL}/api/users/logout`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/logout`, {
         method: "POST",
         credentials: "include", // refreshToken 쿠키 포함
     });
