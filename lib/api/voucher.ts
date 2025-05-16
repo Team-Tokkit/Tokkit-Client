@@ -67,11 +67,19 @@ export const filterMyVouchers = async (filters: any, page = 0, size = 15) => {
 
 // 내 바우처 사용처 조회하기 (전체)
 export const getMyVoucherStores = async (voucherOwnershipId: number, page = 0, size = 10) => {
-  const userId = 10 // 예시로 하드코딩된 userId, 실제로는 로그인한 사용자의 ID를 사용해야 함
+  const userId = 10 // TODO: 예시로 하드코딩된 userId, 실제로는 로그인한 사용자의 ID를 사용해야 함
     console.log("🔍 getMyVoucherStores 요청:", { voucherOwnershipId, page, size })
 
   const res = await API.get(`/my-vouchers/details/${voucherOwnershipId}/stores`, {
     params: { page, size, userId },
+  })
+  return res.data.result
+}
+
+// 내 바우처 삭제하기
+export const deleteMyVoucher = async (voucherOwnershipId: number, userId: number) => {
+  const res = await API.delete(`/my-vouchers/${voucherOwnershipId}`, {
+    params: { userId }, 
   })
   return res.data.result
 }

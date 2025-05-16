@@ -4,11 +4,12 @@ import MyVoucherCard from "./MyVoucherCard"
 import type { MyVoucher } from "@/app/my-vouchers/types/my-voucher"
 
 interface Props {
-  myVouchers: MyVoucher[]
+  vouchers: MyVoucher[] 
   loading: boolean
+  onDelete: (voucherId: number) => void 
 }
 
-export default function MyVoucherList({ myVouchers, loading }: Props) {
+export default function MyVoucherList({ vouchers, loading, onDelete }: Props) {
   if (loading) {
     return (
       <div className="min-h-[300px] flex flex-col items-center justify-center bg-[#FAFAFA]">
@@ -22,18 +23,18 @@ export default function MyVoucherList({ myVouchers, loading }: Props) {
     )
   }
 
-  if (!Array.isArray(myVouchers)) {
+  if (!Array.isArray(vouchers)) {
     return <p className="text-center">잘못된 데이터 형식입니다.</p>
   }
 
-  if (myVouchers.length === 0) {
+  if (vouchers.length === 0) {
     return <p className="text-center">보유한 바우처가 없습니다.</p>
   }
 
   return (
     <div className="space-y-4">
-      {myVouchers.map((voucher) => (
-        <MyVoucherCard key={voucher.id} voucher={voucher} />
+      {vouchers.map((voucher) => (
+        <MyVoucherCard key={voucher.id} voucher={voucher} onDelete={onDelete} />
       ))}
     </div>
   )
