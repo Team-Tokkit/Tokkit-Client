@@ -1,44 +1,57 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeft, Calendar } from "lucide-react";
-import SkeletonDetail from "./SkeletonDetail";
+import { Calendar } from "lucide-react";
+import SkeletonDetail from "@/app/notice/components/SkeletonDetail";
+import Header from "@/components/common/Header";
+import { getApiUrl } from "@/lib/getApiUrl";
 
+const API_URL = getApiUrl();
 
 export default function NoticeDetailPage() {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const noticeId = Array.isArray(id) ? id[0] : id;
   const [notice, setNotice] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const page = searchParams.get("page") ?? "1";
+
   useEffect(() => {
-    if (!id) return;
+    if (!noticeId) return;
     setLoading(true);
+
     axios
-      .get(`http://localhost:8080/api/notice/${id}`)
+      .get(`${API_URL}/api/notice/${noticeId}`)
       .then((response) => {
         setNotice(response.data.result);
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching notice:", error);
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [noticeId]);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      router.replace(`/notice?page=${page}`);
+    };
+  
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [page]);  
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-2xl">
-      <div className="flex items-center space-x-2 mb-6">
-        <button
-          onClick={() => window.history.back()}
-          className="p-2 rounded hover:bg-gray-100 transition"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <h1 className="text-2xl font-bold">공지사항</h1>
+    <div className="container mx-auto max-w-4xl">
+      <div className="py-2">
+        <Header title="공지사항 🔔" />
       </div>
-
       <div className="bg-white p-6 rounded-xl border space-y-6">
         {loading ? (
           <>
