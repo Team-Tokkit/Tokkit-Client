@@ -45,7 +45,6 @@ export default function WalletPage() {
         );
         const txData = await txRes.json();
         if (txData.isSuccess) {
-          console.log("거래내역 조회 응답:", txData.result);
           setTransactions(txData.result);
         } else {
           alert("거래내역 조회 실패: " + txData.message);

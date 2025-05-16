@@ -32,18 +32,15 @@ export default function ConvertPage() {
 
   const fetchBalance = async () => {
     try {
-      console.log("잔액 조회 시작...");
       const response = await fetch(`${API_URL}/api/wallet/balance?userId=1`);
       const data = await response.json();
       if (data.isSuccess) {
         setDepositBalance(data.result.depositBalance);
         setTokenBalance(data.result.tokenBalance);
-        console.log("잔액 조회 성공:", data.result);
       } else {
         alert("잔액 조회 실패: " + data.message);
       }
     } catch (error) {
-      console.error("잔액 조회 오류:", error);
       alert("잔액 조회 중 오류 발생");
     } finally {
       setInitialLoading(false);

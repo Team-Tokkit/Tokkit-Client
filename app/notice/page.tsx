@@ -41,7 +41,6 @@ export default function NoticesPage() {
             },
           }
         );
-        console.log(response);
         if (response.ok) {
           const data = await response.json();
           const content = data.result.content || [];
