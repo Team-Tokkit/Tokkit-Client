@@ -11,7 +11,7 @@ export default function ConvertButton() {
         className="group h-16 bg-white hover:bg-[#FFF6E0]
              text-[#1A1A1A] border border-[#E0E0E0]
              rounded-xl shadow-sm flex items-center justify-center gap-[6px]"
-        onClick={() => router.push("/wallet/convert/token-to-deposit")}
+        onClick={() => router.push("/wallet/convert/deposit-to-token")}
       >
         <span className="text-base font-medium flex items-center gap-[6px]">
           예금
@@ -27,7 +27,7 @@ export default function ConvertButton() {
         className="group h-16 bg-white hover:bg-[#FFF6E0]
              text-[#1A1A1A] border border-[#E0E0E0]
              rounded-xl shadow-sm flex items-center justify-center gap-[6px]"
-        onClick={() => router.push("/wallet/convert/deposit-to-token")}
+        onClick={() => router.push("/wallet/convert/token-to-deposit")}
       >
         <span className="text-base font-medium flex items-center gap-[6px]">
           토큰
