@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import NoticeList from "@/components/notice/NoticeList";
-import Pagination from "@/components/notice/Pagination";
-import { SkeletonList } from "@/components/notice/SkeletonList";
+import { useSearchParams, useRouter } from "next/navigation";
+import NoticeList from "@/app/notice/components/NoticeList";
+import Pagination from "@/components/common/Pagination";
+import { SkeletonList } from "@/app/notice/components/SkeletonList";
+import Header from "@/components/common/Header";
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
 
 interface Notice {
   id: number;
@@ -13,17 +18,22 @@ interface Notice {
 }
 
 export default function NoticesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
+
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [latestNoticeIds, setLatestNoticeIds] = useState<number[]>([]);
 
   useEffect(() => {
     async function fetchNotices() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/notice?page=${currentPage}`,
+          `${API_URL}/api/notice?page=${currentPage}`,
           {
             method: "GET",
             headers: {
@@ -34,8 +44,23 @@ export default function NoticesPage() {
         console.log(response);
         if (response.ok) {
           const data = await response.json();
-          setNotices(data.result.content || []);
+          const content = data.result.content || [];
+          setNotices(content);
           setTotalPages(data.result.totalPages || 1);
+
+          if (currentPage === 0) {
+            const now = new Date();
+            const latestIds = content
+              .filter((notice: any) => {
+                const createdAt = new Date(notice.createdAt);
+                const diffInDays =
+                  (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+                return diffInDays <= 3;
+              })
+              .map((n: any) => n.id);
+
+            setLatestNoticeIds(latestIds);
+          }
         } else {
           console.error("Failed to fetch notices:", response.statusText);
         }
@@ -54,13 +79,20 @@ export default function NoticesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-2xl">
-      <h1 className="text-2xl font-bold mb-6">공지사항</h1>
-      <NoticeList notices={notices} />
+    <div className="container mx-auto max-w-4xl">
+      <div className="py-2">
+        <Header title="공지사항 🔔" />
+      </div>
+
+      <NoticeList
+        notices={notices}
+        latestNoticeIds={latestNoticeIds}
+        currentPage={currentPage}
+      />
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage + 1}
-        onPageChange={(page) => setCurrentPage(page - 1)}
+        onPageChange={(page) => router.push(`/notice?page=${page}`)}
       />
     </div>
   );

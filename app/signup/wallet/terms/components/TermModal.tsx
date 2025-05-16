@@ -1,0 +1,73 @@
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { Term } from "@/app/signup/wallet/terms/data/walletTerms";
+import {FC} from "react"; // 타입 재사용
+
+interface TermModalProps {
+    term: Term;
+    onClose: () => void;
+    onAgree: () => void;
+}
+
+const modalVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: 50, scale: 0.95 },
+};
+
+const TermModal: FC<TermModalProps> = ({ term, onClose, onAgree }) => {
+    if (!term) return null;
+
+    return (
+        <motion.div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+        >
+            <motion.div
+                className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
+                variants={modalVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{
+                    type: "spring",
+                    damping: 25,
+                    stiffness: 300,
+                }}
+            >
+                <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-700">
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                        {term.title}
+                    </h3>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={onClose}
+                        className="rounded-full h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
+                    >
+                        <X className="h-5 w-5" />
+                    </Button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-5 text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                    {term.content}
+                </div>
+
+                <div className="p-5 border-t border-gray-100 dark:border-gray-700">
+                    <Button
+                        className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-gray-900 font-medium rounded-xl shadow-md transition-all duration-200"
+                        onClick={onAgree}
+                    >
+                        동의합니다
+                    </Button>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+};
+
+export default TermModal;
