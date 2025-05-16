@@ -40,6 +40,11 @@ export default function MyVouchersPage() {
     fetchFilteredVouchers()
   }, [userId, keyword, sort])
 
+  const handleDelete = (voucherId: number) => {
+    // 삭제된 바우처를 리스트에서 제거
+    setMyVouchers((prevVouchers) => prevVouchers.filter((voucher) => voucher.id !== voucherId))
+  }
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
       <VoucherHeader title="내 바우처" />
@@ -55,7 +60,7 @@ export default function MyVouchersPage() {
         <h2 className="text-lg font-bold mb-4">
           내 바우처 ({myVouchers.length})
         </h2>
-        <MyVoucherList myVouchers={myVouchers} loading={loading} />
+        <MyVoucherList vouchers={myVouchers} loading={loading} onDelete={handleDelete} />
       </div>
     </div>
   )
