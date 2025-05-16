@@ -10,9 +10,9 @@ import { toast } from "@/hooks/use-toast"
 import { BackButton } from "@/components/back-button"
 import { PageHeader } from "@/components/page-header"
 import Image from "next/image";
-import ResetPasswordForm from "@/app/resetPassword/components/ResetPasswordFrom";
-import ResetPasswordResult from "@/app/resetPassword/components/ResetPasswordResult";
-import {requestTempPassword} from "@/app/resetPassword/api/reset-password-auth";
+import ResetPasswordForm from "@/app/reset-password/components/ResetPasswordFrom";
+import ResetPasswordResult from "@/app/reset-password/components/ResetPasswordResult";
+import {requestTempPassword} from "@/app/reset-password/api/reset-password-auth";
 
 export default function ResetPasswordPage() {
     const router = useRouter()
