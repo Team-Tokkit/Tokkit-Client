@@ -13,9 +13,25 @@ import {
     DialogTrigger,
     DialogClose,
 } from "@/components/ui/dialog"
+import { logout } from "@/app/mypage/api/user-logout";
 
 export default function LogoutDialog() {
     const router = useRouter()
+
+    const handleLogout = async () => {
+        try {
+            await logout(); // API 호출
+
+            // 쿠키 삭제
+            document.cookie = "accessToken=; path=/; max-age=0";
+            document.cookie = "refreshToken=; path=/; max-age=0";
+
+            router.push("/login");
+        } catch (err) {
+            console.error("로그아웃 실패:", err);
+            alert("로그아웃 중 오류가 발생했습니다.");
+        }
+    };
 
     return (
         <div className="mt-4 text-center">
@@ -38,7 +54,7 @@ export default function LogoutDialog() {
                             <DialogClose asChild>
                                 <Button variant="outline" className="w-24 h-10">취소</Button>
                             </DialogClose>
-                            <Button onClick={() => router.push("/login")} className="w-24 h-10 bg-gray-800 text-white">
+                            <Button onClick={handleLogout} className="w-24 h-10 bg-gray-800 text-white">
                                 로그아웃
                             </Button>
                         </div>

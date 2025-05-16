@@ -7,17 +7,10 @@ import { SkipBackIcon as Backspace, Check } from "lucide-react"
 interface VirtualKeypadProps {
   maxLength?: number
   onComplete?: (password: string) => void
-  title?: string
-  subtitle?: string
-  scramble?: boolean
+  hideTitle?: boolean
 }
 
-export default function VirtualKeypad({
-  maxLength = 6,
-  onComplete,
-  title = "간편 비밀번호 입력",
-  subtitle = "6자리 숫자를 입력해주세요",
-}: VirtualKeypadProps) {
+export default function VirtualKeypad({ maxLength = 6, onComplete, hideTitle = false }: VirtualKeypadProps) {
   const [password, setPassword] = useState<string>("")
   const [keypadNumbers, setKeypadNumbers] = useState<number[]>([])
   const [pressedKey, setPressedKey] = useState<number | null>(null)
@@ -86,30 +79,6 @@ export default function VirtualKeypad({
     }
   }
 
-  // 하이라이트 효과 서서히 제거하는 함수 (사용하지 않음)
-  const fadeEffect = () => {
-    const fadeInterval = 50 // 50ms마다 업데이트
-    const fadeStep = 0.02 // 한 번에 줄어드는 불투명도
-
-    const fade = () => {
-      setHighlightOpacity((prev) => {
-        const newOpacity = Math.max(0, prev - fadeStep)
-
-        if (newOpacity <= 0) {
-          // 완전히 투명해지면 하이라이트 키 초기화
-          setHighlightedKeys([])
-          return 0
-        }
-
-        // 아직 투명해지는 중이면 다음 페이드 효과 예약
-        fadeTimerRef.current = setTimeout(fade, fadeInterval)
-        return newOpacity
-      })
-    }
-
-    fade()
-  }
-
   const handleBackspace = () => {
     if (password.length > 0) {
       setPassword(password.slice(0, -1))
@@ -135,126 +104,102 @@ export default function VirtualKeypad({
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-w-xs mx-auto">
-      {title && (
-        <motion.h2
-          className="text-xl font-bold text-[#1A1A1A] dark:text-white mb-2"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {title}
-        </motion.h2>
-      )}
+      <div className="flex flex-col items-center w-full max-w-xs mx-auto">
+        {/* Password dots */}
+        <div className="flex justify-center gap-4 mb-10 w-full">
+          {Array.from({ length: maxLength }).map((_, index) => (
+              <motion.div
+                  key={index}
+                  variants={dotVariants}
+                  initial="empty"
+                  animate={index < password.length ? "filled" : "empty"}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  className={`w-4 h-4 rounded-full ${index < password.length ? "bg-[#FFB020]" : "bg-[#E0E0E0]"}`}
+              />
+          ))}
+        </div>
 
-      {subtitle && (
-        <motion.p
-          className="text-sm text-[#666666] dark:text-[#BBBBBB] mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          {subtitle}
-        </motion.p>
-      )}
+        {/* Virtual keypad */}
+        <div className="grid grid-cols-3 gap-4 w-full">
+          {keypadNumbers.map((num, index) => (
+              <motion.button
+                  key={num}
+                  variants={buttonVariants}
+                  initial="idle"
+                  animate={pressedKey === num ? "pressed" : "idle"}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap="pressed"
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  className={`h-16 rounded-2xl bg-white border border-[#E0E0E0] 
+                      text-xl font-medium text-[#1A1A1A] shadow-sm relative overflow-hidden`}
+                  onClick={() => handleNumberClick(num)}
+              >
+                <span className="relative z-10">{num}</span>
+                <AnimatePresence>
+                  {highlightedKeys.includes(num) && (
+                      <motion.div
+                          className="absolute inset-0 bg-[#FFB020] rounded-2xl"
+                          initial={{ opacity: 0.3 }}
+                          animate={{ opacity: highlightOpacity }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.1 }}
+                      />
+                  )}
+                </AnimatePresence>
+              </motion.button>
+          ))}
 
-      {/* Password dots */}
-      <div className="flex justify-center gap-4 mb-10 w-full">
-        {Array.from({ length: maxLength }).map((_, index) => (
-          <motion.div
-            key={index}
-            variants={dotVariants}
-            initial="empty"
-            animate={index < password.length ? "filled" : "empty"}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            className={`w-4 h-4 rounded-full ${
-              index < password.length ? "bg-[#FFB020] dark:bg-[#FFD485]" : "bg-[#E0E0E0] dark:bg-[#333333]"
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Virtual keypad */}
-      <div className="grid grid-cols-3 gap-4 w-full">
-        {keypadNumbers.map((num, index) => (
+          {/* 하단 줄: 지우기, 0, 확인 버튼 */}
           <motion.button
-            key={num}
-            variants={buttonVariants}
-            initial="idle"
-            animate={pressedKey === num ? "pressed" : "idle"}
-            whileHover={{ scale: 1.05 }}
-            whileTap="pressed"
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            className={`h-16 rounded-2xl bg-white dark:bg-[#2A2A2A] border border-[#E0E0E0] dark:border-[#333333] 
-                      text-xl font-medium text-[#1A1A1A] dark:text-white shadow-sm relative overflow-hidden`}
-            onClick={() => handleNumberClick(num)}
+              variants={buttonVariants}
+              initial="idle"
+              whileHover={{ scale: 1.05 }}
+              whileTap="pressed"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="h-16 rounded-2xl bg-[#FFB020] flex items-center justify-center"
+              onClick={handleBackspace}
           >
-            <span className="relative z-10">{num}</span>
+            <Backspace className="h-6 w-6 text-white" />
+          </motion.button>
+
+          <motion.button
+              variants={buttonVariants}
+              initial="idle"
+              animate={pressedKey === 0 ? "pressed" : "idle"}
+              whileHover={{ scale: 1.05 }}
+              whileTap="pressed"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="h-16 rounded-2xl bg-white border border-[#E0E0E0]
+                    text-xl font-medium text-[#1A1A1A] shadow-sm relative overflow-hidden"
+              onClick={() => handleNumberClick(0)}
+          >
+            <span className="relative z-10">0</span>
             <AnimatePresence>
-              {highlightedKeys.includes(num) && (
-                <motion.div
-                  className="absolute inset-0 bg-[#FFB020] dark:bg-[#FFD485] rounded-2xl"
-                  initial={{ opacity: 0.3 }}
-                  animate={{ opacity: highlightOpacity }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }} // 빠른 전환을 위해 지속시간 단축
-                />
+              {highlightedKeys.includes(0) && (
+                  <motion.div
+                      className="absolute inset-0 bg-[#FFB020] rounded-2xl"
+                      initial={{ opacity: 0.3 }}
+                      animate={{ opacity: highlightOpacity }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                  />
               )}
             </AnimatePresence>
           </motion.button>
-        ))}
 
-        {/* 하단 줄: 지우기, 0, 확인 버튼 */}
-        <motion.button
-          variants={buttonVariants}
-          initial="idle"
-          whileHover={{ scale: 1.05 }}
-          whileTap="pressed"
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="h-16 rounded-2xl bg-[#FFB020] dark:bg-[#FFD485] flex items-center justify-center"
-          onClick={handleBackspace}
-        >
-          <Backspace className="h-6 w-6 text-white dark:text-[#1A1A1A]" />
-        </motion.button>
-
-        <motion.button
-          variants={buttonVariants}
-          initial="idle"
-          animate={pressedKey === 0 ? "pressed" : "idle"}
-          whileHover={{ scale: 1.05 }}
-          whileTap="pressed"
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="h-16 rounded-2xl bg-white dark:bg-[#2A2A2A] border border-[#E0E0E0] dark:border-[#333333]
-                    text-xl font-medium text-[#1A1A1A] dark:text-white shadow-sm relative overflow-hidden"
-          onClick={() => handleNumberClick(0)}
-        >
-          <span className="relative z-10">0</span>
-          <AnimatePresence>
-            {highlightedKeys.includes(0) && (
-              <motion.div
-                className="absolute inset-0 bg-[#FFB020] dark:bg-[#FFD485] rounded-2xl"
-                initial={{ opacity: 0.3 }}
-                animate={{ opacity: highlightOpacity }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }} // 빠른 전환을 위해 지속시간 단축
-              />
-            )}
-          </AnimatePresence>
-        </motion.button>
-
-        <motion.button
-          variants={buttonVariants}
-          initial="idle"
-          whileHover={{ scale: 1.05 }}
-          whileTap="pressed"
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="h-16 rounded-2xl flex items-center justify-center bg-[#FFB020] dark:bg-[#FFD485]"
-          onClick={handleSubmit}
-          disabled={password.length !== maxLength}
-        >
-          <Check className="h-6 w-6 text-white dark:text-[#1A1A1A]" />
-        </motion.button>
+          <motion.button
+              variants={buttonVariants}
+              initial="idle"
+              whileHover={{ scale: 1.05 }}
+              whileTap="pressed"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="h-16 rounded-2xl flex items-center justify-center bg-[#FFB020]"
+              onClick={handleSubmit}
+              disabled={password.length !== maxLength}
+          >
+            <Check className="h-6 w-6 text-white" />
+          </motion.button>
+        </div>
       </div>
-    </div>
   )
 }
