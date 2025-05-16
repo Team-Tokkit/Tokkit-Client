@@ -16,17 +16,18 @@ export default function ConvertPreview({
   const parsedAmount = Number.parseInt(amount);
   const isDepositToToken = type === "deposit-to-token";
 
-  const labelFrom = isDepositToToken ? "토큰에서" : "예금에서";
-  const labelTo = isDepositToToken ? "예금으로" : "토큰으로";
+  const labelFrom = isDepositToToken ? "예금에서" : "토큰에서";
+  const labelTo = isDepositToToken ? "토큰으로" : "예금으로";
   const imageSrc = "/images/arrow-down.gif";
 
+  // 계산된 전환 후 잔액
   const finalDeposit = isDepositToToken
-    ? depositBalance + parsedAmount
-    : depositBalance - parsedAmount;
+    ? depositBalance - parsedAmount // 예금 → 토큰 시 예금에서 차감
+    : depositBalance + parsedAmount; // 토큰 → 예금 시 예금에 더함
 
   const finalToken = isDepositToToken
-    ? tokenBalance - parsedAmount
-    : tokenBalance + parsedAmount;
+    ? tokenBalance + parsedAmount // 예금 → 토큰 시 토큰에 더함
+    : tokenBalance - parsedAmount; // 토큰 → 예금 시 토큰에서 차감
 
   return (
     <div className="bg-white rounded-xl p-5 shadow-sm mb-6">
@@ -72,30 +73,30 @@ export default function ConvertPreview({
         {isDepositToToken ? (
           <>
             <div className="flex justify-between items-center mb-2">
-              <p className="text-sm text-[#666666]">전환 후 토큰 잔액</p>
-              <p className="font-bold text-[#1A1A1A]">
-                {finalToken.toLocaleString()}원
-              </p>
-            </div>
-            <div className="flex justify-between items-center">
               <p className="text-sm text-[#666666]">전환 후 예금 잔액</p>
               <p className="font-bold text-[#1A1A1A]">
                 {finalDeposit.toLocaleString()}원
+              </p>
+            </div>
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-[#666666]">전환 후 토큰 잔액</p>
+              <p className="font-bold text-[#1A1A1A]">
+                {finalToken.toLocaleString()}원
               </p>
             </div>
           </>
         ) : (
           <>
             <div className="flex justify-between items-center mb-2">
-              <p className="text-sm text-[#666666]">전환 후 예금 잔액</p>
-              <p className="font-bold text-[#1A1A1A]">
-                {finalDeposit.toLocaleString()}원
-              </p>
-            </div>
-            <div className="flex justify-between items-center">
               <p className="text-sm text-[#666666]">전환 후 토큰 잔액</p>
               <p className="font-bold text-[#1A1A1A]">
                 {finalToken.toLocaleString()}원
+              </p>
+            </div>
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-[#666666]">전환 후 예금 잔액</p>
+              <p className="font-bold text-[#1A1A1A]">
+                {finalDeposit.toLocaleString()}원
               </p>
             </div>
           </>

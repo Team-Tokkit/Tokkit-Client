@@ -9,12 +9,12 @@ export default function ProcessingStep({ type }: ProcessingStepProps) {
   const isDepositToToken = type === "deposit-to-token";
 
   const imageSrc = isDepositToToken
-    ? "/images/token-to-deposit.gif"
-    : "/images/deposit-to-token.gif";
+    ? "/images/deposit-to-token.gif"
+    : "/images/token-to-deposit.gif";
 
   const altText = isDepositToToken
-    ? "토큰을 예금으로 전환"
-    : "예금을 토큰으로 전환";
+    ? "예금을 토큰으로 전환"
+    : "토큰을 예금으로 전환";
 
   return (
     <motion.div
