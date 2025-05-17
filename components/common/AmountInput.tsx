@@ -6,12 +6,16 @@ interface AmountInputProps {
   amount: string;
   onChange: (value: string) => void;
   onMax: () => void;
+  label?: string;
+  bottomRightText?: React.ReactNode;
 }
 
 export default function AmountInput({
   amount,
   onChange,
   onMax,
+  label = "전환할 금액",
+  bottomRightText,
 }: AmountInputProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, "");
@@ -24,7 +28,7 @@ export default function AmountInput({
         htmlFor="amount"
         className="text-[#444444] text-sm font-medium mb-2 block"
       >
-        전환할 금액
+        {label}
       </Label>
 
       <div className="relative">
@@ -40,7 +44,9 @@ export default function AmountInput({
         </span>
       </div>
 
-      <div className="flex justify-end mt-2">
+      <div className="flex items-center justify-between mt-2 w-full">
+        <div className="text-sm text-gray-500">{bottomRightText}</div>
+
         <Button
           variant="outline"
           size="sm"

@@ -19,23 +19,23 @@ export default function BalanceCard({
       {isDepositToToken ? (
         <>
           <div className="flex justify-between items-center mb-2">
-            <p className={secondaryStyle}>토큰 잔액</p>
-            <p className={primaryStyle}>{tokenBalance.toLocaleString()}원</p>
-          </div>
-          <div className="flex justify-between items-center">
             <p className={secondaryStyle}>예금 잔액</p>
             <p className={primaryStyle}>{depositBalance.toLocaleString()}원</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className={secondaryStyle}>토큰 잔액</p>
+            <p className={primaryStyle}>{tokenBalance.toLocaleString()}원</p>
           </div>
         </>
       ) : (
         <>
           <div className="flex justify-between items-center mb-2">
-            <p className={secondaryStyle}>예금 잔액</p>
-            <p className={primaryStyle}>{depositBalance.toLocaleString()}원</p>
-          </div>
-          <div className="flex justify-between items-center">
             <p className={secondaryStyle}>토큰 잔액</p>
             <p className={primaryStyle}>{tokenBalance.toLocaleString()}원</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className={secondaryStyle}>예금 잔액</p>
+            <p className={primaryStyle}>{depositBalance.toLocaleString()}원</p>
           </div>
         </>
       )}

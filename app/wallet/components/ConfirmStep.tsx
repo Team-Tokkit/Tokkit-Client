@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import ConvertPreview from "@/components/wallet/convert/ConvertPreview";
-import InfoBox from "@/components/wallet/common/InfoBox";
+import ConvertPreview from "@/app/wallet/components/convert/ConvertPreview";
+import InfoBox from "@/app/wallet/components/common/InfoBox";
 
 interface ConfirmStepProps {
   type: "deposit-to-token" | "token-to-deposit";
