@@ -18,8 +18,15 @@ export default function Pagination({
   currentPage,
   onPageChange,
 }: PaginationProps) {
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const blockSize = 5;
+  const currentBlock = Math.floor((currentPage - 1) / blockSize);
+  const startPage = currentBlock * blockSize + 1;
+  const endPage = Math.min(startPage + blockSize - 1, totalPages);
 
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
   return (
     <div className="flex justify-center items-center gap-2 mt-6">
       <button

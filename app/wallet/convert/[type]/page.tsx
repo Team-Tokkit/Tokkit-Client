@@ -2,6 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
 
 import Header from "@/components/common/Header";
 import AmountStep from "@/app/wallet/components/AmountStep";
@@ -11,8 +12,16 @@ import ProcessingStep from "@/app/wallet/components/ProcessingStep";
 import CompleteStep from "@/app/wallet/components/CompleteStep";
 
 import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
 
 const API_URL = getApiUrl();
+
+interface WalletInfo {
+  userId: number;
+  name: string;
+  accountNumber: string;
+  tokenBalance: number;
+}
 
 export default function ConvertPage() {
   const router = useRouter();
@@ -23,6 +32,8 @@ export default function ConvertPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [depositBalance, setDepositBalance] = useState<number | null>(null);
   const [tokenBalance, setTokenBalance] = useState<number | null>(null);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+
   const [amount, setAmount] = useState("");
   const [step, setStep] = useState<
     "amount" | "confirm" | "password" | "processing" | "complete"
@@ -30,10 +41,34 @@ export default function ConvertPage() {
 
   const title = isDepositToToken ? "예금 → 토큰" : "토큰 → 예금";
 
+  useEffect(() => {
+    const token = getCookie("accessToken");
+    if (!token) return;
+
+    fetchWalletInfo(token)
+      .then((data) => setWalletInfo(data))
+      .catch((err) => console.error("지갑 정보 불러오기 실패", err));
+  }, []);
+
   const fetchBalance = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/wallet/balance?userId=1`);
+      const token = getCookie("accessToken");
+      if (!token) throw new Error("accessToken 없음");
+
+      if (!walletInfo) throw new Error("walletInfo 없음");
+
+      const response = await fetch(
+        `${API_URL}/api/wallet/balance?userId=${walletInfo.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
       const data = await response.json();
+
       if (data.isSuccess) {
         setDepositBalance(data.result.depositBalance);
         setTokenBalance(data.result.tokenBalance);
@@ -42,14 +77,16 @@ export default function ConvertPage() {
       }
     } catch (error) {
       alert("잔액 조회 중 오류 발생");
+      console.error(error);
     } finally {
       setInitialLoading(false);
     }
   };
 
   useEffect(() => {
+    if (!walletInfo) return;
     fetchBalance();
-  }, []);
+  }, [walletInfo]);
 
   const handleMaxAmount = () => {
     const max = isDepositToToken ? tokenBalance : depositBalance;
@@ -86,11 +123,26 @@ export default function ConvertPage() {
       ? "/api/wallet/convert/deposit-to-token"
       : "/api/wallet/convert/token-to-deposit";
 
+    const token = getCookie("accessToken");
+
+    if (!walletInfo || !token) {
+      alert("로그인 정보가 올바르지 않습니다.");
+      setStep("amount");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: 1, amount: amountNum }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: walletInfo.userId,
+          amount: amountNum,
+        }),
       });
 
       const data = await response.json();
