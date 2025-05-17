@@ -123,7 +123,6 @@ export default function PaymentCarousel({
         </motion.div>
       </div>
 
-      {/* 인디케이터 */}
       <div className="flex justify-center gap-2 mt-4">
         {vouchers.map((_, index) => (
           <div

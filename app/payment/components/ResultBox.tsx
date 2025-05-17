@@ -1,10 +1,10 @@
 import { StoreQRInfo } from "@/data/payment/storeqr";
-import { MyVouchers } from "@/data/payment/payment";
+import { Voucher } from "@/data/payment/payment";
 
 interface ResultBoxProps {
   paymentAmount: string;
   storeQRInfo: StoreQRInfo | null;
-  selectedVoucher: MyVouchers;
+  selectedVoucher: Voucher;
 }
 
 export default function ResultBox({
@@ -13,7 +13,7 @@ export default function ResultBox({
   selectedVoucher,
 }: ResultBoxProps) {
   const isToken = selectedVoucher.id === "token";
-  const remaining = selectedVoucher.balance - Number(paymentAmount);
+  const remaining = selectedVoucher.balance;
 
   return (
     <div className="bg-white rounded-xl p-5 shadow-sm mb-8 w-full max-w-xs">
@@ -27,7 +27,9 @@ export default function ResultBox({
 
         <div className="flex justify-between">
           <span className="text-[#666666]">가맹점</span>
-          <span className="text-[#1A1A1A]">{storeQRInfo?.merchantName || "-"}</span>
+          <span className="text-[#1A1A1A]">
+            {storeQRInfo?.merchantName || "-"}
+          </span>
         </div>
 
         <div className="flex justify-between">
