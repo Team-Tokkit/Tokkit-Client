@@ -30,7 +30,6 @@ export default function MyPage() {
             title: "전자지갑",
             icon: Wallet,
             action: () => router.push("/wallet"),
-            badge: "50,000원",
             color: "from-[#FFB020]/10 to-[#FF9500]/10",
             iconColor: "text-[#FF9500]",
         },
