@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
 
-=======
->>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
 import Header from "@/components/common/Header";
 import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
 import Category from "@/app/wallet/components/totalhistory/Category";
 import Calendar from "@/app/wallet/components/totalhistory/Calendar";
-<<<<<<< HEAD
 import TransactionList from "@/components/common/TransactionList";
 import { getApiUrl } from "@/lib/getApiUrl";
 import { getCookie } from "@/lib/cookies";
@@ -26,14 +22,6 @@ interface WalletInfo {
 
 export default function TransactionsPage() {
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
-=======
-import TransactionList from "@/app/wallet/components/common/TransactionList";
-import { getApiUrl } from "@/lib/getApiUrl";
-
-const API_URL = getApiUrl();
-
-export default function TransactionsPage() {
->>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +48,6 @@ export default function TransactionsPage() {
   ];
 
   useEffect(() => {
-<<<<<<< HEAD
     const fetchData = async () => {
       try {
         const token = getCookie("accessToken");
@@ -99,18 +86,6 @@ export default function TransactionsPage() {
           setTransactions(data.result);
         } else {
           alert("거래내역 조회 실패: " + (data?.message || "알 수 없는 오류"));
-=======
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/wallet/transactions?userId=1`
-        );
-        const data = await response.json();
-        if (data.isSuccess) {
-          setTransactions(data.result);
-        } else {
-          alert("거래내역 조회 실패: " + data.message);
->>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
         }
       } catch (error) {
         console.error("거래내역 조회 오류:", error);
