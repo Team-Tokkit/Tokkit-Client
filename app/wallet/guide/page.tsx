@@ -1,15 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import WalletHeader from "@/components/wallet/common/WalletHeader";
-import GuideIntroCard from "@/components/wallet/guide/GuideIntroCard";
-import GuideList from "@/components/wallet/guide/GuideList";
-import InfoBox from "@/components/wallet/common/InfoBox";
+import Header from "@/components/common/Header";
+import GuideIntroCard from "@/app/wallet/components/guide/GuideIntroCard";
+import GuideList from "@/app/wallet/components/guide/GuideList";
+import InfoBox from "@/app/wallet/components/common/InfoBox";
 
 export default function WalletGuidePage() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <WalletHeader title="전자지갑 이용 안내" />
+      <Header title="전자지갑 이용 안내" />
 
       <div className="flex-1 flex flex-col p-6">
         <motion.div

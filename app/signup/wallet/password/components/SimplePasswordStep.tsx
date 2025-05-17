@@ -57,6 +57,16 @@ export default function SimplePasswordStep({ onComplete, isLoading = false }: Pr
                     transition={{ duration: 0.3 }}
                     className="flex flex-col items-center"
                 >
+                    {step == "first" && (
+                        <motion.div
+                            className = "mb-8 text-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <h2 className = "text-xl font-bold text-[#1A1A1A] mb-2">간편 비밀번호 입력</h2>
+                        </motion.div>
+                    )}
                     {step === "confirm" && (
                         <motion.div
                             className="mb-8 text-center"

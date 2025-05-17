@@ -1,6 +1,7 @@
 import { getApiUrl } from "@/lib/getApiUrl";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
+
 const API_URL = getApiUrl();
 
 export async function fetchWalletInfo(accessToken: string) {

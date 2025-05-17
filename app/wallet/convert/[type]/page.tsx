@@ -99,11 +99,11 @@ export default function ConvertPage() {
       alert("전환할 금액을 입력해주세요.");
       return;
     }
-    if (isDepositToToken && amountNum > tokenBalance) {
-      alert("토큰 잔액을 초과할 수 없습니다.");
-      return;
-    } else if (!isDepositToToken && amountNum > depositBalance) {
+    if (isDepositToToken && amountNum > depositBalance!) {
       alert("예금 잔액을 초과할 수 없습니다.");
+      return;
+    } else if (!isDepositToToken && amountNum > tokenBalance!) {
+      alert("토큰 잔액을 초과할 수 없습니다.");
       return;
     }
     setStep("confirm");
@@ -115,15 +115,13 @@ export default function ConvertPage() {
 
   const handlePasswordComplete = async (password: string) => {
     setStep("processing");
-    await new Promise((resolve) => setTimeout(resolve, 2500));
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const amountNum = Number.parseInt(amount);
-    const updatedDeposit = isDepositToToken
-      ? depositBalance + amountNum
-      : depositBalance - amountNum;
-    const updatedToken = isDepositToToken
-      ? tokenBalance - amountNum
-      : tokenBalance + amountNum;
+    const endpoint = isDepositToToken
+      ? "/api/wallet/convert/deposit-to-token"
+      : "/api/wallet/convert/token-to-deposit";
 
     const token = getCookie("accessToken");
 
@@ -162,14 +160,14 @@ export default function ConvertPage() {
     }
   };
 
-  if (initialLoading) {
+  if (initialLoading || depositBalance === null || tokenBalance === null) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAFA]">
         <img
           src="/images/loading-bunny.png"
           alt="로딩 중"
           className="w-28 h-24 md:w-48 md:h-36 mb-6 object-contain"
-          />
+        />
         <p className="text-[#666666] text-sm">잠시만 기다려주세요...</p>
       </div>
     );
@@ -177,13 +175,14 @@ export default function ConvertPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FAFAFA]">
-      <WalletHeader title={title} />
+      <Header title={title} />
       {step === "amount" || step === "confirm" ? (
         <main className="flex-1 flex flex-col overflow-hidden">
-        {step === "amount" && (
+          {step === "amount" && (
             <AmountStep
               type={type}
               amount={amount}
+              setAmount={setAmount}
               depositBalance={depositBalance}
               tokenBalance={tokenBalance}
               onMax={handleMaxAmount}

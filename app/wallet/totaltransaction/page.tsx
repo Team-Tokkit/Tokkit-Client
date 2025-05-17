@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
 
+=======
+>>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
 import Header from "@/components/common/Header";
 import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
 import Category from "@/app/wallet/components/totalhistory/Category";
 import Calendar from "@/app/wallet/components/totalhistory/Calendar";
+<<<<<<< HEAD
 import TransactionList from "@/components/common/TransactionList";
 import { getApiUrl } from "@/lib/getApiUrl";
 import { getCookie } from "@/lib/cookies";
@@ -22,6 +26,14 @@ interface WalletInfo {
 
 export default function TransactionsPage() {
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+=======
+import TransactionList from "@/app/wallet/components/common/TransactionList";
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
+
+export default function TransactionsPage() {
+>>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,8 +50,7 @@ export default function TransactionsPage() {
   const typeOptions = [
     { label: "전체", value: "전체" },
     { label: "결제", value: "결제" },
-    { label: "충전", value: "충전" },
-    { label: "전환", value: "전환" },
+    { label: "변환", value: "변환" },
   ];
 
   const periodOptions = [
@@ -49,6 +60,7 @@ export default function TransactionsPage() {
   ];
 
   useEffect(() => {
+<<<<<<< HEAD
     const fetchData = async () => {
       try {
         const token = getCookie("accessToken");
@@ -87,6 +99,18 @@ export default function TransactionsPage() {
           setTransactions(data.result);
         } else {
           alert("거래내역 조회 실패: " + (data?.message || "알 수 없는 오류"));
+=======
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/wallet/transactions?userId=1`
+        );
+        const data = await response.json();
+        if (data.isSuccess) {
+          setTransactions(data.result);
+        } else {
+          alert("거래내역 조회 실패: " + data.message);
+>>>>>>> b72639757e7ba765ec0a6f6a5f0c32f8f052abbd
         }
       } catch (error) {
         console.error("거래내역 조회 오류:", error);
@@ -102,15 +126,22 @@ export default function TransactionsPage() {
   const filteredTransactions = transactions.filter((tx: any) => {
     if (
       searchTerm &&
-      !tx.merchant.toLowerCase().includes(searchTerm.toLowerCase())
+      !tx.description.toLowerCase().includes(searchTerm.toLowerCase())
     ) {
       return false;
     }
 
-    if (type !== "전체" && tx.type !== type) return false;
+    if (type !== "전체") {
+      const typeMap: Record<string, string> = {
+        결제: "PAYMENT",
+        충전: "CHARGE",
+        변환: "CONVERT",
+      };
+      if (tx.type !== typeMap[type]) return false;
+    }
 
-    if (period !== "all") {
-      const txDate = new Date(tx.date.replace(" ", "T"));
+    if (period !== "전체 기간") {
+      const txDate = new Date(tx.createdAt);
       const today = new Date();
       const diff = today.getTime() - txDate.getTime();
 
@@ -119,16 +150,24 @@ export default function TransactionsPage() {
     }
 
     if (date) {
-      const txDate = new Date(tx.date.replace(" ", "T"));
+      const txDate = new Date(tx.createdAt);
       if (txDate.toDateString() !== date.toDateString()) return false;
     }
 
     return true;
   });
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">거래내역을 불러오는 중...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
-      <WalletHeader title="거래내역" />
+      <Header title="거래내역" />
 
       <div className="p-4 bg-white shadow-sm">
         <div className="flex gap-2 mb-4">

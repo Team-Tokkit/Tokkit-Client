@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Header from "@/components/common/Header";
@@ -77,6 +78,40 @@ export default function WalletPage() {
 
   const recentTransactions = transactions.slice(0, 3);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const balanceRes = await fetch(
+          `${API_URL}/api/wallet/balance?userId=1`
+        );
+        const balanceData = await balanceRes.json();
+        if (balanceData.isSuccess) {
+          setTokenBalance(balanceData.result.tokenBalance);
+          setDepositBalance(balanceData.result.depositBalance);
+        } else {
+          alert("잔액 조회 실패: " + balanceData.message);
+        }
+
+        const txRes = await fetch(
+          `${API_URL}/api/wallet/transactions?userId=1`
+        );
+        const txData = await txRes.json();
+        if (txData.isSuccess) {
+          setTransactions(txData.result);
+        } else {
+          alert("거래내역 조회 실패: " + txData.message);
+        }
+      } catch (error) {
+        console.error("API 요청 오류:", error);
+        alert("지갑 데이터를 불러오는 중 오류 발생");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [refresh]);
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <header className="bg-white">
@@ -93,11 +128,17 @@ export default function WalletPage() {
           <ConvertButton />
 
           <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
-            <TransactionList
-              label="최근 거래"
-              transactions={transactions}
-              limit={3}
-            />
+            {loading ? (
+              <p className="text-sm text-gray-400">
+                최근 거래를 불러오는 중...
+              </p>
+            ) : (
+              <TransactionList
+                label="최근 거래"
+                transactions={recentTransactions}
+                limit={3}
+              />
+            )}
             <div className="flex justify-center items-center h-8 mt-5">
               <Button
                 variant="ghost"
