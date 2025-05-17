@@ -19,7 +19,7 @@ export default function NoticeList({
   currentPage: number;
 }) {
   return (
-    <div className="bg-gray-50 border rounded-xl shadow-sm min-h-[400px] p-2">
+    <div className="bg-gray-50 rounded-xl shadow-sm min-h-[400px] p-2">
       <div>
         {notices.map((notice) => (
           <NoticeItem

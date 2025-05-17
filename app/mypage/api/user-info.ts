@@ -4,6 +4,7 @@ import {fetchWithAuth} from "@/lib/fetchWithAuth";
 const API_URL = getApiUrl();
 
 export interface UserInfo {
+    id: number;
     name: string;
     email: string;
     phoneNumber: string;

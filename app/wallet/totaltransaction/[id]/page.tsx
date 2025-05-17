@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/common/Header";
-import TransactionCardContent from "@/app/wallet/components/common/TransactionCardContent";
+import TransactionCardContent from "@/components/common/TransactionCardContent";
 import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
 
 const API_URL = getApiUrl();
 
@@ -34,9 +35,16 @@ export default function TransactionDetailPage() {
 
     const fetchTransactionDetail = async () => {
       try {
+        const token = getCookie("accessToken");
         const response = await fetch(
-          `${API_URL}/api/wallet/transactions/${id}`
+          `${API_URL}/api/wallet/transactions/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+
         const data = await response.json();
         if (data.isSuccess) {
           setTransaction(data.result);

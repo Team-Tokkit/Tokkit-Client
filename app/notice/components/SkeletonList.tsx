@@ -2,7 +2,7 @@ import Header from "@/components/common/Header";
 
 export function SkeletonList() {
   return (
-    <div className="container mx-auto max-w-4xl">
+    <div className="container mx-auto max-w-4xl px-4">
       <div className="py-2">
         <Header title="공지사항 🔔" />
       </div>

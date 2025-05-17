@@ -8,12 +8,14 @@ interface WalletCardProps {
   tokenBalance: number;
   depositBalance: number;
   userName: string;
+  accountNumber: string;
 }
 
 export default function WalletCard({
   tokenBalance,
   depositBalance,
   userName,
+  accountNumber
 }: WalletCardProps) {
   return (
     <motion.div
@@ -35,7 +37,7 @@ export default function WalletCard({
             <p className="text-sm font-medium text-white">
               {userName} 님의 지갑
             </p>
-            <p className="text-xs text-white/80">우리 1111-2222-3333</p>
+            <p className="text-xs text-white/80">{accountNumber}</p>
           </div>
         </div>
 

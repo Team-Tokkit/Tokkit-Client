@@ -7,6 +7,7 @@ import { Calendar } from "lucide-react";
 import SkeletonDetail from "@/app/notice/components/SkeletonDetail";
 import Header from "@/components/common/Header";
 import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
 
 const API_URL = getApiUrl();
 
@@ -24,8 +25,15 @@ export default function NoticeDetailPage() {
     if (!noticeId) return;
     setLoading(true);
 
+    const token = getCookie("accessToken");
+
     axios
-      .get(`${API_URL}/api/notice/${noticeId}`)
+      .get(`${API_URL}/api/notice/${noticeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         setNotice(response.data.result);
       })
@@ -42,13 +50,13 @@ export default function NoticeDetailPage() {
       event.preventDefault();
       router.replace(`/notice?page=${page}`);
     };
-  
+
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [page]);  
+  }, [page]);
 
   return (
-    <div className="container mx-auto max-w-4xl">
+    <div className="container mx-auto max-w-4xl px-4">
       <div className="py-2">
         <Header title="공지사항 🔔" />
       </div>
