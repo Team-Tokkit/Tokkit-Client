@@ -60,7 +60,18 @@ export default function DashboardPage() {
       }, 4000);
     };
 
-    startNoticeSlide();
+    useEffect(() => {
+        setMounted(true)
+        const accessToken = getCookie("accessToken");
+        if (!accessToken) return;
+
+        fetchWalletInfo(accessToken)
+            .then((data) => {
+                setWalletInfo(data); // { name, accountNumber, tokenBalance }
+            })
+            .catch((err) => {
+                console.error("지갑 정보 로딩 실패:", err);
+            });
 
     return () => {
       if (noticeSlideTimerRef.current) {
