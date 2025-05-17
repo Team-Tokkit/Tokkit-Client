@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { myVouchers } from "@/data/payment/payment";
+import { myVouchers, Voucher } from "@/data/payment/payment";
 import { mockStoreQR, StoreQRInfo } from "@/data/payment/storeqr";
 import confetti from "canvas-confetti";
 
@@ -15,22 +15,31 @@ import ManualBox from "@/app/payment/components/ManualBox";
 import PaymentCarousel from "@/app/payment/components/PaymentCarousel";
 import MerchantInfoCard from "@/app/payment/components/MerchantInfoCard";
 import AmountBox from "@/app/payment/components/AmountBox";
+import SimplePassword from "../signup/wallet/password/components/SimplePasswordStep";
 import ResultBox from "@/app/payment/components/ResultBox";
+import { getApiUrl } from "@/lib/getApiUrl";
+
+const API_URL = getApiUrl();
 
 export default function PaymentPage() {
   const router = useRouter();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [showScanner, setShowScanner] = useState(true);
   const [paymentStep, setPaymentStep] = useState<
-    "scan" | "amount" | "manual" | "result"
+    "scan" | "amount" | "manual" | "password" | "result"
   >("scan");
   const [transactionId, setTransactionId] = useState("");
-  const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [merchantInfo, setMerchantInfo] = useState<StoreQRInfo | null>(null);
-  const [usableVouchers, setUsableVouchers] = useState(myVouchers);
+  const [usableVouchers, setUsableVouchers] = useState<Voucher[]>(myVouchers);
   const [scannerKey, setScannerKey] = useState(0);
   const [scanLocked, setScanLocked] = useState(false);
   const [done, setDone] = useState(false);
+
+  const [voucherOwnershipId, setVoucherOwnershipId] = useState("");
+  const [merchantId, setMerchantId] = useState("");
+  const [storeId, setStoreId] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [simplePassword, setSimplePassword] = useState("");
 
   useEffect(() => {
     setPaymentAmount("");
@@ -88,33 +97,13 @@ export default function PaymentPage() {
 
     try {
       const parsed = JSON.parse(data);
-      const { transactionId } = parsed;
+      const { storeId, merchantId } = parsed;
 
-      const merchant = Object.values(mockStoreQR).find(
-        (store) => store.transactionId === transactionId
-      );
+      setStoreId(storeId);
+      setMerchantId(merchantId);
 
-      if (merchant) {
-        setMerchantInfo(merchant);
-        setTransactionId(transactionId);
-
-        const allowedIds = merchant.supportedVouchers || [];
-        const usable = myVouchers.filter((v) => allowedIds.includes(v.id));
-        setUsableVouchers(usable);
-
-        setTimeout(() => {
-          setPaymentStep("amount");
-          setScanLocked(false);
-        }, 300);
-      } else {
-        setShowScanner(false);
-        setTimeout(() => {
-          alert("해당 거래번호로 매장을 찾을 수 없습니다.");
-          setScannerKey((prev) => prev + 1);
-          setShowScanner(true);
-          setScanLocked(false);
-        }, 600);
-      }
+      setPaymentStep("amount");
+      setScanLocked(false);
     } catch {
       setShowScanner(false);
       setTimeout(() => {
@@ -151,13 +140,71 @@ export default function PaymentPage() {
       setTransactionId(trimmed);
 
       const allowedIds = merchant.supportedVouchers || [];
-      const usable = myVouchers.filter((v) => allowedIds.includes(v.id));
+
+      const usable = myVouchers.filter((v) =>
+        allowedIds.includes(String(v.id))
+      );
+
       setUsableVouchers(usable);
 
       setPaymentStep("amount");
     } else {
       alert("유효하지 않은 거래번호입니다.");
     }
+  };
+
+  const handlePayment = async () => {
+    const idempotencyKey = generateIdempotencyKey();
+
+    if (!storeId || !merchantId) {
+      alert("QR 코드에서 데이터를 올바르게 읽지 못했습니다.");
+      return;
+    }
+
+    const amount = Number(paymentAmount); // 문자열을 숫자로 변환
+
+    if (!amount || isNaN(amount)) {
+      alert("유효한 금액을 입력하세요.");
+      return;
+    }
+
+    const payload = {
+      userId: 1,
+      voucherOwnershipId: "someVoucherId",
+      merchantId,
+      storeId,
+      amount: amount,
+      simplePassword: "1234",
+    };
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/wallet/voucher/pay-with-voucher`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Idempotency-Key": idempotencyKey,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("결제가 성공적으로 완료되었습니다!");
+        setPaymentStep("result");
+      } else {
+        alert("결제 실패: " + data.message);
+      }
+    } catch (error) {
+      console.error("결제 오류:", error);
+      alert("결제 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  const generateIdempotencyKey = () => {
+    return crypto.randomUUID();
   };
 
   const handlePaymentComplete = () => {
@@ -170,7 +217,7 @@ export default function PaymentPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
       <Header title="결제하기" />
-      <div className="flex-1 min-h-[calc(90vh-60px)] overflow-hidden p-4">
+      <div className="flex-1 min-h-[calc(90vh-60px)] overflow-x-hidden overflow-y-visible p-4">
         <AnimatePresence mode="wait">
           {paymentStep === "scan" && (
             <motion.div
@@ -221,11 +268,10 @@ export default function PaymentPage() {
               className="flex flex-col items-center justify-start min-h-[calc(100vh-60px)] px-4 pb-4 space-y-4"
             >
               <div className="w-full max-w-md">
-                  <MerchantInfoCard
-                    name={merchantInfo.merchantName}
-                    address={merchantInfo.address}
-                    logoUrl={merchantInfo.logoUrl}
-                  />
+                <MerchantInfoCard
+                  name={merchantInfo.merchantName}
+                  address={merchantInfo.address}
+                />
               </div>
 
               <div className="w-full max-w-md">
@@ -235,9 +281,9 @@ export default function PaymentPage() {
                   currentBalance={currentBalance}
                   selectedVoucher={usableVouchers[carouselIndex]}
                   onCancel={handleCancel}
-                  onSubmit={() => setPaymentStep("result")}
+                  onSubmit={() => setPaymentStep("password")}
                 >
-                  <div className="mb-4">
+                  <div className="mb-4 overflow-visible">
                     <PaymentCarousel
                       vouchers={usableVouchers}
                       currentIndex={carouselIndex}
@@ -248,6 +294,18 @@ export default function PaymentPage() {
                   </div>
                 </AmountBox>
               </div>
+            </motion.div>
+          )}
+
+          {paymentStep === "password" && (
+            <motion.div
+              key="password"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
+            >
+              <SimplePassword onComplete={() => setPaymentStep("result")} />
             </motion.div>
           )}
 
@@ -292,11 +350,25 @@ export default function PaymentPage() {
                 결제가 성공적으로 완료되었습니다.
               </p>
 
-              <ResultBox
-                paymentAmount={paymentAmount}
-                storeQRInfo={merchantInfo}
-                selectedVoucher={myVouchers[carouselIndex]}
-              />
+              {(() => {
+                const selected = usableVouchers[carouselIndex];
+                const numericAmount = Number(
+                  paymentAmount.replace(/,/g, "") || "0"
+                );
+
+                const adjustedVoucher = {
+                  ...selected,
+                  balance: selected.balance - numericAmount,
+                };
+
+                return (
+                  <ResultBox
+                    paymentAmount={paymentAmount}
+                    storeQRInfo={merchantInfo}
+                    selectedVoucher={adjustedVoucher}
+                  />
+                );
+              })()}
 
               <Button
                 className="w-full max-w-xs h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white font-medium rounded-xl shadow-md mt-2"

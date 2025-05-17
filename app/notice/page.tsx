@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+
 import NoticeList from "@/app/notice/components/NoticeList";
 import Pagination from "@/components/common/Pagination";
 import { SkeletonList } from "@/app/notice/components/SkeletonList";
 import Header from "@/components/common/Header";
+
 import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
 
 const API_URL = getApiUrl();
 
@@ -32,13 +35,21 @@ export default function NoticesPage() {
     async function fetchNotices() {
       setLoading(true);
       try {
+        const token = getCookie("accessToken");
+        if (!token) {
+          console.error("토큰 없음 → 공지사항 요청 중단");
+          return;
+        }
+
         const response = await fetch(
           `${API_URL}/api/notice?page=${currentPage}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
           }
         );
 
@@ -79,9 +90,9 @@ export default function NoticesPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl">
+    <div className="container mx-auto max-w-4xl px-4">
       <div className="py-2">
-        <Header title="공지사항 🔔" />
+        <Header title="공지사항 🔔" backHref="/dashboard" />
       </div>
 
       <NoticeList
@@ -89,6 +100,7 @@ export default function NoticesPage() {
         latestNoticeIds={latestNoticeIds}
         currentPage={currentPage}
       />
+
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage + 1}

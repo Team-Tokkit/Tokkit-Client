@@ -1,14 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { transactions } from "@/data/wallet/wallet";
-import WalletHeader from "@/components/wallet/common/WalletHeader";
-import SearchBar from "@/components/wallet/totalhistory/SearchBar";
-import Category from "@/components/wallet/totalhistory/Category";
-import Calendar from "@/components/wallet/totalhistory/Calendar";
-import TransactionList from "@/components/wallet/common/TransactionList";
+import { useEffect, useState } from "react";
+import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
+
+import Header from "@/components/common/Header";
+import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
+import Category from "@/app/wallet/components/totalhistory/Category";
+import Calendar from "@/app/wallet/components/totalhistory/Calendar";
+import TransactionList from "@/components/common/TransactionList";
+import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
+
+const API_URL = getApiUrl();
+
+interface WalletInfo {
+  userId: number;
+  name: string;
+  accountNumber: string;
+  tokenBalance: number;
+}
 
 export default function TransactionsPage() {
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, setType] = useState("전체");
@@ -32,7 +48,58 @@ export default function TransactionsPage() {
     { label: "최근 1개월", value: "month" },
   ];
 
-  const filteredTransactions = transactions.filter((tx) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = getCookie("accessToken");
+        if (!token) throw new Error("로그인 토큰 없음");
+
+        const wallet = await fetchWalletInfo(token as string);
+        setWalletInfo(wallet);
+      } catch (error) {
+        console.error("지갑 정보 로드 실패:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const token = getCookie("accessToken");
+        if (!token) throw new Error("토큰 없음");
+
+        const response = await fetch(`${API_URL}/api/wallet/transactions`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : null;
+
+        if (data?.isSuccess) {
+          setTransactions(data.result);
+        } else {
+          alert("거래내역 조회 실패: " + (data?.message || "알 수 없는 오류"));
+        }
+      } catch (error) {
+        console.error("거래내역 조회 오류:", error);
+        alert("거래내역 불러오기 중 오류 발생");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  const filteredTransactions = transactions.filter((tx: any) => {
     if (
       searchTerm &&
       !tx.merchant.toLowerCase().includes(searchTerm.toLowerCase())

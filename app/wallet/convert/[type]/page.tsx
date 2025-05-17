@@ -2,12 +2,26 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import WalletHeader from "@/components/wallet/common/WalletHeader";
-import AmountStep from "@/components/wallet/AmountStep";
-import ConfirmStep from "@/components/wallet/ConfirmStep";
-import PasswordStep from "@/components/wallet/PasswordStep";
-import ProcessingStep from "@/components/wallet/ProcessingStep";
-import CompleteStep from "@/components/wallet/CompleteStep";
+import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
+
+import Header from "@/components/common/Header";
+import AmountStep from "@/app/wallet/components/AmountStep";
+import ConfirmStep from "@/app/wallet/components/ConfirmStep";
+import PasswordStep from "@/components/common/SimplePassWord";
+import ProcessingStep from "@/app/wallet/components/ProcessingStep";
+import CompleteStep from "@/app/wallet/components/CompleteStep";
+
+import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
+
+const API_URL = getApiUrl();
+
+interface WalletInfo {
+  userId: number;
+  name: string;
+  accountNumber: string;
+  tokenBalance: number;
+}
 
 export default function ConvertPage() {
   const router = useRouter();
@@ -16,19 +30,63 @@ export default function ConvertPage() {
   const isDepositToToken = type === "deposit-to-token";
 
   const [initialLoading, setInitialLoading] = useState(true);
-  const [depositBalance, setDepositBalance] = useState(200000);
-  const [tokenBalance, setTokenBalance] = useState(30000);
+  const [depositBalance, setDepositBalance] = useState<number | null>(null);
+  const [tokenBalance, setTokenBalance] = useState<number | null>(null);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+
   const [amount, setAmount] = useState("");
   const [step, setStep] = useState<
     "amount" | "confirm" | "password" | "processing" | "complete"
   >("amount");
 
-  const title = type === "deposit-to-token" ? "토큰 → 예금" : "예금 → 토큰";
+  const title = isDepositToToken ? "예금 → 토큰" : "토큰 → 예금";
 
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoading(false), 1800);
-    return () => clearTimeout(timer);
+    const token = getCookie("accessToken");
+    if (!token) return;
+
+    fetchWalletInfo(token)
+      .then((data) => setWalletInfo(data))
+      .catch((err) => console.error("지갑 정보 불러오기 실패", err));
   }, []);
+
+  const fetchBalance = async () => {
+    try {
+      const token = getCookie("accessToken");
+      if (!token) throw new Error("accessToken 없음");
+
+      if (!walletInfo) throw new Error("walletInfo 없음");
+
+      const response = await fetch(
+        `${API_URL}/api/wallet/balance?userId=${walletInfo.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.isSuccess) {
+        setDepositBalance(data.result.depositBalance);
+        setTokenBalance(data.result.tokenBalance);
+      } else {
+        alert("잔액 조회 실패: " + data.message);
+      }
+    } catch (error) {
+      alert("잔액 조회 중 오류 발생");
+      console.error(error);
+    } finally {
+      setInitialLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!walletInfo) return;
+    fetchBalance();
+  }, [walletInfo]);
 
   const handleMaxAmount = () => {
     const max = isDepositToToken ? tokenBalance : depositBalance;
@@ -67,9 +125,41 @@ export default function ConvertPage() {
       ? tokenBalance - amountNum
       : tokenBalance + amountNum;
 
-    setDepositBalance(updatedDeposit);
-    setTokenBalance(updatedToken);
-    setStep("complete");
+    const token = getCookie("accessToken");
+
+    if (!walletInfo || !token) {
+      alert("로그인 정보가 올바르지 않습니다.");
+      setStep("amount");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: walletInfo.userId,
+          amount: amountNum,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.isSuccess) {
+        await fetchBalance();
+        setStep("complete");
+      } else {
+        alert(data.message || "전환 실패");
+        setStep("amount");
+      }
+    } catch {
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      setStep("amount");
+    }
   };
 
   if (initialLoading) {
