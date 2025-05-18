@@ -46,9 +46,8 @@ export default function WalletCard({
         </div>
 
         <div className="mt-6 flex items-end justify-between">
-          {/* 잔액 */}
           <div className="min-w-0">
-            <p className="text-xs text-white/80 font-light">예금 토큰 잔액</p>
+            <p className="text-xs text-white/80 font-light">토큰 잔액</p>
             <div className="flex items-baseline mt-1">
               <p className="text-[28px] sm:text-3xl font-bold text-white truncate max-w-[160px]">
                 {tokenBalance.toLocaleString()}
@@ -57,7 +56,6 @@ export default function WalletCard({
             </div>
           </div>
 
-          {/* 버튼 */}
           <div className="flex gap-2 flex-shrink-0">
             <Button
               size="sm"

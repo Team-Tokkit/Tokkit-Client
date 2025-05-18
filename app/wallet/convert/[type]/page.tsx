@@ -29,6 +29,7 @@ export default function ConvertPage() {
   const type = params.type as "deposit-to-token" | "token-to-deposit";
   const isDepositToToken = type === "deposit-to-token";
 
+  const [error, setError] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
   const [depositBalance, setDepositBalance] = useState<number | null>(null);
   const [tokenBalance, setTokenBalance] = useState<number | null>(null);
@@ -114,6 +115,40 @@ export default function ConvertPage() {
   };
 
   const handlePasswordComplete = async (password: string) => {
+    const token = getCookie("accessToken");
+
+    if (!walletInfo || !token) {
+      alert("로그인 정보가 올바르지 않습니다.");
+      setStep("amount");
+      return;
+    }
+
+    try {
+      const verifyRes = await fetch(
+        `${API_URL}/api/users/simple-password/verify`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({ simplePassword: password }),
+        }
+      );
+
+      if (!verifyRes.ok) {
+        const err = await verifyRes.json();
+        alert(err.message || "비밀번호가 올바르지 않습니다.");
+        setStep("password");
+        return;
+      }
+    } catch (err) {
+      alert("비밀번호 인증 중 오류가 발생했습니다.");
+      setStep("password");
+      return;
+    }
+
     setStep("processing");
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -122,14 +157,6 @@ export default function ConvertPage() {
     const endpoint = isDepositToToken
       ? "/api/wallet/convert/deposit-to-token"
       : "/api/wallet/convert/token-to-deposit";
-
-    const token = getCookie("accessToken");
-
-    if (!walletInfo || !token) {
-      alert("로그인 정보가 올바르지 않습니다.");
-      setStep("amount");
-      return;
-    }
 
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
@@ -155,7 +182,7 @@ export default function ConvertPage() {
         setStep("amount");
       }
     } catch {
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
       setStep("amount");
     }
   };
