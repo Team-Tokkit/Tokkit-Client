@@ -48,14 +48,17 @@ export default function WalletPage() {
 
     const fetchWalletData = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/users/wallet`, {
+        const res = await fetch(`${API_URL}/api/wallet/balance`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (!res.ok) throw new Error("지갑 정보를 불러오는 데 실패했습니다.");
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`지갑 정보 실패: ${res.status} - ${errText}`);
+        }
 
         const data = await res.json();
         const result = data.result;
@@ -81,26 +84,47 @@ export default function WalletPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const balanceRes = await fetch(
-          `${API_URL}/api/wallet/balance?userId=1`
-        );
-        const balanceData = await balanceRes.json();
-        if (balanceData.isSuccess) {
-          setTokenBalance(balanceData.result.tokenBalance);
-          setDepositBalance(balanceData.result.depositBalance);
-        } else {
-          alert("잔액 조회 실패: " + balanceData.message);
+        const token = getCookie("accessToken");
+        if (!token) return;
+
+        const payload = parseJwt(token);
+        const userId = payload?.userId ?? payload?.sub;
+        if (!userId) throw new Error("유저 ID 없음");
+
+        const balanceRes = await fetch(`${API_URL}/api/wallet/balance`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (!balanceRes.ok) {
+          const errText = await balanceRes.text();
+          throw new Error(`잔액 요청 실패: ${balanceRes.status} - ${errText}`);
         }
 
+        const balanceData = await balanceRes.json();
+        setTokenBalance(balanceData.result.tokenBalance);
+        setDepositBalance(balanceData.result.depositBalance);
+
         const txRes = await fetch(
-          `${API_URL}/api/wallet/transactions?userId=1`
+          `${API_URL}/api/wallet/transactions?userId=${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
         );
-        const txData = await txRes.json();
-        if (txData.isSuccess) {
-          setTransactions(txData.result);
-        } else {
-          alert("거래내역 조회 실패: " + txData.message);
+
+        if (!txRes.ok) {
+          const errText = await txRes.text();
+          throw new Error(`거래내역 요청 실패: ${txRes.status} - ${errText}`);
         }
+
+        const txData = await txRes.json();
+        setTransactions(txData.result);
       } catch (error) {
         console.error("API 요청 오류:", error);
         alert("지갑 데이터를 불러오는 중 오류 발생");
