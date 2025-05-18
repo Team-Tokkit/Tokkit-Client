@@ -1,12 +1,5 @@
 import AmountInput from "@/components/common/AmountInput";
-
-interface Voucher {
-  id: string;
-  icon: React.ReactNode;
-  title: string;
-  balance: number;
-  expiryDate: string;
-}
+import { Voucher } from "@/data/payment/payment";
 
 interface Props {
   amount: string;

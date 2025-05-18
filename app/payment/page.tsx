@@ -18,6 +18,13 @@ import AmountBox from "@/app/payment/components/AmountBox";
 import SimplePassword from "../signup/wallet/password/components/SimplePasswordStep";
 import ResultBox from "@/app/payment/components/ResultBox";
 import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
+import { parseJwt } from "@/lib/parseJwt";
+import {
+  verifySimplePassword,
+  submitVoucherPayment,
+  submitTokenPayment,
+} from "@/app/payment/api/payment";
 
 const API_URL = getApiUrl();
 
@@ -40,6 +47,10 @@ export default function PaymentPage() {
   const [storeId, setStoreId] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [simplePassword, setSimplePassword] = useState("");
+
+  const accessToken = getCookie("accessToken");
+  const userId = accessToken ? parseJwt(accessToken).userId : 0;
+
 
   useEffect(() => {
     setPaymentAmount("");
@@ -99,12 +110,28 @@ export default function PaymentPage() {
       const parsed = JSON.parse(data);
       const { storeId, merchantId } = parsed;
 
+      const matchedStore = Object.values(mockStoreQR).find(
+          (store) => store.storeId === storeId && store.merchantId === merchantId
+      );
+
+      if (!matchedStore) {
+        alert("해당 QR에 해당하는 가맹점을 찾을 수 없습니다.");
+        setScanLocked(false);
+        return;
+      }
+
       setStoreId(storeId);
       setMerchantId(merchantId);
+      setMerchantInfo(matchedStore);
+
+      const allowedIds = matchedStore.supportedVouchers || [];
+      const usable = myVouchers.filter((v) => allowedIds.includes(String(v.id)));
+      setUsableVouchers(usable);
 
       setPaymentStep("amount");
       setScanLocked(false);
-    } catch {
+    } catch (err) {
+      console.error("QR 파싱 오류:", err);
       setShowScanner(false);
       setTimeout(() => {
         alert("QR 코드 형식이 잘못되었습니다.");
@@ -155,52 +182,27 @@ export default function PaymentPage() {
 
   const handlePayment = async () => {
     const idempotencyKey = generateIdempotencyKey();
+    const amount = Number(paymentAmount);
+    const selectedVoucher = usableVouchers[carouselIndex];
+    const isToken = selectedVoucher.id === "token";
 
-    if (!storeId || !merchantId) {
-      alert("QR 코드에서 데이터를 올바르게 읽지 못했습니다.");
+    const verifyResult = await verifySimplePassword(userId, simplePassword);
+    if (!verifyResult.result?.verified) {
+      alert("간편 비밀번호가 올바르지 않습니다.");
       return;
     }
 
-    const amount = Number(paymentAmount); // 문자열을 숫자로 변환
+    const response = isToken
+        ? await submitTokenPayment(userId, merchantId, amount, simplePassword, idempotencyKey)
+        : await submitVoucherPayment(userId, selectedVoucher.id, amount, idempotencyKey);
 
-    if (!amount || isNaN(amount)) {
-      alert("유효한 금액을 입력하세요.");
+    if (!response.isSuccess) {
+      alert(response.message || "결제에 실패했습니다.");
       return;
     }
 
-    const payload = {
-      userId: 1,
-      voucherOwnershipId: "someVoucherId",
-      merchantId,
-      storeId,
-      amount: amount,
-      simplePassword: "1234",
-    };
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/wallet/voucher/pay-with-voucher`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Idempotency-Key": idempotencyKey,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("결제가 성공적으로 완료되었습니다!");
-        setPaymentStep("result");
-      } else {
-        alert("결제 실패: " + data.message);
-      }
-    } catch (error) {
-      console.error("결제 오류:", error);
-      alert("결제 중 오류가 발생했습니다. 다시 시도해 주세요.");
-    }
+    alert("결제가 완료되었습니다.");
+    setPaymentStep("result");
   };
 
   const generateIdempotencyKey = () => {
@@ -359,6 +361,7 @@ export default function PaymentPage() {
                 const adjustedVoucher = {
                   ...selected,
                   balance: selected.balance - numericAmount,
+                  icon: selected.icon || '', // 아이콘이 없는 경우 빈 문자열 기본값 사용
                 };
 
                 return (
