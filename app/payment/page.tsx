@@ -49,6 +49,9 @@ export default function PaymentPage() {
   const accessToken = getCookie("accessToken");
   const userId = accessToken ? parseJwt(accessToken).userId : 0;
 
+  const [isProcessing, setIsProcessing] = useState(false); // 중복 방지
+  const [idempotencyKey] = useState(() => crypto.randomUUID()); // 멱등키 고정
+
 
   useEffect(() => {
     setPaymentAmount("");
@@ -191,44 +194,32 @@ export default function PaymentPage() {
   };
 
   const handlePayment = async (verifiedPassword: string) => {
-    const idempotencyKey = generateIdempotencyKey();
-    const amount = Number(paymentAmount);
+    if (isProcessing) return;
+    setIsProcessing(true);
 
-    console.log("🟡 handlePayment 진입");
+    const amount = Number(paymentAmount);
 
     if (!accessToken) {
       alert("로그인이 필요합니다. (accessToken 없음)");
+      setIsProcessing(false);
       return;
     }
-
-    console.log("✅ accessToken =", accessToken);
 
     let userId: number;
     try {
       const parsed = parseJwt(accessToken);
-      console.log("✅ JWT 파싱 결과 =", parsed);
-
       userId = parsed.userId ?? parsed.id;
       if (!userId) {
-        console.warn("⚠️ JWT에 userId 없음");
         throw new Error("JWT에 userId 없음");
       }
     } catch (e) {
-      console.error("❌ JWT 파싱 실패 또는 userId 없음:", e);
       alert("로그인 정보가 올바르지 않습니다.");
+      setIsProcessing(false);
       return;
     }
 
     const selectedVoucher = usableVouchers[carouselIndex];
     const isToken = selectedVoucher.id === "token";
-
-    console.log("🟢 결제 요청 데이터", {
-      userId,
-      merchantId,
-      amount,
-      simplePassword: verifiedPassword,
-      isToken,
-    });
 
     const response = isToken
         ? await submitTokenPayment(
@@ -249,15 +240,12 @@ export default function PaymentPage() {
 
     if (!response.isSuccess) {
       alert(response.message || "결제에 실패했습니다.");
+      setIsProcessing(false);
       return;
     }
 
-    alert("결제가 완료되었습니다.");
     setPaymentStep("result");
-  };
-
-  const generateIdempotencyKey = () => {
-    return crypto.randomUUID();
+    setIsProcessing(false);
   };
 
   const handlePaymentComplete = () => {
