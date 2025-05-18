@@ -15,18 +15,16 @@ import ManualBox from "@/app/payment/components/ManualBox";
 import PaymentCarousel from "@/app/payment/components/PaymentCarousel";
 import MerchantInfoCard from "@/app/payment/components/MerchantInfoCard";
 import AmountBox from "@/app/payment/components/AmountBox";
-import SimplePassword from "../signup/wallet/password/components/SimplePasswordStep";
 import ResultBox from "@/app/payment/components/ResultBox";
-import { getApiUrl } from "@/lib/getApiUrl";
 import { getCookie } from "@/lib/cookies";
 import { parseJwt } from "@/lib/parseJwt";
 import {
   verifySimplePassword,
   submitVoucherPayment,
-  submitTokenPayment,
+  submitTokenPayment, getPaymentOptions,
 } from "@/app/payment/api/payment";
+import VerifySimplePassword from "@/app/payment/components/VerifySimplePassword";
 
-const API_URL = getApiUrl();
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -102,7 +100,7 @@ export default function PaymentPage() {
     return () => clearInterval(interval);
   }, [done]);
 
-  const handleScanComplete = (data: string) => {
+  const handleScanComplete = async (data: string) => {
     if (scanLocked) return;
     setScanLocked(true);
 
@@ -124,23 +122,35 @@ export default function PaymentPage() {
       setMerchantId(merchantId);
       setMerchantInfo(matchedStore);
 
-      const allowedIds = matchedStore.supportedVouchers || [];
-      const usable = myVouchers.filter((v) => allowedIds.includes(String(v.id)));
-      setUsableVouchers(usable);
+      if (!accessToken) throw new Error("로그인이 필요합니다.");
+      const options = await getPaymentOptions(storeId, accessToken);
 
+      const mapped = options.map((opt) => ({
+        id: opt.type === "TOKEN" ? "token" : String(opt.voucherOwnershipId),
+        title: opt.name,
+        balance: opt.balance,
+        expiryDate: opt.expireDate,
+        icon: opt.type === "TOKEN" ? "🪙" : "🎟️",
+        disabled: !opt.usable,
+      }));
+
+      setUsableVouchers(mapped);
       setPaymentStep("amount");
-      setScanLocked(false);
     } catch (err) {
-      console.error("QR 파싱 오류:", err);
+      console.error("QR 파싱 또는 결제 수단 조회 오류:", err);
+      alert("QR 코드 인식 또는 결제 수단 로딩에 실패했습니다.");
       setShowScanner(false);
       setTimeout(() => {
-        alert("QR 코드 형식이 잘못되었습니다.");
         setScannerKey((prev) => prev + 1);
         setShowScanner(true);
         setScanLocked(false);
       }, 600);
+      return;
     }
+
+    setScanLocked(false);
   };
+
 
   const handleManualEntry = () => {
     setPaymentStep("manual");
@@ -180,21 +190,62 @@ export default function PaymentPage() {
     }
   };
 
-  const handlePayment = async () => {
+  const handlePayment = async (verifiedPassword: string) => {
     const idempotencyKey = generateIdempotencyKey();
     const amount = Number(paymentAmount);
-    const selectedVoucher = usableVouchers[carouselIndex];
-    const isToken = selectedVoucher.id === "token";
 
-    const verifyResult = await verifySimplePassword(userId, simplePassword);
-    if (!verifyResult.result?.verified) {
-      alert("간편 비밀번호가 올바르지 않습니다.");
+    console.log("🟡 handlePayment 진입");
+
+    if (!accessToken) {
+      alert("로그인이 필요합니다. (accessToken 없음)");
       return;
     }
 
+    console.log("✅ accessToken =", accessToken);
+
+    let userId: number;
+    try {
+      const parsed = parseJwt(accessToken);
+      console.log("✅ JWT 파싱 결과 =", parsed);
+
+      userId = parsed.userId ?? parsed.id;
+      if (!userId) {
+        console.warn("⚠️ JWT에 userId 없음");
+        throw new Error("JWT에 userId 없음");
+      }
+    } catch (e) {
+      console.error("❌ JWT 파싱 실패 또는 userId 없음:", e);
+      alert("로그인 정보가 올바르지 않습니다.");
+      return;
+    }
+
+    const selectedVoucher = usableVouchers[carouselIndex];
+    const isToken = selectedVoucher.id === "token";
+
+    console.log("🟢 결제 요청 데이터", {
+      userId,
+      merchantId,
+      amount,
+      simplePassword: verifiedPassword,
+      isToken,
+    });
+
     const response = isToken
-        ? await submitTokenPayment(userId, merchantId, amount, simplePassword, idempotencyKey)
-        : await submitVoucherPayment(userId, selectedVoucher.id, amount, idempotencyKey);
+        ? await submitTokenPayment(
+            userId,
+            merchantId,
+            amount,
+            verifiedPassword,
+            idempotencyKey,
+            accessToken
+        )
+        : await submitVoucherPayment(
+            userId,
+            selectedVoucher.id,
+            amount,
+            idempotencyKey,
+            accessToken
+        );
 
     if (!response.isSuccess) {
       alert(response.message || "결제에 실패했습니다.");
@@ -300,15 +351,19 @@ export default function PaymentPage() {
           )}
 
           {paymentStep === "password" && (
-            <motion.div
-              key="password"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
-            >
-              <SimplePassword onComplete={() => setPaymentStep("result")} />
-            </motion.div>
+              <motion.div
+                  key="password"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
+              >
+                <VerifySimplePassword
+                    onVerified={(password) => {
+                      handlePayment(password);
+                    }}
+                />
+              </motion.div>
           )}
 
           {paymentStep === "result" && (
