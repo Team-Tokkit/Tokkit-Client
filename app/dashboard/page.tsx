@@ -60,18 +60,7 @@ export default function DashboardPage() {
       }, 4000);
     };
 
-    useEffect(() => {
-        setMounted(true)
-        const accessToken = getCookie("accessToken");
-        if (!accessToken) return;
-
-        fetchWalletInfo(accessToken)
-            .then((data) => {
-                setWalletInfo(data); // { name, accountNumber, tokenBalance }
-            })
-            .catch((err) => {
-                console.error("지갑 정보 로딩 실패:", err);
-            });
+    startNoticeSlide();
 
     return () => {
       if (noticeSlideTimerRef.current) {
@@ -182,10 +171,7 @@ export default function DashboardPage() {
           {loading ? (
             <p className="text-sm text-gray-400">최근 거래를 불러오는 중...</p>
           ) : (
-            <TransactionList
-              transactions={recentTransactions}
-              limit={3}
-            />
+            <TransactionList transactions={recentTransactions} limit={3} />
           )}
           <div className="flex justify-center items-center h-8 mt-5">
             <Button

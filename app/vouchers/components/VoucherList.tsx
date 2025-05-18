@@ -10,7 +10,7 @@ import Pagination from "@/components/common/Pagination"
 export default function VoucherList() {
   const [vouchers, setVouchers] = useState<Voucher[]>([])
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1) // 1-based index
+  const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const searchParams = useSearchParams()
 
