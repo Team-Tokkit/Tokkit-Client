@@ -1,3 +1,4 @@
+import { setCookie } from "@/lib/cookies"
 import { getApiUrl } from "@/lib/getApiUrl";
 
 const API_URL = getApiUrl();
@@ -22,4 +23,10 @@ export async function loginMerchant(data: MerchantLoginRequest): Promise<void> {
         const message = error?.message || '로그인에 실패했습니다.'
         throw new Error(message)
     }
+
+    const dataJson = await res.json()
+    const { accessToken, refreshToken } = dataJson.result
+
+    setCookie("accessToken", accessToken, 3600)    // 1시간
+    setCookie("refreshToken", refreshToken, 3600 * 24 * 7) // 7일
 }
