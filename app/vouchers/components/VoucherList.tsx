@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import VoucherCard from "./VoucherCard"
 import { getVouchers } from "@/lib/api/voucher"
 import type { Voucher } from "@/app/vouchers/types/voucher"
-import Pagination from "@/components/common/Pagination"
+import Pagination from "@/app/vouchers/components/Pagination"
 
 export default function VoucherList() {
   const [vouchers, setVouchers] = useState<Voucher[]>([])
@@ -24,7 +24,7 @@ useEffect(() => {
     sort,
     direction,
     page: page - 1,
-    size: 15,
+    size: 10,
   }
 
   if (storeCategory && storeCategory !== "all") {
@@ -36,16 +36,18 @@ useEffect(() => {
   }
 
   setLoading(true)
-  getVouchers(params)
-    .then((res) => {
-      setVouchers(res.content)
-      setTotalPages(res.totalPages)
-    })
-    .catch(() => {
-      setVouchers([])
-      setTotalPages(1)
-    })
-    .finally(() => setLoading(false))
+getVouchers(params)
+  .then((res) => {
+    console.log("API Response:", res);
+    setVouchers(res.content); 
+    setTotalPages(res.totalPages);
+  })
+  .catch((error) => {
+    console.error("Error fetching vouchers:", error);
+    setVouchers([]);
+    setTotalPages(1);
+  })
+  .finally(() => setLoading(false));
 }, [searchParams.toString(), page])
 
 
