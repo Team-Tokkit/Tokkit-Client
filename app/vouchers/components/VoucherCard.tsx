@@ -16,7 +16,6 @@ interface Props {
 export default function VoucherCard({
   voucher,
   onCardClick,
-  onActionClick,
   actionLabel = "구매하기",
 }: Props) {
   const router = useRouter()
@@ -30,13 +29,14 @@ const handleCardClick = () => {
 }
 
   const handleActionClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (onActionClick) {
-      onActionClick(voucher)
-    } else {
-      router.push(`/vouchers/apply/${voucher.id}`)
-    }
-  }
+    e.stopPropagation();
+    router.push(`/vouchers/purchase?voucherId=${voucher.id}`);
+  };
+
+  const remainingCount = voucher.remainingCount;
+  const fillPercent = Math.round(
+    (100 * (voucher.totalCount - remainingCount)) / voucher.totalCount
+  );
 
   return (
     <motion.div
@@ -53,19 +53,12 @@ const handleCardClick = () => {
           className="object-cover"
           unoptimized
         />
-
         <div className="absolute top-2 right-2 flex items-center space-x-2 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-          <span>남은 수량: {voucher.remainingCount}개</span>
+          <span>남은 수량: {remainingCount}개</span>
           <div className="w-16 bg-gray-300 rounded-full h-2">
-            {/* TODO: 나중에 남은 수량을 계산하는 api 연동해야함 */}
             <div
-              className="bg-[#FFB020] h-2 rounded-full"
-              style={{
-                width: `${Math.min(
-                  (voucher.remainingCount / voucher.totalCount) * 100,
-                  100
-                )}%`,
-              }}
+              className="h-2 rounded-full bg-[#FFB020]"
+              style={{ width: `${fillPercent}%` }}
             />
           </div>
         </div>
@@ -98,8 +91,9 @@ const handleCardClick = () => {
               size="sm"
               className="rounded-lg bg-[#FFB020] hover:bg-[#FF9500] text-white"
               onClick={handleActionClick}
+              disabled={remainingCount <= 0}
             >
-              {actionLabel}
+              {remainingCount > 0 ? actionLabel : "품절"}
             </Button>
           </div>
         </div>
