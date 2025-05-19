@@ -1,63 +1,92 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import PurchasePassword from "../../components/PurchasePassword"
 import { purchaseVoucher } from "@/lib/api/voucher"
 import { verifySimplePassword } from "@/app/payment/api/payment"
+import Image from "next/image"
+import { ArrowLeft } from "lucide-react"
 
 export default function VoucherPurchaseVerifyPage() {
   const router = useRouter()
   const params = useSearchParams()
   const voucherId = Number(params.get("voucherId"))
 
-  const [password, setPassword] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [failCount, setFailCount] = useState(0)
 
-  const handleComplete = (input: string) => {
-    setPassword(input)
+
+  const handleComplete = async (input: string) => {
+    if (!input) return
     setError(null)
-  }
-
-  const handleConfirm = async () => {
-    if (!password) return
     setLoading(true)
+
     try {
-      const valid = await verifySimplePassword(password)
+      const valid = await verifySimplePassword(input)
       if (!valid) {
-        setError('비밀번호가 일치하지 않습니다. 다시 입력해주세요.')
+        const newFailCount = failCount + 1
+        setFailCount(newFailCount)
+        setError("비밀번호가 일치하지 않습니다. 다시 입력해주세요.")
+
+        // TODO: 실패 5회 시 리디렉션
+        if (newFailCount >= 5) {
+          router.push("/mypage/reset-pin")
+        }
         return
       }
-      await purchaseVoucher({ voucherId, simplePassword: password })
-      router.push('/wallet/voucher/purchase')
+
+      await purchaseVoucher({ voucherId, simplePassword: input })
+      router.push("/wallet/voucher/purchase")
     } catch (e) {
-      setError('구매에 실패했습니다. 다시 시도해주세요.')
-        console.error(e)
+      console.error(e)
+      setError("구매에 실패했습니다. 다시 시도해주세요.")
     } finally {
       setLoading(false)
     }
   }
 
+  const handleForgotPassword = () => {
+    router.push("/mypage/change-pin")
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-2xl font-semibold text-center mb-6">간편 비밀번호 입력</h2>
-        <p className="text-gray-500 text-center mb-8">
+    <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-8">
+      <div className="w-full max-w-md flex flex-col items-center">
+        {/* Header */}
+        <div className="w-full flex items-center mb-5">
+          <button onClick={() => router.back()} className="p-2">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <span className="text-xl text-gray-700 font-bold ml-2">비밀번호 입력</span>
+        </div>
+
+        <Image
+          src="/images/bunny-mascot.png"
+          alt="바우처 마스코트"
+          width={80}
+          height={120}
+          className="mb-4"
+        />
+
+        <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">간편 비밀번호 입력</h2>
+        <p className="text-sm text-gray-500 text-center mb-6">
           바우처 구매를 위해 간편 비밀번호를 입력해주세요.
         </p>
 
-        <PurchasePassword onComplete={handleComplete} />
+        <div className="w-full">
+          <PurchasePassword onComplete={handleComplete} />
+        </div>
 
-        {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
 
-        <button
-          onClick={handleConfirm}
-          disabled={!password || loading}
-          className="mt-6 w-full bg-yellow-500 text-white py-3 rounded-lg hover:bg-yellow-600 transition duration-200 disabled:opacity-50"
+        <p
+          className="text-sm text-gray-500 text-center mt-8 underline cursor-pointer hover:text-gray-700"
+          onClick={handleForgotPassword}
         >
-          {loading ? '처리 중...' : '확인'}
-        </button>
+          비밀번호를 잊으셨나요?
+        </p>
       </div>
     </div>
   )
