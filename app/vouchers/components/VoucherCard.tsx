@@ -20,13 +20,13 @@ export default function VoucherCard({
 }: Props) {
   const router = useRouter()
 
-const handleCardClick = () => {
-  if (onCardClick) {
-    onCardClick(voucher)
-  } else {
-    router.push(`/vouchers/details/${voucher.id}`)
+  const handleCardClick = () => {
+    if (onCardClick) {
+      onCardClick(voucher)
+    } else {
+      router.push(`/vouchers/details/${voucher.id}`)
+    }
   }
-}
 
   const handleActionClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,9 +34,8 @@ const handleCardClick = () => {
   };
 
   const remainingCount = voucher.remainingCount;
-  const fillPercent = Math.round(
-    (100 * (voucher.totalCount - remainingCount)) / voucher.totalCount
-  );
+  const fillPercent = Math.round((100 * remainingCount) / voucher.totalCount);
+
 
   return (
     <motion.div
@@ -51,7 +50,6 @@ const handleCardClick = () => {
           alt={voucher.name}
           fill
           className="object-cover"
-          unoptimized
         />
         <div className="absolute top-2 right-2 flex items-center space-x-2 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
           <span>남은 수량: {remainingCount}개</span>

@@ -7,8 +7,8 @@ export interface Voucher {
   originalPrice?: number
   validDate: string
   contact?: string
-  remainingCount?: number
-  totalCount?: number
+  remainingCount: number
+  totalCount: number
   imageUrl: string
   merchant?: string
 }
