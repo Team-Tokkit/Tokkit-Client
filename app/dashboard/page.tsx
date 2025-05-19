@@ -42,10 +42,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setMounted(true);
-    const accessToken = getCookie("accessToken");
-    if (!accessToken) return;
 
-    fetchWalletInfo(accessToken)
+    fetchWalletInfo()
       .then((data) => {
         setWalletInfo(data);
       })

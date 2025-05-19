@@ -239,6 +239,7 @@ export default function PaymentPage() {
         );
 
     if (!response.isSuccess) {
+      console.error("결제에 실패했습니다.", response);
       alert(response.message || "결제에 실패했습니다.");
       setIsProcessing(false);
       return;
