@@ -68,11 +68,11 @@ const handlePay = () => {
     )
   }
 
-  // Check if user has enough balance
+
   const hasEnoughBalance = walletInfo && walletInfo.tokenBalance >= voucher.price
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white pb-20">
+    <div className="min-h-screen bg-[#F9FAFB]  pb-20">
       <div className="max-w-lg mx-auto p-6">
         {/* Progress Steps */}
         <div className="flex justify-between items-center mb-8 px-2">
@@ -132,7 +132,7 @@ const handlePay = () => {
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full -mt-10 -mr-10"></div>
+            <div className="absolute top-0 right-0 w-24 h-24 rounded-full -mt-10 -mr-10"></div>
             <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center">
               <span className="bg-[#FFB020]/10 text-[#FFB020] w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">
                 2

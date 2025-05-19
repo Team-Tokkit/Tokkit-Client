@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { SkipBackIcon as Backspace, Check } from "lucide-react"
 
@@ -9,16 +9,27 @@ interface VirtualKeypadProps {
   onComplete?: (password: string) => void
   hideTitle?: boolean
 }
+export interface VirtualKeypadHandle {
+  reset: () => void
+}
 
-export default function VirtualKeypad({ maxLength = 6, onComplete, hideTitle = false }: VirtualKeypadProps) {
-  const [password, setPassword] = useState<string>("")
-  const [keypadNumbers, setKeypadNumbers] = useState<number[]>([])
-  const [pressedKey, setPressedKey] = useState<number | null>(null)
-  const [highlightedKeys, setHighlightedKeys] = useState<number[]>([])
-  const [previousHighlightedKeys, setPreviousHighlightedKeys] = useState<number[]>([])
-  const highlightTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const fadeTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const [highlightOpacity, setHighlightOpacity] = useState<number>(0.3)
+const VirtualKeypad = forwardRef<VirtualKeypadHandle, VirtualKeypadProps>(
+  ({ maxLength = 6, onComplete, hideTitle = false }, ref) => {
+    const [password, setPassword] = useState<string>("")
+    const [keypadNumbers, setKeypadNumbers] = useState<number[]>([])
+    const [pressedKey, setPressedKey] = useState<number | null>(null)
+    const [highlightedKeys, setHighlightedKeys] = useState<number[]>([])
+    const [previousHighlightedKeys, setPreviousHighlightedKeys] = useState<number[]>([])
+    const highlightTimerRef = useRef<NodeJS.Timeout | null>(null)
+    const fadeTimerRef = useRef<NodeJS.Timeout | null>(null)
+    const [highlightOpacity, setHighlightOpacity] = useState<number>(0.3)
+
+    // 비밀번호가 일치 하지 않을때 필드 초기화 
+    useImperativeHandle(ref, () => ({
+      reset: () => {
+        setPassword("")
+      },
+    }))
 
   // 키패드 숫자 랜덤 배치
   useEffect(() => {
@@ -201,5 +212,7 @@ export default function VirtualKeypad({ maxLength = 6, onComplete, hideTitle = f
           </motion.button>
         </div>
       </div>
-  )
-}
+  );
+});
+
+export default VirtualKeypad;
