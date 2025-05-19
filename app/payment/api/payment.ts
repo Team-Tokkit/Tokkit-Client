@@ -1,5 +1,6 @@
 import { getApiUrl } from "@/lib/getApiUrl";
 import {fetchWithAuth} from "@/lib/fetchWithAuth";
+import { getCookie } from "@/lib/cookies";
 const API_URL = getApiUrl();
 
 export interface PaymentOptionResponse {
@@ -12,11 +13,14 @@ export interface PaymentOptionResponse {
     storeCategory: string;
 }
 
-export async function getPaymentOptions(storeId: string, accessToken: string): Promise<PaymentOptionResponse[]> {
+export async function getPaymentOptions(storeId: string): Promise<PaymentOptionResponse[]> {
+    const token = getCookie("accessToken");
+    if (!token) throw new Error("accessToken 없음");
+
     const res = await fetch(`${API_URL}/api/wallet/payment-options?storeId=${storeId}`, {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 
@@ -27,12 +31,15 @@ export async function getPaymentOptions(storeId: string, accessToken: string): P
 
 
 // 간편 비밀번호 검증
-export async function verifySimplePassword(simplePassword: string, accessToken: string): Promise<boolean> {
+export async function verifySimplePassword(simplePassword: string): Promise<boolean> {
+    const token = getCookie("accessToken");
+    if (!token) throw new Error("accessToken 없음");
+
     const res = await fetchWithAuth(`${API_URL}/api/users/simple-password/verify`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ simplePassword }),
     });
@@ -42,22 +49,22 @@ export async function verifySimplePassword(simplePassword: string, accessToken: 
 
 // 토큰 결제
 export async function submitTokenPayment(
-    userId: number,
-    merchantId: string,
+    merchantId: number,
     amount: number,
     simplePassword: string,
     idempotencyKey: string,
-    accessToken: string
 ) {
+    const token = getCookie("accessToken");
+    if (!token) throw new Error("accessToken 없음");
+
     const res = await fetchWithAuth(`${API_URL}/api/wallet/pay-with-token`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Idempotency-Key": idempotencyKey,
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            userId,
             merchantId: Number(merchantId),
             amount,
             simplePassword,
@@ -69,22 +76,28 @@ export async function submitTokenPayment(
 
 // 바우처 결제
 export async function submitVoucherPayment(
-    userId: number,
-    voucherOwnershipId: string,
+    voucherOwnershipId: number,
+    merchantId: number,
+    storeId: number,
     amount: number,
+    simplePassword: string,
     idempotencyKey: string,
-    accessToken: string
 ) {
+    const token = getCookie("accessToken");
+    if (!token) throw new Error("accessToken 없음");
+
     const res = await fetchWithAuth(`${API_URL}/api/wallet/pay-with-voucher`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Idempotency-Key": idempotencyKey,
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            userId,
             voucherOwnershipId: Number(voucherOwnershipId),
+            merchantId: Number(merchantId),
+            storeId: Number(storeId),
+            simplePassword,
             amount,
         }),
     });

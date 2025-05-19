@@ -46,9 +46,6 @@ export default function PaymentPage() {
   const [paymentAmount, setPaymentAmount] = useState("");
   const [simplePassword, setSimplePassword] = useState("");
 
-  const accessToken = getCookie("accessToken");
-  const userId = accessToken ? parseJwt(accessToken).userId : 0;
-
   const [isProcessing, setIsProcessing] = useState(false); // 중복 방지
   const [idempotencyKey] = useState(() => crypto.randomUUID()); // 멱등키 고정
 
@@ -125,8 +122,7 @@ export default function PaymentPage() {
       setMerchantId(merchantId);
       setMerchantInfo(matchedStore);
 
-      if (!accessToken) throw new Error("로그인이 필요합니다.");
-      const options = await getPaymentOptions(storeId, accessToken);
+      const options = await getPaymentOptions(storeId);
 
       const mapped = options.map((opt) => ({
         id: opt.type === "TOKEN" ? "token" : String(opt.voucherOwnershipId),
@@ -199,43 +195,23 @@ export default function PaymentPage() {
 
     const amount = Number(paymentAmount);
 
-    if (!accessToken) {
-      alert("로그인이 필요합니다. (accessToken 없음)");
-      setIsProcessing(false);
-      return;
-    }
-
-    let userId: number;
-    try {
-      const parsed = parseJwt(accessToken);
-      userId = parsed.userId ?? parsed.id;
-      if (!userId) {
-        throw new Error("JWT에 userId 없음");
-      }
-    } catch (e) {
-      alert("로그인 정보가 올바르지 않습니다.");
-      setIsProcessing(false);
-      return;
-    }
-
     const selectedVoucher = usableVouchers[carouselIndex];
     const isToken = selectedVoucher.id === "token";
 
     const response = isToken
         ? await submitTokenPayment(
-            userId,
-            merchantId,
+            Number(merchantId),
             amount,
             verifiedPassword,
             idempotencyKey,
-            accessToken
         )
         : await submitVoucherPayment(
-            userId,
-            selectedVoucher.id,
+            Number(selectedVoucher.id),
+            Number(merchantId),
+            Number(storeId),
             amount,
+            verifiedPassword,
             idempotencyKey,
-            accessToken
         );
 
     if (!response.isSuccess) {

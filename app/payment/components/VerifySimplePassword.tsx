@@ -28,14 +28,7 @@ export default function VerifySimplePassword({ onVerified }: Props) {
         setError(null);
 
         try {
-            const accessToken = getCookie("accessToken");
-            if (!accessToken) {
-                setError("로그인이 만료되었습니다.");
-                setIsLoading(false);
-                return;
-            }
-
-            const success = await verifySimplePassword(pinCode, accessToken);
+            const success = await verifySimplePassword(pinCode);
             if (success) {
                 setPassword(pinCode);
                 onVerified(pinCode); // ✅ 인증 성공 시 즉시 콜백
