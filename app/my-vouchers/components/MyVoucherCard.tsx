@@ -23,8 +23,7 @@ export default function MyVoucherCard({ voucher, onDelete }: Props) {
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      const userId = 10 // TODO: 실제 로그인된 사용자의 ID를 사용해야 함
-      await deleteMyVoucher(voucher.id, userId)
+      await deleteMyVoucher(voucher.id)
       console.log(`Voucher ${voucher.id} 삭제 성공`)
       setIsDeleted(true)
       setTimeout(() => {
@@ -43,7 +42,7 @@ export default function MyVoucherCard({ voucher, onDelete }: Props) {
   return (
     <>
       <Link
-        href={`/my-vouchers/details/${voucher.id}?userId=10`}
+        href={`/my-vouchers/details/${voucher.id}`}
         className="block bg-white dark:bg-[#1A1A1A] rounded-xl shadow-sm overflow-hidden hover:-translate-y-0.5 transition-transform"
       >
         <div className="relative h-40">
