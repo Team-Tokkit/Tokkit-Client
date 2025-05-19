@@ -8,6 +8,7 @@ export interface Voucher {
   validDate: string
   contact?: string
   remainingCount?: number
+  totalCount?: number
   imageUrl: string
   merchant?: string
 }
@@ -41,4 +42,14 @@ export interface VoucherSearchParams {
   direction?: string;
   page?: number;
   size?: number;
+}
+
+export interface VoucherPurchaseRequest {
+  voucherId: number
+  simplePassword: string
+}
+
+export interface VoucherPurchaseResponse {
+  ownershipId: number
+  message: string
 }

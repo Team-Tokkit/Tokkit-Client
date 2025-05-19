@@ -34,3 +34,12 @@ export interface MyVoucher {
       }
     }
 
+export interface MyVoucherSearchParams {
+  storeCategory?: string;      
+  searchKeyword?: string;      
+  sort?: string;               
+  direction?: string;          
+  userId?: number;             
+  page?: number;
+  size?: number;
+}
