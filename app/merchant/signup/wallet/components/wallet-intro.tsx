@@ -1,4 +1,3 @@
-// components/WalletIntro.tsx
 "use client"
 
 import { useRouter } from "next/navigation"
@@ -90,7 +89,7 @@ export default function WalletIntro() {
 
                         <Button
                             className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-xl shadow-md shadow-[#FFB020]/20 dark:shadow-[#FFD485]/10"
-                            onClick={() => router.push("/signup/wallet/terms")}
+                            onClick={() => router.push("/merchant/signup/wallet/terms")}
                         >
                             시작하기
                         </Button>
