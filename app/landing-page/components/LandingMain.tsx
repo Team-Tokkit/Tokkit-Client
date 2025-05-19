@@ -15,9 +15,9 @@ export default function LandingMain({ onOpenTab, isTabOpen }: LandingMainProps) 
     const router = useRouter()
 
     return (
-        // 🌟 전체 메인 영역 (로고, 슬로건, 버튼, 마스코트)
+        // 전체 메인 영역 (로고, 슬로건, 버튼, 마스코트)
         <motion.div
-            className="bg-[#F8F9FA] absolute inset-0 flex flex-col items-center pt-12 px-6"
+            className="bg-[#F8F9FA] absolute inset-0 flex flex-col items-center justify-center px-6"
             initial={{ x: 0 }}
             animate={{ x: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -57,7 +57,7 @@ export default function LandingMain({ onOpenTab, isTabOpen }: LandingMainProps) 
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                 >
-                    중앙은행 디지털 화폐(CBDC)로 더 스마트하고 안전한 금융 생활을 시작하세요
+                    중앙은행 디지털 화폐(CBDC)로 <br /> 스마트하고 안전한 금융 생활을 시작하세요
                 </motion.p>
 
                 {/* 🔘 로그인 / 회원가입 / 가맹점 버튼 */}
