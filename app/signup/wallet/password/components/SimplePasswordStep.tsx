@@ -81,7 +81,7 @@ export default function SimplePasswordStep({ onComplete, isLoading = false }: Pr
                     <VirtualKeypad
                         onComplete={handleKeypadComplete}
                         maxLength={6}
-                        scramble
+                        hideTitle={step === "confirm"}
                     />
                 </motion.div>
             </AnimatePresence>

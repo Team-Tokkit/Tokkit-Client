@@ -15,11 +15,16 @@ import ManualBox from "@/app/payment/components/ManualBox";
 import PaymentCarousel from "@/app/payment/components/PaymentCarousel";
 import MerchantInfoCard from "@/app/payment/components/MerchantInfoCard";
 import AmountBox from "@/app/payment/components/AmountBox";
-import SimplePassword from "../signup/wallet/password/components/SimplePasswordStep";
 import ResultBox from "@/app/payment/components/ResultBox";
-import { getApiUrl } from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
+import { parseJwt } from "@/lib/parseJwt";
+import {
+  verifySimplePassword,
+  submitVoucherPayment,
+  submitTokenPayment, getPaymentOptions,
+} from "@/app/payment/api/payment";
+import VerifySimplePassword from "@/app/payment/components/VerifySimplePassword";
 
-const API_URL = getApiUrl();
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -40,6 +45,10 @@ export default function PaymentPage() {
   const [storeId, setStoreId] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [simplePassword, setSimplePassword] = useState("");
+
+  const [isProcessing, setIsProcessing] = useState(false); // 중복 방지
+  const [idempotencyKey] = useState(() => crypto.randomUUID()); // 멱등키 고정
+
 
   useEffect(() => {
     setPaymentAmount("");
@@ -91,7 +100,7 @@ export default function PaymentPage() {
     return () => clearInterval(interval);
   }, [done]);
 
-  const handleScanComplete = (data: string) => {
+  const handleScanComplete = async (data: string) => {
     if (scanLocked) return;
     setScanLocked(true);
 
@@ -99,21 +108,48 @@ export default function PaymentPage() {
       const parsed = JSON.parse(data);
       const { storeId, merchantId } = parsed;
 
+      const matchedStore = Object.values(mockStoreQR).find(
+          (store) => store.storeId === storeId && store.merchantId === merchantId
+      );
+
+      if (!matchedStore) {
+        alert("해당 QR에 해당하는 가맹점을 찾을 수 없습니다.");
+        setScanLocked(false);
+        return;
+      }
+
       setStoreId(storeId);
       setMerchantId(merchantId);
+      setMerchantInfo(matchedStore);
 
+      const options = await getPaymentOptions(storeId);
+
+      const mapped = options.map((opt) => ({
+        id: opt.type === "TOKEN" ? "token" : String(opt.voucherOwnershipId),
+        title: opt.name,
+        balance: opt.balance,
+        expiryDate: opt.expireDate,
+        icon: opt.type === "TOKEN" ? "🪙" : "🎟️",
+        disabled: !opt.usable,
+      }));
+
+      setUsableVouchers(mapped);
       setPaymentStep("amount");
-      setScanLocked(false);
-    } catch {
+    } catch (err) {
+      console.error("QR 파싱 또는 결제 수단 조회 오류:", err);
+      alert("QR 코드 인식 또는 결제 수단 로딩에 실패했습니다.");
       setShowScanner(false);
       setTimeout(() => {
-        alert("QR 코드 형식이 잘못되었습니다.");
         setScannerKey((prev) => prev + 1);
         setShowScanner(true);
         setScanLocked(false);
       }, 600);
+      return;
     }
+
+    setScanLocked(false);
   };
+
 
   const handleManualEntry = () => {
     setPaymentStep("manual");
@@ -153,58 +189,40 @@ export default function PaymentPage() {
     }
   };
 
-  const handlePayment = async () => {
-    const idempotencyKey = generateIdempotencyKey();
+  const handlePayment = async (verifiedPassword: string) => {
+    if (isProcessing) return;
+    setIsProcessing(true);
 
-    if (!storeId || !merchantId) {
-      alert("QR 코드에서 데이터를 올바르게 읽지 못했습니다.");
+    const amount = Number(paymentAmount);
+
+    const selectedVoucher = usableVouchers[carouselIndex];
+    const isToken = selectedVoucher.id === "token";
+
+    const response = isToken
+        ? await submitTokenPayment(
+            Number(merchantId),
+            amount,
+            verifiedPassword,
+            idempotencyKey,
+        )
+        : await submitVoucherPayment(
+            Number(selectedVoucher.id),
+            Number(merchantId),
+            Number(storeId),
+            amount,
+            verifiedPassword,
+            idempotencyKey,
+        );
+
+    if (!response.isSuccess) {
+      console.error("결제에 실패했습니다.", response);
+      alert(response.message || "결제에 실패했습니다.");
+      setIsProcessing(false);
       return;
     }
 
-    const amount = Number(paymentAmount); // 문자열을 숫자로 변환
-
-    if (!amount || isNaN(amount)) {
-      alert("유효한 금액을 입력하세요.");
-      return;
-    }
-
-    const payload = {
-      userId: 1,
-      voucherOwnershipId: "someVoucherId",
-      merchantId,
-      storeId,
-      amount: amount,
-      simplePassword: "1234",
-    };
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/wallet/voucher/pay-with-voucher`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Idempotency-Key": idempotencyKey,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("결제가 성공적으로 완료되었습니다!");
-        setPaymentStep("result");
-      } else {
-        alert("결제 실패: " + data.message);
-      }
-    } catch (error) {
-      console.error("결제 오류:", error);
-      alert("결제 중 오류가 발생했습니다. 다시 시도해 주세요.");
-    }
-  };
-
-  const generateIdempotencyKey = () => {
-    return crypto.randomUUID();
+    setPaymentStep("result");
+    setIsProcessing(false);
   };
 
   const handlePaymentComplete = () => {
@@ -298,15 +316,19 @@ export default function PaymentPage() {
           )}
 
           {paymentStep === "password" && (
-            <motion.div
-              key="password"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
-            >
-              <SimplePassword onComplete={() => setPaymentStep("result")} />
-            </motion.div>
+              <motion.div
+                  key="password"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
+              >
+                <VerifySimplePassword
+                    onVerified={(password) => {
+                      handlePayment(password);
+                    }}
+                />
+              </motion.div>
           )}
 
           {paymentStep === "result" && (
@@ -359,6 +381,7 @@ export default function PaymentPage() {
                 const adjustedVoucher = {
                   ...selected,
                   balance: selected.balance - numericAmount,
+                  icon: selected.icon || '', // 아이콘이 없는 경우 빈 문자열 기본값 사용
                 };
 
                 return (

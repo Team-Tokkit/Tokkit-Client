@@ -52,7 +52,7 @@ export default function NoticesPage() {
             credentials: "include",
           }
         );
-        
+
         if (response.ok) {
           const data = await response.json();
           const content = data.result.content || [];

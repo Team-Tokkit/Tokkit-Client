@@ -11,8 +11,6 @@ export const useLogin = () => {
             body: JSON.stringify({ email, password }),
         });
 
-        console.log("응답 상태:", res.status);
-
         if (!res.ok) {
             throw new Error("로그인에 실패했습니다.");
         }
