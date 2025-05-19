@@ -12,7 +12,7 @@ export default function MyVoucherTabFilter() {
 
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams)
-    params.set("sort", value) // <-- 핵심: recent | amount | expiry
+    params.set("sort", value) 
     if (userId) params.set("userId", userId)
     if (query) params.set("searchKeyword", query)
     router.push(`/my-vouchers?${params.toString()}`)

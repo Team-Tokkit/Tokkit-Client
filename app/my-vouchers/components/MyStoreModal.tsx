@@ -45,12 +45,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
         const names = res.content.map((store: any) => store.storeName)
 
         if (!isAborted) {
-          const calculatedTotalPages = Math.max(1, Math.ceil(res.totalElements / pageSize))
-          const newTotalPages =
-            res.totalElements === 0
-              ? 0
-              : Math.min(calculatedTotalPages, res.totalPages || calculatedTotalPages)
-
+          const newTotalPages = Math.max(1, Math.ceil(res.totalElements / pageSize))
           setTotalPages(newTotalPages)
           setTotalCount(res.totalElements)
 
@@ -109,7 +104,12 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
                 {totalCount}개
               </Badge>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100" onClick={onClose}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-100"
+              onClick={onClose}
+            >
               <X className="w-5 h-5 text-gray-500" />
               <span className="sr-only">닫기</span>
             </Button>
@@ -136,8 +136,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
                         duration: 0.2,
                         ease: "easeOut",
                       }}
-                      className="py-3 px-4 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 
-                                transition-all duration-200 rounded-lg flex items-center"
+                      className="py-3 px-4 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition-all duration-200 rounded-lg flex items-center"
                     >
                       <div className="w-2 h-2 rounded-full bg-yellow-400 mr-3" />
                       {store}
