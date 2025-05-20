@@ -53,7 +53,7 @@ export default function TransactionsPage() {
         const token = getCookie("accessToken");
         if (!token) throw new Error("로그인 토큰 없음");
 
-        const wallet = await fetchWalletInfo(token as string);
+        const wallet = await fetchWalletInfo();
         setWalletInfo(wallet);
       } catch (error) {
         console.error("지갑 정보 로드 실패:", error);
