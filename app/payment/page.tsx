@@ -21,7 +21,7 @@ import { parseJwt } from "@/lib/parseJwt";
 import {
   verifySimplePassword,
   submitVoucherPayment,
-  submitTokenPayment, getPaymentOptions, fetchStoreInfo,
+  submitTokenPayment, getPaymentOptions, fetchStoreInfo, StoreInfoResponse,
 } from "@/app/payment/api/payment";
 import VerifySimplePassword from "@/app/payment/components/VerifySimplePassword";
 
@@ -34,7 +34,7 @@ export default function PaymentPage() {
     "scan" | "amount" | "manual" | "password" | "result"
   >("scan");
   const [transactionId, setTransactionId] = useState("");
-  const [merchantInfo, setMerchantInfo] = useState<StoreQRInfo | null>(null);
+  const [merchantInfo, setMerchantInfo] = useState<StoreInfoResponse | null>(null);
   const [usableVouchers, setUsableVouchers] = useState<Voucher[]>(myVouchers);
   const [scannerKey, setScannerKey] = useState(0);
   const [scanLocked, setScanLocked] = useState(false);
@@ -117,7 +117,7 @@ export default function PaymentPage() {
 
       const { merchantId, storeId } = parsed;
 
-      const storeInfo: StoreQRInfo = await fetchStoreInfo(storeId, merchantId);
+      const storeInfo: StoreInfoResponse = await fetchStoreInfo(storeId, merchantId);
       setMerchantInfo(storeInfo);
       setMerchantId(merchantId);
       setStoreId(storeId);
@@ -294,10 +294,12 @@ export default function PaymentPage() {
               className="flex flex-col items-center justify-start min-h-[calc(100vh-60px)] px-4 pb-4 space-y-4"
             >
               <div className="w-full max-w-md">
-                <MerchantInfoCard
-                  name={merchantInfo.merchantName}
-                  address={merchantInfo.address}
-                />
+                {merchantInfo && (
+                    <MerchantInfoCard
+                        name={merchantInfo.merchantName}
+                        address={merchantInfo.address}
+                    />
+                )}
               </div>
 
               <div className="w-full max-w-md">

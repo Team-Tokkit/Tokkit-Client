@@ -1,9 +1,9 @@
-import { StoreQRInfo } from "@/data/payment/storeqr";
 import { Voucher } from "@/data/payment/payment";
+import {StoreInfoResponse} from "@/app/payment/api/payment";
 
 interface ResultBoxProps {
   paymentAmount: string;
-  storeQRInfo: StoreQRInfo | null;
+  storeQRInfo: StoreInfoResponse | null;
   selectedVoucher: Voucher;
 }
 

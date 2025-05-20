@@ -21,7 +21,7 @@ export default function QRTestPage() {
                         key={storeId}
                         className="p-4 bg-white rounded-xl shadow-md w-fit flex flex-col items-center gap-2"
                     >
-                        <h3 className="font-bold text-base">{store.storeName}</h3>
+                        <h3 className="font-bold text-base">{store.storeId}</h3>
                         <QRCode value={txId} size={150} />
                         <p className="text-sm text-gray-500 mt-2">거래번호: <code>{txId}</code></p>
                     </div>

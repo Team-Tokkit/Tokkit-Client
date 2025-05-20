@@ -13,6 +13,14 @@ export interface PaymentOptionResponse {
     storeCategory: string;
 }
 
+export interface StoreInfoResponse {
+    storeId: number;
+    merchantId: number;
+    storeName: string;
+    address: string;
+    merchantName: string;
+}
+
 // 가맹점 조회
 export async function fetchStoreInfo(storeId: number, merchantId: number) {
     const url = new URL(`${API_URL}/api/store/info`);
