@@ -8,7 +8,7 @@ import MyVoucherHeader from "@/app/my-vouchers/components/MyVoucherHeader";
 import MyVoucherInfo from "@/app/my-vouchers/components/MyVoucherInfo";
 import { ExpandableSection } from "@/app/vouchers/components/ExpandableSection";
 import { FileText, Building, CreditCard } from "lucide-react";
-import {MyStoreList} from "@/app/my-vouchers/components/MyStoreList";
+import { MyStoreList } from "@/app/my-vouchers/components/MyStoreList";
 
 export default function MyVoucherDetailPage() {
   const { voucherOwnershipId } = useParams();
@@ -33,7 +33,23 @@ export default function MyVoucherDetailPage() {
     fetchDetail();
   }, [id]);
 
-  if (loading) return <p className="p-4 text-center">로딩 중...</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] pb-5">
+        {/* 상단 영역 (헤더 대체) */}
+        <div className="h-60 bg-gray-200 mb-4 rounded-b-3xl shadow-sm animate-pulse" />
+
+        {/* 본문 스켈레톤 */}
+        <div className="p-4 space-y-4">
+          <div className="h-40 bg-gray-200 rounded-xl animate-pulse" />
+          <div className="h-32 bg-gray-200 rounded-xl animate-pulse" />
+          <div className="h-32 bg-gray-200 rounded-xl animate-pulse" />
+          <div className="h-24 bg-gray-200 rounded-xl animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
   if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
   if (!voucher) return <p className="p-4 text-center">바우처를 찾을 수 없습니다.</p>;
 
