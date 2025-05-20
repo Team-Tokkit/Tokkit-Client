@@ -103,6 +103,7 @@ export default function ProfileEditPage() {
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-md mx-auto">
                 <ProfileHeader />
+                <div className="mt-10">
                 <ProfileCard>
                     <ProfileCardHeader name={user.name} />
                     {isSaveSuccess ? (
@@ -128,6 +129,7 @@ export default function ProfileEditPage() {
                         />
                     )}
                 </ProfileCard>
+                </div>
             </div>
         </div>
     )
