@@ -27,7 +27,7 @@ export default function MyVouchersPage() {
           page: 0,
           size: 15,
         })
-        console.log("🎯 fetchMyVouchers 응답:", res)
+        console.log("fetchMyVouchers 응답:", res)
         setMyVouchers(res.content)
       } catch (e) {
         console.error("내 바우처 조회 실패:", e)

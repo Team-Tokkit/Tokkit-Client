@@ -8,6 +8,7 @@ import { verifySimplePassword } from "@/app/payment/api/payment"
 import { VirtualKeypadHandle } from "@/components/virtual-keypad"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
+import LoadingOverlay from "@/components/common/LoadingOverlay"
 
 export default function VoucherPurchaseVerifyPage() {
   const router = useRouter()
@@ -62,33 +63,7 @@ export default function VoucherPurchaseVerifyPage() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-8">
-      {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="flex flex-col items-center bg-white px-8 py-6 rounded-lg shadow-lg">
-            <svg
-              className="animate-spin h-8 w-8 text-green-500 mb-3"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              ></path>
-            </svg>
-            <span className="text-base font-medium text-green-600">처리 중입니다. 잠시만 기다려주세요...</span>
-          </div>
-        </div>
-      )}
+      {loading && <LoadingOverlay/>}
       <div className="w-full max-w-md flex flex-col items-center">
         {/* Header */}
         <div className="w-full flex items-center mb-5">

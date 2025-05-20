@@ -36,6 +36,10 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
   }, [voucherOwnershipId])
 
   useEffect(() => {
+
+    // 모달이 열리면 스크롤 방지
+    document.body.style.overflow = "hidden";
+
     let isAborted = false
 
     async function fetchStores() {
@@ -70,8 +74,10 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
     fetchStores()
 
     return () => {
+      document.body.style.overflow = "";
       isAborted = true
     }
+  
   }, [voucherOwnershipId, page])
 
   return (
@@ -82,6 +88,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
+        onClick={onClose}
       >
         <motion.div
           className="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] overflow-hidden shadow-xl relative"
@@ -95,6 +102,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
             mass: 0.8,
             duration: 0.3,
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* 헤더 */}
           <div className="flex justify-between items-center p-5 border-b">
