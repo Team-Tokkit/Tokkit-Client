@@ -17,7 +17,6 @@ export default function QRTestPage() {
           <h3 className="font-bold mb-2">{store.merchantName}</h3>
           <QRCode
             value={JSON.stringify({
-              transactionId: store.transactionId,
               storeId: store.storeId,
               merchantId: store.merchantId,
             })}
