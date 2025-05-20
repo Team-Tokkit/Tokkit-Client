@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import Header from "@/components/common/Header";
-import AmountStep from "@/app/wallet/components/AmountStep"
+import AmountStep from "@/app/wallet/components/AmountStep";
 import ConfirmStep from "@/app/wallet/components/ConfirmStep";
 import ProcessingStep from "@/app/wallet/components/ProcessingStep";
 import CompleteStep from "@/app/wallet/components/CompleteStep";
@@ -12,13 +12,16 @@ import { fetchWalletBalance, verifyPassword, convertBalance } from "@/app/wallet
 
 export default function ConvertPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const type = (searchParams.get("type") as "deposit-to-token" | "token-to-deposit") ?? "deposit-to-token";
+  const params = useParams();
+  const type = params.type as "deposit-to-token" | "token-to-deposit";
 
   const [step, setStep] = useState<"amount" | "confirm" | "password" | "processing" | "complete">("amount");
   const [amount, setAmount] = useState("");
   const [depositBalance, setDepositBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
+
+  const isDepositToToken = type === "deposit-to-token";
+  const title = isDepositToToken ? "예금 → 토큰" : "토큰 → 예금";
 
   useEffect(() => {
     fetchBalance();
@@ -35,18 +38,14 @@ export default function ConvertPage() {
   };
 
   const handleMax = () => {
-    const max = type === "deposit-to-token" ? depositBalance : tokenBalance;
+    const max = isDepositToToken ? depositBalance : tokenBalance;
     setAmount(String(max));
   };
 
-  const handleAmountChange = (val: string) => {
-    setAmount(val);
-  };
-
-  const handlePasswordComplete = async (simplePassword: string) => {
+  const handlePasswordComplete = async (password: string) => {
     const amountNum = Number(amount);
     try {
-      await verifyPassword(simplePassword);
+      await verifyPassword(password);
     } catch (err: any) {
       alert(err.message);
       setStep("password");
@@ -57,7 +56,7 @@ export default function ConvertPage() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     try {
-      await convertBalance(type, amountNum, simplePassword);
+      await convertBalance(type, amountNum, password);
       await fetchBalance();
       setStep("complete");
     } catch (err: any) {
@@ -68,7 +67,7 @@ export default function ConvertPage() {
 
   return (
       <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
-        <Header title="전환하기" />
+        <Header title={title} />
         <div className="flex-1 min-h-[calc(90vh-60px)]">
           {step === "amount" && (
               <AmountStep
@@ -78,7 +77,7 @@ export default function ConvertPage() {
                   tokenBalance={tokenBalance}
                   setAmount={setAmount}
                   onMax={handleMax}
-                  onChange={handleAmountChange}
+                  onChange={setAmount}
                   onContinue={() => setStep("confirm")}
               />
           )}
@@ -95,8 +94,16 @@ export default function ConvertPage() {
           )}
 
           {step === "password" && (
-              <VerifySimplePassword onVerified={handlePasswordComplete} />
+              <div className="flex flex-col items-center justify-center h-full px-4 pt-10">
+                <img
+                    src="/images/bunny-lock.png"
+                    alt="간편 비밀번호 입력"
+                    className="w-32 h-auto mb-6"
+                />
+                <VerifySimplePassword onVerified={handlePasswordComplete} />
+              </div>
           )}
+
 
           {step === "processing" && <ProcessingStep type={type} />}
 
