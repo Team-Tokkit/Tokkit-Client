@@ -1,7 +1,9 @@
 import axios from "axios"
 import type {Store, StoreSearchParams} from "../types"
 import {getApiUrl} from "@/lib/getApiUrl";
+import { getCookie } from "@/lib/cookies";
 
+const accessToken = getCookie("accessToken");
 
 const API_URL = getApiUrl()
 /**
@@ -16,6 +18,7 @@ export async function fetchNearbyStores(params: StoreSearchParams): Promise<Stor
             params,
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": accessToken ? `Bearer ${accessToken}` : "",
             },
         })
         const data = response.data
