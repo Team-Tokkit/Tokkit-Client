@@ -26,7 +26,7 @@ export default function AmountBox({
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm space-y-6">
       {children && <div className="mb-16">{children}</div>}
-      <h3 className="text-lg font-bold text-[#1A1A1A] -mt-6">결제 금액 입력</h3>
+      <h3 className="text-lg font-bold text-[#1A1A1A] -mt-6 ">결제 금액 입력</h3>
       <div>
         <AmountInput
           amount={amount}

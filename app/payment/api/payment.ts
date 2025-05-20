@@ -27,8 +27,6 @@ export async function fetchStoreInfo(storeId: number, merchantId: number) {
     url.searchParams.append("storeId", storeId);
     url.searchParams.append("merchantId", merchantId);
 
-    console.log(url.toString())
-
     const res = await fetchWithAuth(url.toString(), {
         method: "GET",
         headers: {
