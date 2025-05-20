@@ -81,7 +81,7 @@ export default function MyVoucherCard({ voucher, onDelete }: Props) {
             </div>
             <div className="text-right">
               <p className="text-xs text-[#666666] dark:text-[#BBBBBB]">총 금액</p>
-              <p className="text-lg font-bold">{voucher.originalPrice.toLocaleString()}원</p>
+              <p className="text-lg font-bold">{voucher.price.toLocaleString()}원</p>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function MyVoucherCard({ voucher, onDelete }: Props) {
             <div
               className={`h-2 rounded-full transition-all duration-300 ${isDisabled ? "bg-gray-400" : "bg-green-600"}`}
               style={{
-                width: `${(voucher.remainingAmount / voucher.originalPrice) * 100}%`,
+                width: `${(voucher.remainingAmount / voucher.price) * 100}%`,
               }}
             />
           </div>

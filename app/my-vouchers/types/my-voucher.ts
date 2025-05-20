@@ -3,7 +3,7 @@ export interface MyVoucher {
     id: number
     name: string
     contact: string
-    originalPrice: number
+    price: number
     remainingAmount: number
     // isVoucher:boolean
     status: string
@@ -20,7 +20,7 @@ export interface MyVoucher {
       voucherDetailDescription: string
       voucherRefundPolicy: string
       remainingAmount: number
-      originalPrice: number
+      price: number
       status: string
       imageUrl: string
       stores: {
