@@ -1,13 +1,13 @@
 "use client"
 
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Wallet, Ticket, CreditCard, Bell, FileText } from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
 import MenuList from "./components/MenuList"
 import LogoutDialog from "./components/LogoutDialog"
-import {getUserInfo, UserInfo} from "@/app/mypage/api/user-info";
-import {getCookie} from "@/lib/cookies";
+import { getUserInfo, UserInfo } from "@/app/mypage/api/user-info";
+import { getCookie } from "@/lib/cookies";
 
 export default function MyPage() {
     const router = useRouter()
@@ -64,9 +64,9 @@ export default function MyPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
+        <div className="h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
             <MyPageHeader user={user || { name: '', email: '', phoneNumber: '' }} />
-            <main className="flex-1 flex flex-col p-5 px-6 pt-4 pb-24">
+            <main className="flex-1 flex flex-col p-5 px-6 pt-4 ">
                 <MenuList menuItems={menuItems} />
                 <LogoutDialog />
             </main>
