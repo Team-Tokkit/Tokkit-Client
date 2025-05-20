@@ -3,14 +3,22 @@
 import { Calendar } from "lucide-react"
 import { MyVoucherDetail } from "@/app/my-vouchers/types/my-voucher"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 interface Props {
   voucher: MyVoucherDetail
 }
 
 export default function MyVoucherInfo({ voucher }: Props) {
-  // 특정 상태 확인
+  const router = useRouter()
+
   const isDisabled = ["USED", "EXPIRED", "CANCELLED"].includes(voucher.status)
+
+  const handleClick = () => {
+    if (!isDisabled) {
+      router.push("/payment")
+    }
+  }
 
   return (
     <div className="bg-white dark:bg-[#1A1A1A] rounded-xl shadow-sm p-4 mb-4">
@@ -24,7 +32,7 @@ export default function MyVoucherInfo({ voucher }: Props) {
         <div className="text-right">
           <p className="text-xs text-[#666666]">총 금액</p>
           <p className="text-2xl font-medium text-[#666666]">
-            {voucher.originalPrice.toLocaleString()}원
+            {voucher.price.toLocaleString()}원
           </p>
         </div>
       </div>
@@ -34,7 +42,7 @@ export default function MyVoucherInfo({ voucher }: Props) {
             isDisabled ? "bg-gray-400" : "bg-green-600"
           }`}
           style={{
-            width: `${(voucher.remainingAmount / voucher.originalPrice) * 100}%`,
+            width: `${(voucher.remainingAmount / voucher.price) * 100}%`,
           }}
         />
       </div>
@@ -45,12 +53,12 @@ export default function MyVoucherInfo({ voucher }: Props) {
         </p>
       </div>
 
-      {/* 버튼 텍스트 변경 */}
       <Button
         className={`w-full ${
           isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-[#FFB020] hover:bg-[#FF9500]"
         } text-white dark:text-[#1A1A1A]`}
         disabled={isDisabled}
+        onClick={handleClick}
       >
         {isDisabled ? "사용할 수 없는 바우처입니다" : "바우처로 결제하기"}
       </Button>
