@@ -10,7 +10,7 @@ export default function VoucherHeader({ title }: { title: string }) {
   return (
     <header className="bg-white p-5 sticky top-0 z-10 shadow-sm">
       <div className="flex items-center">
-        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+        <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.push("/dashboard")}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <h1 className="text-xl font-bold">{title}</h1>

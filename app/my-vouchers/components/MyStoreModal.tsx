@@ -36,6 +36,10 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
   }, [voucherOwnershipId])
 
   useEffect(() => {
+
+    // 모달이 열리면 스크롤 방지
+    document.body.style.overflow = "hidden";
+
     let isAborted = false
 
     async function fetchStores() {
@@ -45,12 +49,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
         const names = res.content.map((store: any) => store.storeName)
 
         if (!isAborted) {
-          const calculatedTotalPages = Math.max(1, Math.ceil(res.totalElements / pageSize))
-          const newTotalPages =
-            res.totalElements === 0
-              ? 0
-              : Math.min(calculatedTotalPages, res.totalPages || calculatedTotalPages)
-
+          const newTotalPages = Math.max(1, Math.ceil(res.totalElements / pageSize))
           setTotalPages(newTotalPages)
           setTotalCount(res.totalElements)
 
@@ -75,8 +74,10 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
     fetchStores()
 
     return () => {
+      document.body.style.overflow = "";
       isAborted = true
     }
+  
   }, [voucherOwnershipId, page])
 
   return (
@@ -87,6 +88,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
+        onClick={onClose}
       >
         <motion.div
           className="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] overflow-hidden shadow-xl relative"
@@ -100,6 +102,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
             mass: 0.8,
             duration: 0.3,
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* 헤더 */}
           <div className="flex justify-between items-center p-5 border-b">
@@ -109,7 +112,12 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
                 {totalCount}개
               </Badge>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100" onClick={onClose}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-100"
+              onClick={onClose}
+            >
               <X className="w-5 h-5 text-gray-500" />
               <span className="sr-only">닫기</span>
             </Button>
@@ -136,8 +144,7 @@ export function MyStoreModal({ voucherOwnershipId, onClose }: MyStoreModalProps)
                         duration: 0.2,
                         ease: "easeOut",
                       }}
-                      className="py-3 px-4 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 
-                                transition-all duration-200 rounded-lg flex items-center"
+                      className="py-3 px-4 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition-all duration-200 rounded-lg flex items-center"
                     >
                       <div className="w-2 h-2 rounded-full bg-yellow-400 mr-3" />
                       {store}
