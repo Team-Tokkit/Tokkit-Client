@@ -35,7 +35,7 @@ export default function ManualBox({ onSubmit, onCancel }: ManualBoxProps) {
         </h3>
         <p className="text-sm text-[#666666] mb-6 leading-relaxed">
           가맹점에 비치된 QR 안내판 아래의{" "}
-          <span className="font-medium text-[#1A1A1A]">6자리 숫자</span>를
+          <span className="font-medium text-[#1A1A1A]">코드를</span>를
           입력해주세요.
         </p>
 
@@ -49,7 +49,7 @@ export default function ManualBox({ onSubmit, onCancel }: ManualBoxProps) {
 
         <input
           type="text"
-          placeholder="예: starbucks-01"
+          placeholder="예: m001s00001"
           value={input}
           onChange={(e) => {
             setInput(e.target.value);

@@ -31,7 +31,7 @@ export default function VerifySimplePassword({ onVerified }: Props) {
             const success = await verifySimplePassword(pinCode);
             if (success) {
                 setPassword(pinCode);
-                onVerified(pinCode); // ✅ 인증 성공 시 즉시 콜백
+                onVerified(pinCode); // 인증 성공 시 즉시 콜백
                 return;
             } else {
                 setError("비밀번호가 일치하지 않습니다.");

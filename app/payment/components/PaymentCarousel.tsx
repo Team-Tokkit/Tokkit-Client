@@ -28,15 +28,17 @@ export default function PaymentCarousel({
     };
 
     const handlePrev = () => {
-        const prevIndex =
-            currentIndex === 0 ? vouchers.length - 1 : currentIndex - 1;
+        const prevIndex = currentIndex === 0 ? vouchers.length - 1 : currentIndex - 1;
         onScrollIndexChange(prevIndex);
     };
 
     return (
         <div className="relative w-full flex flex-col items-center">
-            <h3 className="text-lg font-bold mb-6 text-[#1A1A1A] w-full text-left">결제 수단 선택</h3>
+            <h3 className="text-lg font-bold mb-6 text-[#1A1A1A] w-full text-left">
+                결제 수단 선택
+            </h3>
 
+            {/* 좌우 화살표 */}
             <button
                 onClick={handlePrev}
                 className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full p-1 shadow-md -translate-x-1/2"
@@ -50,17 +52,14 @@ export default function PaymentCarousel({
                 <ChevronRight className="h-5 w-5 text-[#1A1A1A]" />
             </button>
 
-            {/* 마스킹된 박스 */}
-            <div className="relative w-full px-4">
-                <div className="relative rounded-2xl overflow-hidden bg-white px-4 py-6">
-                {/* 마스크 레이어 */}
-                    <div className="absolute inset-0 rounded-2xl pointer-events-none z-10 bg-white" />
+            {/* 카드 영역 */}
+            <div className="relative w-full px-4 overflow-x-visible"> {/* 💡 중요: overflow-x-visible */}
+                <div className="relative rounded-2xl bg-white px-4 py-6 overflow-x-hidden"> {/* 💡 overflow-hidden 제거 */}
 
-                    {/* 슬라이드 컨테이너 */}
                     <div
-                        className="relative z-20 w-full flex justify-start"
+                        className="relative z-20 w-full flex items-center justify-center -mt-5"
                         style={{
-                            paddingLeft: `calc(50% - ${CARD_WIDTH_PX / 2}px)`,
+                            paddingLeft: `calc(50% - ${(CARD_WIDTH_PX / 2) + CARD_MARGIN}px)`, // 💡 마진 고려한 중앙정렬
                         }}
                     >
                         <motion.div
@@ -116,9 +115,7 @@ export default function PaymentCarousel({
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="text-xs text-gray-500">만료일</p>
-                                                    <p className="text-sm text-[#1A1A1A]">
-                                                        {voucher.expiryDate}
-                                                    </p>
+                                                    <p className="text-sm text-[#1A1A1A]">{voucher.expiryDate}</p>
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -130,6 +127,7 @@ export default function PaymentCarousel({
                 </div>
             </div>
 
+            {/* 인디케이터 */}
             <div className="flex justify-center gap-2 mt-4">
                 {vouchers.map((_, index) => (
                     <div
