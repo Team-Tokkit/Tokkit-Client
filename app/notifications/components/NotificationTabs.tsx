@@ -24,12 +24,12 @@ export default function NotificationTabs({ activeTab, onChange }: NotificationTa
     return (
         <div className="px-4 pt-4 pb-2 bg-white dark:bg-[#1A1A1A] shadow-sm">
             <Tabs defaultValue="all" value={activeTab} onValueChange={onChange}>
-                <TabsList className="w-full overflow-x-auto flex justify-start p-0 bg-transparent h-auto">
+                <TabsList className="w-full overflow-x-auto flex justify-center p-0 bg-transparent h-auto">
                     {categories.map((category) => (
                         <TabsTrigger
                             key={category.id}
                             value={category.id}
-                            className="px-4 py-2 rounded-full data-[state=active]:bg-[#FFB020] data-[state=active]:text-white"
+                            className="px-6 py-1 text-m rounded-full min-w-0 data-[state=active]:bg-[#FFB020] data-[state=active]:text-white" 
                         >
                             {category.label}
                         </TabsTrigger>
