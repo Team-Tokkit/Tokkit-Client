@@ -24,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/images/favicon.ico" />
+      </head>
       <body className={nunito.className}>
         <ThemeProvider attribute="class"  >
           <MainLayout>{children}</MainLayout>
