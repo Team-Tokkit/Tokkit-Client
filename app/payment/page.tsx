@@ -21,7 +21,7 @@ import { parseJwt } from "@/lib/parseJwt";
 import {
   verifySimplePassword,
   submitVoucherPayment,
-  submitTokenPayment, getPaymentOptions,
+  submitTokenPayment, getPaymentOptions, fetchStoreInfo,
 } from "@/app/payment/api/payment";
 import VerifySimplePassword from "@/app/payment/components/VerifySimplePassword";
 
@@ -41,8 +41,8 @@ export default function PaymentPage() {
   const [done, setDone] = useState(false);
 
   const [voucherOwnershipId, setVoucherOwnershipId] = useState("");
-  const [merchantId, setMerchantId] = useState("");
-  const [storeId, setStoreId] = useState("");
+  const [merchantId, setMerchantId] = useState<number>(0);
+  const [storeId, setStoreId] = useState<number>(0);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [simplePassword, setSimplePassword] = useState("");
 
@@ -100,30 +100,30 @@ export default function PaymentPage() {
     return () => clearInterval(interval);
   }, [done]);
 
+  function parseTransactionId(txId: string): { merchantId: number, storeId: number } | null {
+    const match = txId.match(/^m(\d+)s(\d+)$/);
+    if (!match) return null;
+    const [, merchantId, storeId] = match;
+    return { merchantId: Number(merchantId), storeId: Number(storeId) };
+  }
+
   const handleScanComplete = async (data: string) => {
     if (scanLocked) return;
     setScanLocked(true);
 
     try {
-      const parsed = JSON.parse(data);
-      const { storeId, merchantId } = parsed;
+      const parsed = parseTransactionId(data);
+      if (!parsed) throw new Error("QR 형식 오류");
 
-      const matchedStore = Object.values(mockStoreQR).find(
-          (store) => store.storeId === storeId && store.merchantId === merchantId
-      );
+      const { merchantId, storeId } = parsed;
 
-      if (!matchedStore) {
-        alert("해당 QR에 해당하는 가맹점을 찾을 수 없습니다.");
-        setScanLocked(false);
-        return;
-      }
-
-      setStoreId(storeId);
+      const storeInfo: StoreQRInfo = await fetchStoreInfo(storeId, merchantId);
+      setMerchantInfo(storeInfo);
       setMerchantId(merchantId);
-      setMerchantInfo(matchedStore);
+      setStoreId(storeId);
+      setTransactionId(data);
 
       const options = await getPaymentOptions(storeId);
-
       const mapped = options.map((opt) => ({
         id: opt.type === "TOKEN" ? "token" : String(opt.voucherOwnershipId),
         title: opt.name,
@@ -136,8 +136,8 @@ export default function PaymentPage() {
       setUsableVouchers(mapped);
       setPaymentStep("amount");
     } catch (err) {
-      console.error("QR 파싱 또는 결제 수단 조회 오류:", err);
-      alert("QR 코드 인식 또는 결제 수단 로딩에 실패했습니다.");
+      console.error("QR 인식 실패:", err);
+      alert("QR 코드가 잘못되었거나 해당 매장을 찾을 수 없습니다.");
       setShowScanner(false);
       setTimeout(() => {
         setScannerKey((prev) => prev + 1);
@@ -149,7 +149,6 @@ export default function PaymentPage() {
 
     setScanLocked(false);
   };
-
 
   const handleManualEntry = () => {
     setPaymentStep("manual");
@@ -164,27 +163,36 @@ export default function PaymentPage() {
     setShowScanner(true);
   };
 
-  const handleSubmitTransaction = (input: string) => {
+  const handleSubmitTransaction = async (input: string) => {
     const trimmed = input.trim();
+    const parsed = parseTransactionId(trimmed);
+    if (!parsed) {
+      alert("거래번호 형식이 잘못되었습니다.");
+      return;
+    }
 
-    const merchant = Object.values(mockStoreQR).find(
-      (store) => store.transactionId === trimmed
-    );
-
-    if (merchant) {
-      setMerchantInfo(merchant);
+    try {
+      const { merchantId, storeId } = parsed;
+      const storeInfo = await fetchStoreInfo(storeId, merchantId);
+      setMerchantInfo(storeInfo);
+      setMerchantId(merchantId);
+      setStoreId(storeId);
       setTransactionId(trimmed);
 
-      const allowedIds = merchant.supportedVouchers || [];
+      const options = await getPaymentOptions(storeId);
+      const mapped = options.map((opt) => ({
+        id: opt.type === "TOKEN" ? "token" : String(opt.voucherOwnershipId),
+        title: opt.name,
+        balance: opt.balance,
+        expiryDate: opt.expireDate,
+        icon: opt.type === "TOKEN" ? "🪙" : "🎟️",
+        disabled: !opt.usable,
+      }));
 
-      const usable = myVouchers.filter((v) =>
-        allowedIds.includes(String(v.id))
-      );
-
-      setUsableVouchers(usable);
-
+      setUsableVouchers(mapped);
       setPaymentStep("amount");
-    } else {
+    } catch (err) {
+      console.error("거래번호 인식 실패:", err);
       alert("유효하지 않은 거래번호입니다.");
     }
   };

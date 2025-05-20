@@ -5,14 +5,8 @@ import {getCookie} from "@/lib/cookies";
 const API_URL = getApiUrl();
 
 export async function fetchWalletInfo() {
-  const token = getCookie("accessToken");
-  if (!token) throw new Error("accessToken 없음");
-
   const res = await fetchWithAuth(`${API_URL}/api/wallet/balance`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     credentials: "include",
   });
 
