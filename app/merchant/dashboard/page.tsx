@@ -3,13 +3,13 @@
 import { useState, useEffect, useRef } from "react"
 import { useMobile } from "@/hooks/use-mobile"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 import {MerchantHeader} from "@/app/merchant/dashboard/components/MerchantHeader";
 import {WalletCard} from "@/app/merchant/dashboard/components/WalletCard";
 import {SalesStatistics} from "@/app/merchant/dashboard/components/SalesStatistics";
 import {VoucherSearch} from "@/app/merchant/dashboard/components/VoucherSearch";
 import {NoticeSlider} from "@/app/merchant/dashboard/components/NoticeSlider";
 import {fetchMerchantWalletInfo} from "@/app/merchant/dashboard/api/merchant-wallet-info";
+import {fetchDailyIncome} from "@/app/merchant/dashboard/api/daily-income";
 
 // 공지사항 데이터 타입 정의
 interface Notice {
@@ -26,9 +26,9 @@ export default function MerchantDashboardPage() {
     const router = useRouter()
     const [mounted, setMounted] = useState(false);
     const [isLoading, setIsLoading] = useState(true)
-    const [todayTotal, setTodayTotal] = useState(0)
-    const [weeklyTotal, setWeeklyTotal] = useState(0)
-    const [monthlyTotal, setMonthlyTotal] = useState(0)
+    const [dailyIncome, setDailyIncome] = useState<{
+        dailyIncome: number;
+    }>({ dailyIncome: 0 })
     const [currentNotice, setCurrentNotice] = useState(0)
     const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
     const [walletInfo, setWalletInfo] = useState<{
@@ -76,6 +76,15 @@ export default function MerchantDashboardPage() {
             .catch((err) => {
                 console.error("지갑 정보 로딩 실패:", err);
             });
+
+        fetchDailyIncome()
+            .then((data) => {
+                setDailyIncome(data);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.error("일일 통계 로딩 실패:", err);
+            });
     }, [])
 
     // 공지사항 자동 슬라이드 설정
@@ -121,15 +130,16 @@ export default function MerchantDashboardPage() {
                         storeName={walletInfo.storeName}
                         accountNumber={walletInfo.accountNumber}
                         tokenBalance={walletInfo.tokenBalance}
-                        depositBalance={walletInfo.depositBalance}
-                    />
+                        depositBalance={walletInfo.depositBalance} isLoading={false} onManageClick={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} onConvertClick={function (): void {
+                        throw new Error("Function not implemented.")
+                    }}                    />
                 )}
 
                 {/* 매출 통계 카드 */}
                 <SalesStatistics
-                    todayTotal={todayTotal}
-                    weeklyTotal={weeklyTotal}
-                    monthlyTotal={monthlyTotal}
+                    dailyIncome={dailyIncome.dailyIncome}
                     isLoading={isLoading}
                 />
 
