@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { guideItems } from "@/data/wallet/guideContents";
+import { guideItems } from "@/data/wallet/merchantGuideContents";
 
 export default function GuideAccordion() {
   return (
