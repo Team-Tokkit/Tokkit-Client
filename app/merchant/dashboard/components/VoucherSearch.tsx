@@ -2,9 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
+import { Search } from "lucide-react" // lucide-react 아이콘 추가
+
 
 export function VoucherSearch() {
     const router = useRouter()
@@ -42,6 +43,5 @@ export function VoucherSearch() {
                 </Card>
             </motion.div>
         </div>
-
     )
 }
