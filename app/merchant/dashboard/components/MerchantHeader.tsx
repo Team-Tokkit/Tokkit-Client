@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 export function MerchantHeader() {
     const router = useRouter()
     return (
-        <header className="bg-[#F9FAFB] p-5 pt-8 pb-2">
+        <header className="bg-[#F9FAFB] p-5 pt-8 pb-0">
             <div className="flex items-center justify-between mb-8 px-2">
                 <div className="relative">
                     <Button
