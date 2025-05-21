@@ -2,13 +2,13 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Voucher } from "@/app/vouchers/types/voucher"
 
-// TODO : Merchant API로 교체
-// interface Props {
-//   onCardClick?: (voucher: Voucher) => void
-//   onActionClick?: (voucher: Voucher) => void
-//   actionLabel?: string
-// }
+interface Props {
+  onCardClick?: (voucher: Voucher) => void
+  onActionClick?: (voucher: Voucher) => void
+  actionLabel?: string
+}
 
 export default function VoucherCard({ voucher, onCardClick}: Props) {
   const router = useRouter()
@@ -20,7 +20,6 @@ export default function VoucherCard({ voucher, onCardClick}: Props) {
       router.push(`/merchants/vouchers/details/${voucher.id}`)
     }
   }
-
 
   const remainingCount = voucher.remainingCount;
   const fillPercent = Math.round((100 * remainingCount) / voucher.totalCount);
