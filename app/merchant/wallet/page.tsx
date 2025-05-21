@@ -2,39 +2,51 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import Header from "@/components/common/Header";
 import { fetchMerchantWalletInfo } from "../dashboard/api/merchant-wallet-info";
-import {fetchWalletTransactions} from "@/app/wallet/api/wallet";
 import WalletCard from "@/app/merchant/wallet/components/WalletCard";
 import ConvertButton from "@/app/merchant/wallet/components/ConvertButton";
 import WalletGuide from "@/app/merchant/wallet/components/WalletGuide";
-import TransactionList from "../dashboard/components/TransactionList";
+import {
+    fetchMerchantRecentTransactions,
+    MerchantTransaction
+} from "@/app/merchant/dashboard/api/merchant-recent-transactions";
+import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction";
 
 export default function MerchantWalletPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const refresh = searchParams.get("refresh");
 
-    const [storeName, setStoreName] = useState("");
-    const [accountNumber, setAccountNumber] = useState("");
-    const [tokenBalance, setTokenBalance] = useState<number | null>(null);
-    const [depositBalance, setDepositBalance] = useState<number | null>(null);
-    const [transactions, setTransactions] = useState([]);
+    const [recentMerchantTransactions, setRecentMerchantTransactions] = useState<MerchantTransaction[]>([])
     const [loading, setLoading] = useState(true);
+
+    const [walletInfo, setWalletInfo] = useState<{
+        storeName: string;
+        accountNumber: string;
+        tokenBalance: number;
+        depositBalance: number;
+    } | null>(null)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const summary = await fetchMerchantWalletInfo();
-                setStoreName(summary.storeName);
-                setAccountNumber(summary.accountNumber);
-                setTokenBalance(summary.tokenBalance);
-                setDepositBalance(summary.depositBalance);
+                fetchMerchantWalletInfo()
+                    .then((data) => {
+                        setWalletInfo(data);
+                    })
+                    .catch((err) => {
+                        console.error("지갑 정보 로딩 실패:", err);
+                    });
 
-                const txs = await fetchWalletTransactions();
-                setTransactions(txs);
+                fetchMerchantRecentTransactions(3)
+                    .then(setRecentMerchantTransactions)
+                    .catch((err) => {
+                        console.error("거래내역 조회 실패:", err);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
             } catch (error) {
                 console.error("API 요청 오류:", error);
                 alert("지갑 데이터를 불러오는 중 오류 발생");
@@ -46,46 +58,25 @@ export default function MerchantWalletPage() {
         fetchData();
     }, [refresh]);
 
-    const recentTransactions = transactions.slice(0, 3);
-
     return (
         <div className="min-h-screen bg-[#FAFAFA]">
             <header className="bg-white">
                 <Header title="전자지갑" />
-                {tokenBalance !== null && depositBalance !== null && (
+                {walletInfo && (
                     <WalletCard
-                        tokenBalance={tokenBalance}
-                        depositBalance={depositBalance}
-                        storeName={storeName}
-                        accountNumber={accountNumber}
+                        storeName={walletInfo?.storeName ?? ""}
+                        accountNumber={walletInfo?.accountNumber ?? ""}
+                        tokenBalance={walletInfo?.tokenBalance ?? 0}
+                        depositBalance={walletInfo.depositBalance ?? 0}
                     />
                 )}
                 <div className="flex-1 flex flex-col p-4">
                     <ConvertButton />
 
-                    <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
-                        {loading ? (
-                            <p className="text-sm text-gray-400">
-                                최근 거래를 불러오는 중...
-                            </p>
-                        ) : (
-                            <TransactionList
-                                label="최근 거래"
-                                transactions={recentTransactions}
-                                limit={3}
-                            />
-                        )}
-                        <div className="flex justify-center items-center h-8 mt-5">
-                            <Button
-                                variant="ghost"
-                                className="text-[#666666] flex items-center justify-center gap-1 text-base leading-none"
-                                onClick={() => router.push("/merchant/wallet/totaltransaction")}
-                            >
-                                전체 거래내역 보기
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
+                    <MerchantRecentTransaction
+                        transactions={recentMerchantTransactions}
+                        loading={loading}
+                    />
 
                     <WalletGuide />
                 </div>
