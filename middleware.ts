@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import parseJwt from "@/lib/parseJwt";
 
 // 보호 경로 패턴
 const protectedPaths = [

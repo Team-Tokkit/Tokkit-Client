@@ -1,4 +1,4 @@
-function parseJwt(token: string): { userId: number; role?: string; [key: string]: any } {
+export default function parseJwt(token: string): { userId: number; role?: string; [key: string]: any } {
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
