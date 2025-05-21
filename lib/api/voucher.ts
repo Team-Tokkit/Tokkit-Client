@@ -23,7 +23,7 @@ export async function getVouchers( params: VoucherSearchParams = {}): Promise<{
   size: number;
   number: number;
 }> {
-  const res = await API.get("/vouchers", { params });
+  const res = await API.get("/users/vouchers", { params });
   return res.data.result;
 }
 
@@ -31,7 +31,7 @@ export async function getVouchers( params: VoucherSearchParams = {}): Promise<{
 export async function purchaseVoucher( body: VoucherPurchaseRequest): Promise<VoucherPurchaseResponse> {
   const idempotencyKey = crypto.randomUUID();
   const res = await API.post<{ result: VoucherPurchaseResponse }>(
-    "/wallet/voucher/purchase",
+    "/users/wallet/voucher/purchase",
     body,
     {
       headers: {
@@ -45,7 +45,7 @@ export async function purchaseVoucher( body: VoucherPurchaseRequest): Promise<Vo
 // 바우처 상세 조회 (사용처 5개)
 export async function getVoucherDetails( id: number): Promise<VoucherDetail> {
   const res = await API.get<{ result: VoucherDetail }>(
-    `/vouchers/details/${id}`
+    `/users/vouchers/details/${id}`
   );
   return res.data.result;
 }
@@ -53,7 +53,7 @@ export async function getVoucherDetails( id: number): Promise<VoucherDetail> {
 
 // 바우처의 사용처 조회하기 (전체)
 export const getVoucherStores = async (voucherId: number, page = 0, size = 10) => {
-  const res = await API.get(`/vouchers/details/${voucherId}/stores`, {
+  const res = await API.get(`/users/vouchers/details/${voucherId}/stores`, {
     params: { page, size },
   })
   return res.data.result
@@ -74,7 +74,7 @@ export async function getMyVouchers(params: MyVoucherSearchParams = {}): Promise
   if (sort)          query.sort = sort
   if (direction)     query.direction = direction
 
-  const res = await API.get("/my-vouchers", { params: query })
+  const res = await API.get("/users/my-vouchers", { params: query })
   return res.data.result
 }
 
@@ -82,13 +82,13 @@ export async function getMyVouchers(params: MyVoucherSearchParams = {}): Promise
 // 내 바우처 상세 조회하기
 export async function getMyDetailVouchers(voucherOwnershipId: number | string) {
   const id = Number(voucherOwnershipId)
-  const res = await API.get(`/my-vouchers/details/${id}`)
+  const res = await API.get(`/users/my-vouchers/details/${id}`)
   return res.data.result
 }
 
 // 내 바우처 사용처 조회하기 (전체)
 export const getMyVoucherStores = async (voucherOwnershipId: number, page = 0, size = 10) => {
-  const res = await API.get(`/my-vouchers/details/${voucherOwnershipId}/stores`, {
+  const res = await API.get(`/users/my-vouchers/details/${voucherOwnershipId}/stores`, {
     params: { page, size},
   })
   return res.data.result
@@ -96,6 +96,6 @@ export const getMyVoucherStores = async (voucherOwnershipId: number, page = 0, s
 
 // 내 바우처 삭제하기
 export const deleteMyVoucher = async (voucherOwnershipId: number) => {
-  const res = await API.delete(`/my-vouchers/${voucherOwnershipId}`)
+  const res = await API.delete(`/users/my-vouchers/${voucherOwnershipId}`)
   return res.data.result
 }

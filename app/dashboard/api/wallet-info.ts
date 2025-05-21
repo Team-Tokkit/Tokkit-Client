@@ -5,7 +5,7 @@ import {getCookie} from "@/lib/cookies";
 const API_URL = getApiUrl();
 
 export async function fetchWalletInfo() {
-  const res = await fetchWithAuth(`${API_URL}/api/wallet/balance`, {
+  const res = await fetchWithAuth(`${API_URL}/api/users/wallet/balance`, {
     method: "GET",
     credentials: "include",
   });
