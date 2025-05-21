@@ -11,6 +11,7 @@ import ConfirmStep from "@/app/merchant/wallet/convert/components/ConfirmStep";
 import VerifySimplePassword from "@/app/merchant/wallet/convert/components/VerifySimplePassword";
 import ProcessingStep from "@/app/merchant/wallet/convert/components/ProcessingStep";
 import CompleteStep from "@/app/merchant/wallet/convert/components/CompleteStep";
+import LoadingOverlay from "@/components/common/LoadingOverlay";
 
 export default function ConvertPage() {
     const router = useRouter();
@@ -21,6 +22,7 @@ export default function ConvertPage() {
     const [amount, setAmount] = useState("");
     const [depositBalance, setDepositBalance] = useState(0);
     const [tokenBalance, setTokenBalance] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const title = "토큰 → 예금";
 
@@ -45,29 +47,32 @@ export default function ConvertPage() {
 
     const handlePasswordComplete = async (simplePassword: string) => {
         const amountNum = Number(amount);
+
+        setIsLoading(true);
+
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         try {
             await verifyMerchantSimplePassword(simplePassword);
-        } catch (err: any) {
-            alert(err.message);
-            setStep("password");
-            return;
-        }
-
-        setStep("processing");
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        try {
             await tokenToDeposit(amountNum, simplePassword);
             await fetchBalance();
-            setStep("complete");
+
+            setIsLoading(false);
+            setStep("processing");
+            setTimeout(() => setStep("complete"), 5000);
         } catch (err: any) {
             alert(err.message);
             setStep("amount");
+        } finally {
+            setIsLoading(false);
         }
     };
 
+
     return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+            {isLoading && <LoadingOverlay message="요청 처리 중입니다..." />}
+
             <Header title={title} />
             <div className="flex-1 min-h-[calc(90vh-60px)]">
                 {step === "amount" && (
@@ -114,7 +119,7 @@ export default function ConvertPage() {
                         amount={amount}
                         depositBalance={depositBalance}
                         tokenBalance={tokenBalance}
-                        onBackToWallet={() => router.push("/wallet")}
+                        onBackToWallet={() => router.push("/merchant/wallet")}
                     />
                 )}
             </div>

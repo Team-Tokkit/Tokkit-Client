@@ -14,7 +14,5 @@ export async function tokenToDeposit(amount: number, simplePassword: string) {
 
     if (!data.isSuccess) throw new Error(data.message || "전환 실패");
 
-    const result = data.result;
-
-    return result;
+    return data.result;
 }
