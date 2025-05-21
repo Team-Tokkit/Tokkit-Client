@@ -1,40 +1,18 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import type { Voucher } from "@/app/vouchers/types/voucher"
 
 interface Props {
   voucher: Voucher
-  onCardClick?: (voucher: Voucher) => void
-  onActionClick?: (voucher: Voucher) => void
-  actionLabel?: string
 }
 
 export default function VoucherCard({
   voucher,
-  onCardClick,
-  actionLabel = "구매하기",
 }: Props) {
   const router = useRouter()
-
-  const handleCardClick = () => {
-    if (onCardClick) {
-      onCardClick(voucher)
-    } else {
-      router.push(`/vouchers/details/${voucher.id}`)
-    }
-  }
-
-  const handleActionClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.push(`/vouchers/purchase?voucherId=${voucher.id}`);
-  };
-
-  const remainingCount = voucher.remainingCount;
-  const fillPercent = Math.round((100 * remainingCount) / voucher.totalCount);
 
 
   return (
@@ -42,7 +20,6 @@ export default function VoucherCard({
       className="bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer"
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      onClick={handleCardClick}
     >
       <div className="relative h-40">
         <Image
@@ -51,15 +28,6 @@ export default function VoucherCard({
           fill
           className="object-cover"
         />
-        <div className="absolute top-2 right-2 flex items-center space-x-2 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-          <span>남은 수량: {remainingCount}개</span>
-          <div className="w-16 bg-gray-300 rounded-full h-2">
-            <div
-              className="h-2 rounded-full bg-[#FFB020]"
-              style={{ width: `${fillPercent}%` }}
-            />
-          </div>
-        </div>
       </div>
 
       <div className="p-4">
@@ -85,14 +53,6 @@ export default function VoucherCard({
                 </p>
               )}
             </div>
-            <Button
-              size="sm"
-              className="rounded-lg bg-[#FFB020] hover:bg-[#FF9500] text-white"
-              onClick={handleActionClick}
-              disabled={remainingCount <= 0}
-            >
-              {remainingCount > 0 ? actionLabel : "품절"}
-            </Button>
           </div>
         </div>
       </div>

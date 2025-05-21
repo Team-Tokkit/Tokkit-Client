@@ -19,7 +19,7 @@ export default function Header({ title, backHref }: HeaderProps) {
   };
 
   return (
-    <header className="pr-4 py-4 flex items-center">
+    <header className="pr-4 py-4 ml-4 flex items-center">
       <Button variant="ghost" size="icon" className="mr-2" onClick={handleBack}>
         <ArrowLeft className="h-5 w-5 text-[#1A1A1A]" />
       </Button>
