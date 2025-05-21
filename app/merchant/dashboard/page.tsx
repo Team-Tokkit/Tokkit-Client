@@ -119,17 +119,17 @@ export default function MerchantDashboardPage() {
 
             {/* 메인 컨텐츠 */}
             <div className="flex-1 p-5 pb-8 space-y-5 -mt-6">
-                {/* 전자지갑 카드 - 사용자 대시보드와 동일한 디자인 */}
+                {/* 전자지갑 카드 */}
                 {walletInfo && (
                     <WalletCard
                         storeName={walletInfo.storeName}
                         accountNumber={walletInfo.accountNumber}
                         tokenBalance={walletInfo.tokenBalance}
-                        depositBalance={walletInfo.depositBalance} isLoading={false} onManageClick={function (): void {
-                        throw new Error("Function not implemented.")
-                    }} onConvertClick={function (): void {
-                        throw new Error("Function not implemented.")
-                    }}                    />
+                        depositBalance={walletInfo.depositBalance}
+                        isLoading={false}
+                        onClick={() => router.push("/merchant/wallet")}
+                        onConvertClick={() => router.push("/merchant/wallet/convert")}
+                    />
                 )}
 
                 {/* 매출 통계 카드 */}
