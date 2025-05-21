@@ -7,6 +7,7 @@ import Header from "@/components/common/Header";
 import TransactionCardContent from "@/components/common/TransactionCardContent";
 import { getApiUrl } from "@/lib/getApiUrl";
 import { getCookie } from "@/lib/cookies";
+import {fetchTransactionDetail} from "@/app/wallet/api/fetch-transactions-detail";
 
 const API_URL = getApiUrl();
 
@@ -33,33 +34,18 @@ export default function TransactionDetailPage() {
       return;
     }
 
-    const fetchTransactionDetail = async () => {
-      try {
-        const token = getCookie("accessToken");
-        const response = await fetch(
-          `${API_URL}/api/wallet/transactions/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-        if (data.isSuccess) {
-          setTransaction(data.result);
-        } else {
-          console.error("거래내역 조회 실패:", data.message ?? "서버 오류");
-        }
-      } catch (error) {
-        console.error("거래내역 조회 오류:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTransactionDetail();
+    fetchTransactionDetail(id)
+        .then((data) => {
+          setTransaction(data);
+        })
+        .catch((error) => {
+          console.error("거래내역 조회 오류:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
   }, [id]);
+
 
   if (loading) {
     return (

@@ -8,7 +8,7 @@ export async function fetchWalletBalance() {
     const token = getCookie("accessToken");
     if (!token) throw new Error("accessToken 없음");
 
-    const response = await fetchWithAuth(`${API_URL}/api/wallet/balance`, {
+    const response = await fetchWithAuth(`${API_URL}/api/users/wallet/balance`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -29,7 +29,7 @@ export async function fetchWalletTransactions() {
     const token = getCookie("accessToken");
     if (!token) throw new Error("accessToken 없음");
 
-    const res = await fetch(`${API_URL}/api/wallet/transactions`, {
+    const res = await fetch(`${API_URL}/api/users/wallet/transactions`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -75,8 +75,8 @@ export async function convertBalance(
 
     const endpoint =
         type === "deposit-to-token"
-            ? "/api/wallet/convert/deposit-to-token"
-            : "/api/wallet/convert/token-to-deposit";
+            ? "/api/users/wallet/convert/deposit-to-token"
+            : "/api/users/wallet/convert/token-to-deposit";
 
     const response = await fetchWithAuth(`${API_URL}${endpoint}`, {
         method: "POST",
