@@ -8,22 +8,12 @@ import Pagination from "@/components/common/Pagination";
 import { SkeletonList } from "@/app/notice/components/SkeletonList";
 import Header from "@/components/common/Header";
 
-import { getApiUrl } from "@/lib/getApiUrl";
-import { getCookie } from "@/lib/cookies";
-
-const API_URL = getApiUrl();
-
-interface Notice {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-}
+import { fetchNoticeList, Notice } from "@/app/notice/api/notice-api";
+import { filterLatestNoticeIds } from "@/lib/filterLatestNotices";
 
 export default function NoticesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const currentPage = parseInt(searchParams.get("page") ?? "1", 10) - 1;
 
   const [notices, setNotices] = useState<Notice[]>([]);
@@ -32,57 +22,25 @@ export default function NoticesPage() {
   const [latestNoticeIds, setLatestNoticeIds] = useState<number[]>([]);
 
   useEffect(() => {
-    async function fetchNotices() {
+    async function fetchData() {
       setLoading(true);
       try {
-        const token = getCookie("accessToken");
-        if (!token) {
-          console.error("토큰 없음 → 공지사항 요청 중단");
-          return;
-        }
+        const { content, totalPages } = await fetchNoticeList(currentPage);
+        setNotices(content);
+        setTotalPages(totalPages);
 
-        const response = await fetch(
-          `${API_URL}/api/notice?page=${currentPage}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: "include",
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          const content = data.result.content || [];
-          setNotices(content);
-          setTotalPages(data.result.totalPages || 1);
-
-          if (currentPage === 0) {
-            const now = new Date();
-            const latestIds = content
-              .filter((notice: any) => {
-                const createdAt = new Date(notice.createdAt);
-                const diffInDays =
-                  (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
-                return diffInDays <= 3;
-              })
-              .map((n: any) => n.id);
-
-            setLatestNoticeIds(latestIds);
-          }
-        } else {
-          console.error("Failed to fetch notices:", response.statusText);
+        if (currentPage === 0) {
+          const latestIds = filterLatestNoticeIds(content);
+          setLatestNoticeIds(latestIds);
         }
       } catch (error) {
-        console.error("Error fetching notices:", error);
+        console.error("공지사항 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchNotices();
+    fetchData();
   }, [currentPage]);
 
   if (loading) {
@@ -90,22 +48,22 @@ export default function NoticesPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4">
-      <div className="py-2">
-        <Header title="공지사항 🔔" backHref="/dashboard" />
+      <div className="container mx-auto max-w-4xl px-4">
+        <div className="py-2">
+          <Header title="공지사항 🔔" backHref="/dashboard" />
+        </div>
+
+        <NoticeList
+            notices={notices}
+            latestNoticeIds={latestNoticeIds}
+            currentPage={currentPage}
+        />
+
+        <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage + 1}
+            onPageChange={(page) => router.push(`/notice?page=${page}`)}
+        />
       </div>
-
-      <NoticeList
-        notices={notices}
-        latestNoticeIds={latestNoticeIds}
-        currentPage={currentPage}
-      />
-
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage + 1}
-        onPageChange={(page) => router.push(`/notice?page=${page}`)}
-      />
-    </div>
   );
 }

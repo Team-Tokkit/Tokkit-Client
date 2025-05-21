@@ -28,9 +28,6 @@ export default function WalletPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = getCookie("accessToken");
-        if (!token) throw new Error("토큰 없음");
-
         const summary = await fetchWalletInfo();
         setUserName(summary.name);
         setAccountNumber(summary.accountNumber);
