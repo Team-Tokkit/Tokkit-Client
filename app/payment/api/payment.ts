@@ -23,9 +23,9 @@ export interface StoreInfoResponse {
 
 // 가맹점 조회
 export async function fetchStoreInfo(storeId: number, merchantId: number) {
-    const url = new URL(`${API_URL}/api/store/info`);
-    url.searchParams.append("storeId", storeId);
-    url.searchParams.append("merchantId", merchantId);
+    const url = new URL(`${API_URL}/api/users/store/info`);
+    url.searchParams.append("storeId", storeId.toString());
+    url.searchParams.append("merchantId", merchantId.toString());
 
     const res = await fetchWithAuth(url.toString(), {
         method: "GET",
@@ -45,7 +45,7 @@ export async function fetchStoreInfo(storeId: number, merchantId: number) {
 
 // 결제 수단 조회
 export async function getPaymentOptions(storeId: number): Promise<PaymentOptionResponse[]> {
-    const res = await fetchWithAuth(`${API_URL}/api/wallet/payment-options?storeId=${storeId}`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/wallet/payment-options?storeId=${storeId}`, {
         method: "GET",
     });
 
@@ -77,7 +77,7 @@ export async function submitTokenPayment(
     idempotencyKey: string,
 ) {
 
-    const res = await fetchWithAuth(`${API_URL}/api/wallet/pay-with-token`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/wallet/pay-with-token`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export async function submitVoucherPayment(
     simplePassword: string,
     idempotencyKey: string,
 ) {
-    const res = await fetchWithAuth(`${API_URL}/api/wallet/pay-with-voucher`, {
+    const res = await fetchWithAuth(`${API_URL}/api/users/wallet/pay-with-voucher`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

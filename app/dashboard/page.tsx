@@ -15,6 +15,13 @@ import QuickMenu from "@/app/dashboard/components/QuickMenu";
 import NoticesSection from "@/app/dashboard/components/NoticeSection";
 import FloatingPaymentButton from "@/app/dashboard/components/PaymentButton";
 import TransactionList from "@/components/common/TransactionList";
+import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-notice-preview"
+import type { Transaction as ApiTransaction } from "@/app/dashboard/api/fetch-recent-transactions";
+import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions";
+
+interface Transaction extends Omit<ApiTransaction, 'description'> {
+  description: string;
+}
 
 const API_URL = getApiUrl();
 
@@ -29,11 +36,11 @@ interface Notice {
 export default function DashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [recentTransactions, setRecentTransactions] = useState<ApiTransaction[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [notices, setNotices] = useState<Notice[]>([]);
   const [currentNotice, setCurrentNotice] = useState(0);
   const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [notices, setNotices] = useState<NoticePreview[]>([]);
   const [walletInfo, setWalletInfo] = useState<{
     name: string;
     accountNumber: string;
@@ -68,71 +75,24 @@ export default function DashboardPage() {
   }, [notices.length]);
 
   useEffect(() => {
-    const token = getCookie("accessToken");
-    if (!token) return;
-
-    fetch(`${API_URL}/api/notice?page=0`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const raw = data.result.content || [];
-        const now = new Date();
-
-        const formattedNotices = raw.map((n: any) => {
-          const createdAt = new Date(n.createdAt);
-          const diffInDays =
-            (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
-
-          return {
-            id: n.id,
-            title: n.title,
-            content: n.content,
-            createdAt: n.createdAt,
-            isNew: diffInDays <= 3,
-          };
+    fetchNoticePreview(3)
+        .then(setNotices)
+        .catch((err) => {
+          console.error("공지사항 로딩 실패:", err);
         });
-
-        setNotices(formattedNotices.slice(0, 3));
-      })
-      .catch((err) => {
-        console.error("공지사항 로딩 실패:", err);
-      });
   }, []);
 
   useEffect(() => {
-    const fetchRecentTransactions = async () => {
-      try {
-        const token = getCookie("accessToken");
-        if (!token) throw new Error("토큰 없음");
-
-        const response = await fetch(`${API_URL}/api/wallet/transactions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    fetchRecentTransactions(3)
+        .then(setRecentTransactions)
+        .catch((err) => {
+          console.error("거래내역 조회 실패:", err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-
-        const data = await response.json();
-        if (data?.isSuccess) {
-          setRecentTransactions(data.result.slice(0, 3));
-        } else {
-          console.error(
-            "거래내역 조회 실패:",
-            data.message || "알 수 없는 오류"
-          );
-        }
-      } catch (error) {
-        console.error("거래내역 조회 중 오류:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecentTransactions();
   }, []);
+
 
   const handleNoticeChange = (index: number) => {
     if (notices.length === 0) return;
@@ -169,7 +129,13 @@ export default function DashboardPage() {
           {loading ? (
             <p className="text-sm text-gray-400">최근 거래를 불러오는 중...</p>
           ) : (
-            <TransactionList transactions={recentTransactions} limit={3} />
+            <TransactionList
+              transactions={recentTransactions.map(t => ({
+                ...t,
+                description: t.description || ''
+              }))}
+              limit={3}
+            />
           )}
           <div className="flex justify-center items-center h-8 mt-5">
             <Button

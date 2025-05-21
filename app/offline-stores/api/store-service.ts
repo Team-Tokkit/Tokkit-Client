@@ -14,7 +14,7 @@ const API_URL = getApiUrl()
 export async function fetchNearbyStores(params: StoreSearchParams): Promise<Store[]> {
     try {
 
-        const response = await axios.get<any>(`${API_URL}/api/store/nearby`, {
+        const response = await axios.get<any>(`${API_URL}/api/users/store/nearby`, {
             params,
             headers: {
                 "Content-Type": "application/json",
