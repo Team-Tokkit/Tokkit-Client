@@ -27,6 +27,6 @@ export async function loginMerchant(data: MerchantLoginRequest): Promise<void> {
     const dataJson = await res.json()
     const { accessToken, refreshToken } = dataJson.result
 
-    setCookie("accessToken", accessToken, 3600)    // 1시간
+    setCookie("accessToken", accessToken)
     setCookie("refreshToken", refreshToken, 3600 * 24 * 7) // 7일
 }
