@@ -25,7 +25,7 @@ export default async function VoucherDetailPage({ params }: Props) {
   }
 
   // API 호출 (SSR) — 브라우저 쿠키의 토큰을 Authorization 헤더에 포함
-  const res = await fetch(`${getApiUrl()}/api/vouchers/details/${id}`, {
+  const res = await fetch(`${getApiUrl()}/api/users/vouchers/details/${id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
