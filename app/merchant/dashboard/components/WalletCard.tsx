@@ -10,7 +10,7 @@ interface WalletCardProps {
     tokenBalance: number
     depositBalance: number
     isLoading: boolean
-    onManageClick: () => void
+    onClick: () => void
     onConvertClick: () => void
 }
 
@@ -20,13 +20,13 @@ export function WalletCard({
                                tokenBalance,
                                depositBalance,
                                isLoading,
-                               onManageClick,
+                               onClick,
                                onConvertClick,
                            }: WalletCardProps) {
     return (
         <div
             className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#FFBA2D] to-[#FF9500] shadow-xl mx-2 cursor-pointer"
-            onClick={onManageClick}
+            onClick={onClick}
         >
             <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-5"></div>
             <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-xl"></div>

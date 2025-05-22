@@ -8,10 +8,7 @@ import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
 import Category from "@/app/wallet/components/totalhistory/Category";
 import Calendar from "@/app/wallet/components/totalhistory/Calendar";
 import TransactionList from "@/components/common/TransactionList";
-import { getApiUrl } from "@/lib/getApiUrl";
-import { getCookie } from "@/lib/cookies";
-
-const API_URL = getApiUrl();
+import {fetchTransactions, Transaction} from "@/app/wallet/api/fetch-transactions";
 
 interface WalletInfo {
   userId: number;
@@ -22,7 +19,7 @@ interface WalletInfo {
 
 export default function TransactionsPage() {
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,9 +47,6 @@ export default function TransactionsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = getCookie("accessToken");
-        if (!token) throw new Error("로그인 토큰 없음");
-
         const wallet = await fetchWalletInfo();
         setWalletInfo(wallet);
       } catch (error) {
@@ -64,38 +58,15 @@ export default function TransactionsPage() {
   }, []);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const token = getCookie("accessToken");
-        if (!token) throw new Error("토큰 없음");
-
-        const response = await fetch(`${API_URL}/api/wallet/transactions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    fetchTransactions()
+        .then(setTransactions)
+        .catch((error) => {
+          console.error("거래내역 조회 오류:", error);
+          alert("거래내역 불러오기 중 오류 발생");
+        })
+        .finally(() => {
+          setLoading(false);
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : null;
-
-        if (data?.isSuccess) {
-          setTransactions(data.result);
-        } else {
-          alert("거래내역 조회 실패: " + (data?.message || "알 수 없는 오류"));
-        }
-      } catch (error) {
-        console.error("거래내역 조회 오류:", error);
-        alert("거래내역 불러오기 중 오류 발생");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTransactions();
   }, []);
 
   const filteredTransactions = transactions.filter((tx: any) => {
