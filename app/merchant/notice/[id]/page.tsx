@@ -67,7 +67,7 @@ export default function NoticeDetailPage() {
               </>
           ) : (
               <div className="text-center text-gray-500">
-                공지사항을 찾을 수 없습니다.
+                공지사항을 찾을 수 없습니다
               </div>
           )}
         </div>
