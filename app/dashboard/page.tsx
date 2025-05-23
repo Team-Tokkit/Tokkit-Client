@@ -19,8 +19,8 @@ import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-not
 import type { Transaction as ApiTransaction } from "@/app/dashboard/api/fetch-recent-transactions";
 import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions";
 
-interface Transaction extends Omit<ApiTransaction, 'description'> {
-  description: string;
+interface Transaction extends Omit<ApiTransaction, 'displayDescription'> {
+  displayDescription: string;
 }
 
 const API_URL = getApiUrl();
@@ -132,7 +132,7 @@ export default function DashboardPage() {
             <TransactionList
               transactions={recentTransactions.map(t => ({
                 ...t,
-                description: t.description || ''
+                displayDescription: t.displayDescription || ''
               }))}
               limit={3}
             />

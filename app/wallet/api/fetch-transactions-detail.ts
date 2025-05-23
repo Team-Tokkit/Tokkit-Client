@@ -7,7 +7,7 @@ export interface TransactionDetail {
     id: number;
     type: "PAYMENT" | "CHARGE" | "CONVERT";
     amount: number;
-    description: string;
+    displayDescription: string;
     createdAt: string;
 }
 

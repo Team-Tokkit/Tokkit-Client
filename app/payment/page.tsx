@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { myVouchers, Voucher } from "@/data/payment/payment";
-import { mockStoreQR, StoreQRInfo } from "@/data/payment/storeqr";
 import confetti from "canvas-confetti";
 
 import Header from "@/components/common/Header";
@@ -16,14 +15,13 @@ import PaymentCarousel from "@/app/payment/components/PaymentCarousel";
 import MerchantInfoCard from "@/app/payment/components/MerchantInfoCard";
 import AmountBox from "@/app/payment/components/AmountBox";
 import ResultBox from "@/app/payment/components/ResultBox";
-import { getCookie } from "@/lib/cookies";
-import { parseJwt } from "@/lib/parseJwt";
 import {
   verifySimplePassword,
   submitVoucherPayment,
   submitTokenPayment, getPaymentOptions, fetchStoreInfo, StoreInfoResponse,
 } from "@/app/payment/api/payment";
 import VerifySimplePassword from "@/app/payment/components/VerifySimplePassword";
+import LoadingOverlay from "@/components/common/LoadingOverlay";
 
 
 export default function PaymentPage() {
@@ -47,7 +45,6 @@ export default function PaymentPage() {
   const [simplePassword, setSimplePassword] = useState("");
 
   const [isProcessing, setIsProcessing] = useState(false); // 중복 방지
-  const [idempotencyKey] = useState(() => crypto.randomUUID()); // 멱등키 고정
 
 
   useEffect(() => {
@@ -201,37 +198,44 @@ export default function PaymentPage() {
     if (isProcessing) return;
     setIsProcessing(true);
 
-    const amount = Number(paymentAmount);
+    const idempotencyKey = crypto.randomUUID();
 
+    const amount = Number(paymentAmount);
     const selectedVoucher = usableVouchers[carouselIndex];
     const isToken = selectedVoucher.id === "token";
 
-    const response = isToken
-        ? await submitTokenPayment(
-            Number(merchantId),
-            amount,
-            verifiedPassword,
-            idempotencyKey,
-        )
-        : await submitVoucherPayment(
-            Number(selectedVoucher.id),
-            Number(merchantId),
-            Number(storeId),
-            amount,
-            verifiedPassword,
-            idempotencyKey,
-        );
+    try {
+      const response = isToken
+          ? await submitTokenPayment(
+              Number(merchantId),
+              amount,
+              verifiedPassword,
+              idempotencyKey
+          )
+          : await submitVoucherPayment(
+              Number(selectedVoucher.id),
+              Number(merchantId),
+              Number(storeId),
+              amount,
+              verifiedPassword,
+              idempotencyKey
+          );
 
-    if (!response.isSuccess) {
-      console.error("결제에 실패했습니다.", response);
-      alert(response.message || "결제에 실패했습니다.");
+      if (!response.isSuccess) {
+        console.error("결제에 실패했습니다.", response);
+        alert(response.message || "결제에 실패했습니다.");
+        return;
+      }
+
+      setPaymentStep("result");
+    } catch (e) {
+      console.error("결제 요청 오류:", e);
+      alert("결제 처리 중 오류가 발생했습니다.");
+    } finally {
       setIsProcessing(false);
-      return;
     }
-
-    setPaymentStep("result");
-    setIsProcessing(false);
   };
+
 
   const handlePaymentComplete = () => {
     router.push("/dashboard");
@@ -242,6 +246,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+      {isProcessing && <LoadingOverlay message="결제 요청 중입니다..." />}
       <Header title="결제하기" />
       <div className="flex-1 min-h-[calc(90vh-60px)] overflow-x-hidden overflow-y-visible p-4">
         <AnimatePresence mode="wait">
@@ -334,6 +339,7 @@ export default function PaymentPage() {
                   className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4"
               >
                 <VerifySimplePassword
+                    disabled={isProcessing}
                     onVerified={(password) => {
                       handlePayment(password);
                     }}

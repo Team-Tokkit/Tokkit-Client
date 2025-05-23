@@ -90,6 +90,8 @@ export async function submitTokenPayment(
         }),
     });
 
+    console.log(idempotencyKey, res.status, res.statusText, res.headers.get("Idempotency-Key"))
+
     return await res.json();
 }
 
@@ -116,6 +118,8 @@ export async function submitVoucherPayment(
             amount,
         }),
     });
+
+    console.log(idempotencyKey, res.status, res.statusText, res.headers.get("Idempotency-Key"))
 
     return await res.json();
 }
