@@ -17,8 +17,6 @@ export default function MerchantMyPage() {
         phoneNumber: "",
         businessNumber: "",
         roadAddress: "",
-        sido: "",
-        sigungu: "",
         category: "",
     })
 

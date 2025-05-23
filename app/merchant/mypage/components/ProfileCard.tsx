@@ -11,8 +11,6 @@ interface Props {
         phoneNumber: string;
         businessNumber: string;
         roadAddress: string;
-        sido: string;
-        sigungu: string;
         category: string;
     }
 }
@@ -26,7 +24,7 @@ export default function ProfileCard({ merchant }: Props) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            onClick={() => router.push("/merchant/mypage/edit")}
+            onClick={() => router.push("/merchant/mypage/info")}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
         >

@@ -11,9 +11,7 @@ export interface MerchantInfo {
     phoneNumber: string;
     businessNumber: string;
     roadAddress: string;
-    sido: string;
-    sigungu: string;
-    category: string;
+    storeCategory: string;
 }
 
 export async function getMerchantInfo() {

@@ -1,28 +1,22 @@
-import { CreditCard, Bell, FileText, Store, BarChart3, Lock } from "lucide-react"
+import {CreditCard, Bell, FileText, Store, Lock, LockKeyholeOpen} from "lucide-react"
 import { useRouter } from "next/navigation"
+import {store} from "next/dist/build/output/store";
 
 export const useMenuItems = () => {
     const router = useRouter()
 
     return [
         {
-            title: "가맹점 정보",
-            icon: Store,
-            action: () => router.push("/merchant/info"),
-            color: "from-[#4F6EF7]/10 to-[#3A5BD9]/10",
-            iconColor: "text-[#4F6EF7]",
-        },
-        {
             title: "비밀번호 변경",
-            icon: BarChart3,
-            action: () => router.push("/merchant/restet-password"),
+            icon: LockKeyholeOpen,
+            action: () => router.push("/merchant/reset-password"),
             color: "from-[#10B981]/10 to-[#059669]/10",
             iconColor: "text-[#10B981]",
         },
         {
             title: "간편 비밀번호 변경",
             icon: Lock,
-            action: () => router.push("/merchant/reset-pin"),
+            action: () => router.push("/merchant/reset-simple-password"),
             color: "from-[#F43F5E]/10 to-[#D1365A]/10",
             iconColor: "text-[#F43F5E]",
         },

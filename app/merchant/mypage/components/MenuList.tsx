@@ -35,7 +35,6 @@ export default function MenuList() {
                                 <span>{item.title}</span>
                             </div>
                             <div className="flex items-center">
-                                {item.badge && <span className="mr-2 text-sm font-medium">{item.badge}</span>}
                                 <ChevronRight className="h-5 w-5 text-gray-400" />
                             </div>
                         </button>
