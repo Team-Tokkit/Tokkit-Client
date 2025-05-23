@@ -24,8 +24,6 @@ interface EmailChangeDialogProps {
     verificationCode: string;
     setVerificationCode: (value: string) => void;
     isVerificationSent: boolean;
-    accessToken: string;
-    setUser: (user: any) => void;
     handleSendVerification: () => void;
     handleVerifyEmail: () => void;
 }
@@ -38,8 +36,6 @@ export default function EmailChangeDialog({
                                               verificationCode,
                                               setVerificationCode,
                                               isVerificationSent,
-                                              accessToken,
-                                              setUser,
                                               handleSendVerification,
                                               handleVerifyEmail,
                                           }: EmailChangeDialogProps) {

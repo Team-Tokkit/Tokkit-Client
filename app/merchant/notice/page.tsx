@@ -50,7 +50,7 @@ export default function NoticesPage() {
     return (
         <div className="container mx-auto max-w-4xl px-4">
             <div className="py-2">
-                <Header title="공지사항 🔔" backHref="/dashboard" />
+                <Header title="공지사항 🔔" backHref="/merchant/dashboard" />
             </div>
 
             <NoticeList

@@ -16,8 +16,8 @@ export default function ProfileCardHeader({ name }: ProfileCardHeaderProps) {
                     안녕하세요 {name}님!⚡️
                 </div>
                 <span className="text-sm text-gray-600">
-          회원 정보를 확인하고 필요한 내용을 수정해주세요.
-        </span>
+                    회원 정보를 확인하고 필요한 내용을 수정해주세요.
+                </span>
             </CardTitle>
         </CardHeader>
     )

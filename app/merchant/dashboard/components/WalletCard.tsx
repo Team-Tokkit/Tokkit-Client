@@ -45,12 +45,12 @@ export function WalletCard({
 
                 <div className="mt-6 flex items-end justify-between">
                     <div>
-                        <p className="text-xs text-white/80 font-light tracking-wide">총 잔액</p>
+                        <p className="text-xs text-white/80 font-light tracking-wide">토큰 잔액</p>
                         <div className="flex items-baseline mt-1">
                             <p className="text-3xl font-bold text-white tracking-tight">
-                                {isLoading ? "-" : (tokenBalance + depositBalance).toLocaleString()}
+                                {isLoading ? "-" : tokenBalance.toLocaleString()}
                             </p>
-                            <p className="ml-1 text-lg text-white/90 tracking-wide">원</p>
+                            <p className="ml-1 text-lg text-white/90 tracking-wide"> TKT</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
