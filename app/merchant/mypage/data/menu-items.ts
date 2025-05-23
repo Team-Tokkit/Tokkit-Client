@@ -9,7 +9,7 @@ export const useMenuItems = () => {
         {
             title: "비밀번호 변경",
             icon: LockKeyholeOpen,
-            action: () => router.push("/merchant/reset-password"),
+            action: () => router.push("/merchant/mypage/change-password"),
             color: "from-[#10B981]/10 to-[#059669]/10",
             iconColor: "text-[#10B981]",
         },
