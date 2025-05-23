@@ -16,7 +16,7 @@ export const useMenuItems = () => {
         {
             title: "간편 비밀번호 변경",
             icon: Lock,
-            action: () => router.push("/merchant/reset-simple-password"),
+            action: () => router.push("/merchant/mypage/change-simple-password"),
             color: "from-[#F43F5E]/10 to-[#D1365A]/10",
             iconColor: "text-[#F43F5E]",
         },
