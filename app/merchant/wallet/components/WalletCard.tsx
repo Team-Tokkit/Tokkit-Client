@@ -51,7 +51,7 @@ export default function WalletCard({
             </div>
             <div className="text-2xl font-bold text-white">
               {tokenBalance.toLocaleString()}
-              <span className="text-base font-normal ml-1">원</span>
+              <span className="text-base font-normal ml-1">TKT</span>
             </div>
           </div>
 

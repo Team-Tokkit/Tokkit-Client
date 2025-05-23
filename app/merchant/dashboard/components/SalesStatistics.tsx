@@ -41,7 +41,7 @@ export function SalesStatistics({ dailyIncome, isLoading }: SalesStatisticsProps
                                 <div className="flex flex-col justify-center">
                                     <p className="text-sm text-[#666666] mb-1">{item.label}</p>
                                     <p className="text-xl font-bold text-[#1A1A1A]">
-                                        {isLoading ? "-" : item.value.toLocaleString()}원
+                                        {isLoading ? "-" : item.value.toLocaleString()} TKT
                                     </p>
                                 </div>
                             </CardContent>

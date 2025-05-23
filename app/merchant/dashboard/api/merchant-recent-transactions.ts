@@ -46,5 +46,7 @@ export default async function fetchMerchantTransactions(): Promise<MerchantTrans
 
     if (!data.isSuccess) throw new Error(data.message || "응답 실패");
 
+    console.log(data.result)
+
     return data.result;
 }

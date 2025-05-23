@@ -53,7 +53,7 @@ export default function TransactionCardContent({
             </div>
             <div className={`font-bold ${colorClass}`}>
                 {amount >= 0 ? "+" : ""}
-                {amount.toLocaleString()}원
+                {amount.toLocaleString()} TKT
             </div>
         </div>
     );
