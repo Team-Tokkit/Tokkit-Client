@@ -8,7 +8,7 @@ export interface MerchantTransaction {
     type: string;
     amount: number;
     createdAt: string;
-    description: string;
+    displayDescription: string;
 }
 
 export async function fetchMerchantRecentTransactions(limit: number = 3): Promise<MerchantTransaction[]> {
@@ -29,7 +29,7 @@ export async function fetchMerchantRecentTransactions(limit: number = 3): Promis
             type: item.type,
             amount: item.amount,
             createdAt: item.createdAt,
-            description: item.description,
+            displayDescription: item.displayDescription,
         })
     )
 }

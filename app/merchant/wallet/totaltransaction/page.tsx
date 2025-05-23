@@ -20,7 +20,7 @@ interface MerchantTransaction {
   id: number;
   type: string;
   amount: number;
-  description: string;
+  displayDescription: string;
   createdAt: string;
 }
 
@@ -77,10 +77,10 @@ export default function TransactionsPage() {
   }, []);
 
     const filteredTransactions = merchantTransactions.filter((tx) => {
-          if (!tx.description) return false;
+          if (!tx.displayDescription) return false;
     if (
       searchTerm &&
-      !tx.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      !tx.displayDescription?.toLowerCase().includes(searchTerm.toLowerCase())
     ) {
       return false;
     }

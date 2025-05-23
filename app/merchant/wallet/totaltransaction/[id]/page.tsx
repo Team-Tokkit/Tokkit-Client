@@ -15,7 +15,7 @@ interface TransactionDetail {
   id: number;
   type: string;
   amount: number;
-  description: string;
+  displayDescription: string;
   createdAt: string;
 }
 
@@ -102,7 +102,7 @@ export default function TransactionDetailPage() {
         transition={{ duration: 0.3 }}
       >
         <TransactionCardContent
-          description={transaction.description}
+            displayDescription={transaction.displayDescription}
           amount={transaction.amount}
           createdAt={transaction.createdAt}
         />
@@ -123,7 +123,7 @@ export default function TransactionDetailPage() {
 
         <div className="flex justify-between py-4">
           <div className="text-gray-500">거래 설명</div>
-          <div className="font-medium">{transaction.description}</div>
+          <div className="font-medium">{transaction.displayDescription}</div>
         </div>
       </motion.div>
 

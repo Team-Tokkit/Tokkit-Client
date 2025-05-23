@@ -8,7 +8,7 @@ export interface Transaction {
     type: "PAYMENT" | "CHARGE" | "CONVERT";
     amount: number;
     createdAt: string;
-    description: string;
+    displayDescription: string;
 }
 
 export async function fetchTransactions(): Promise<Transaction[]> {
@@ -23,6 +23,8 @@ export async function fetchTransactions(): Promise<Transaction[]> {
 
     const text = await res.text();
     const data = text ? JSON.parse(text) : null;
+
+    console.log(data);
 
     if (data?.isSuccess) {
         return data.result;

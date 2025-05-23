@@ -6,7 +6,7 @@ interface MerchantTransaction {
     id?: number;
     type: string;
     amount: number;
-    description: string;
+    displayDescription: string;
     createdAt: string;
 }
 
@@ -48,7 +48,7 @@ export default function TransactionList({
                         >
                             <CardContent className="p-4">
                                 <TransactionCardContent
-                                    description={tx.description}
+                                    displayDescription={tx.displayDescription}
                                     amount={tx.amount}
                                     createdAt={tx.createdAt}
                                 />
