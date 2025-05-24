@@ -14,7 +14,7 @@ export function PageHeader({ title, description, isAnimating = false }: PageHead
   return (
     <>
       <motion.h1
-        className="text-3xl font-bold text-center text-[#1A1A1A] mb-4"
+        className="text-xl font-semibold text-center text-gray-800 mb-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: isAnimating ? 0 : 1, y: isAnimating ? -20 : 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
@@ -24,7 +24,7 @@ export function PageHeader({ title, description, isAnimating = false }: PageHead
 
         {description && (
         <motion.p
-          className="text-center text-[#666666]"
+          className="text-sm text-center text-gray-600"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isAnimating ? 0 : 1, y: isAnimating ? -20 : 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}

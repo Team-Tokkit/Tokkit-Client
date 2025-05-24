@@ -11,7 +11,7 @@ export default function VouchersHeader() {
                 <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h1 className="text-xl font-bold">바우처 관리</h1>
+                <h1 className="text-xl font-bold">바우처 조회</h1>
             </div>
         </header>
     )

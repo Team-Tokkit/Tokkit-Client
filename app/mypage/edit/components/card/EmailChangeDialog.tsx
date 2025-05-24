@@ -26,8 +26,6 @@ interface EmailChangeDialogProps {
     verificationCode: string;
     setVerificationCode: (value: string) => void;
     isVerificationSent: boolean;
-    accessToken: string;
-    setUser: (user: any) => void;
     handleSendVerification: () => void;
     handleVerifyEmail: () => void;
 }
@@ -45,6 +43,7 @@ export default function EmailChangeDialog({
     handleSendVerification,
     handleVerifyEmail,
 }: EmailChangeDialogProps) {
+
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState("");

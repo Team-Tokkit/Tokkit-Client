@@ -5,20 +5,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VirtualKeypad from "@/components/virtual-keypad";
-import { verifySimplePassword } from "@/app/payment/api/payment";
-import { getCookie } from "@/lib/cookies";
-
-interface VirtualKeypadProps {
-    onComplete: (pinCode: string) => Promise<void>;
-    maxLength: number;
-    disabled?: boolean;
-}
 
 interface Props {
     onVerified: (password: string) => void;
+    disabled?: boolean;
 }
 
-export default function VerifySimplePassword({ onVerified }: Props) {
+export default function VerifySimplePassword({ onVerified, disabled = false }: Props) {
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -28,16 +21,10 @@ export default function VerifySimplePassword({ onVerified }: Props) {
         setError(null);
 
         try {
-            const success = await verifySimplePassword(pinCode);
-            if (success) {
-                setPassword(pinCode);
-                onVerified(pinCode); // 인증 성공 시 즉시 콜백
-                return;
-            } else {
-                setError("비밀번호가 일치하지 않습니다.");
-            }
+            setPassword(pinCode);
+            onVerified(pinCode);
         } catch (e) {
-            setError("비밀번호 검증에 실패했습니다.");
+            setError("처리 중 오류가 발생했습니다.");
         } finally {
             setIsLoading(false);
         }
@@ -62,6 +49,7 @@ export default function VerifySimplePassword({ onVerified }: Props) {
             <VirtualKeypad
                 onComplete={handleKeypadComplete}
                 maxLength={6}
+                disabled={isLoading || disabled}
             />
 
             <AnimatePresence>

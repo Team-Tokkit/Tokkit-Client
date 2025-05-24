@@ -65,7 +65,6 @@ export default function VoucherCard({
       <div className="p-4">
         <h3 className="text-lg font-bold text-[#1A1A1A] mb-1">{voucher.name}</h3>
         <p className="text-sm text-[#666666] mb-2">{voucher.description}</p>
-
         <div className="flex justify-between items-center">
           <div>
             <p className="text-xs text-[#666666]">유효기간</p>

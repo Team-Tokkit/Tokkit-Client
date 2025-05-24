@@ -8,7 +8,7 @@ export interface Transaction {
     type: string;
     amount: number;
     createdAt: string;
-    description?: string;
+    displayDescription?: string;
 }
 
 export async function fetchRecentTransactions(limit: number = 3): Promise<Transaction[]> {
@@ -21,6 +21,7 @@ export async function fetchRecentTransactions(limit: number = 3): Promise<Transa
     }
 
     const data = await res.json();
+    console.log(data);
 
     if (!data.isSuccess) {
         throw new Error(data.message || "응답 실패");
