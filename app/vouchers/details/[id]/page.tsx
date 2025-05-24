@@ -9,7 +9,6 @@ import { ExpandableSection } from "@/app/vouchers/components/ExpandableSection"
 import { StoreList } from "@/app/vouchers/components/StoreList"
 import { FileText, Building, CreditCard } from "lucide-react"
 import type { VoucherDetail } from "@/app/vouchers/types/voucher"
-import { VoucherDetailSkeleton } from "./loading/Skeleton"
 
 export default function VoucherDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -35,30 +34,8 @@ export default function VoucherDetailPage() {
     fetchData()
   }, [id])
 
-  if (!token) {
-    // 토큰이 없으면 404 처리
-    notFound()
-  }
-
-  // API 호출 (SSR) — 브라우저 쿠키의 토큰을 Authorization 헤더에 포함
-  const res = await fetch(`${getApiUrl()}/api/users/vouchers/details/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  })
-
-  if (!res.ok) {
-    console.error("바우처 조회 실패:", res.status, res.statusText)
-    notFound()
-  }
-
-  const { result: voucher }: { result: VoucherDetail } = await res.json()
-
-  if (loading) return <VoucherDetailSkeleton />
+  if (loading) return <div className="p-4">로딩 중...</div>
   if (error || !voucher) return <div className="p-4">바우처를 찾을 수 없습니다.</div>
-
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-5">
