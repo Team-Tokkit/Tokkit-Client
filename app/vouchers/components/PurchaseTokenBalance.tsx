@@ -5,12 +5,12 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 
 interface PurchaseTokenBalanceProps {
-  userName: string
+  name: string
   accountNumber: string
   tokenBalance: number
 }
 
-export default function PurchaseTokenBalance({ userName, accountNumber, tokenBalance }: PurchaseTokenBalanceProps) {
+export default function PurchaseTokenBalance({ name, accountNumber, tokenBalance }: PurchaseTokenBalanceProps) {
   const router = useRouter()
 
   return (
@@ -36,7 +36,7 @@ export default function PurchaseTokenBalance({ userName, accountNumber, tokenBal
         </div>
         <div>
           <p className="text-sm font-medium text-gray-800">
-            <span className="font-bold">{userName}</span> 님의 지갑
+            <span className="font-bold">{name}</span> 님의 지갑
           </p>
           <p className="text-xs text-gray-500">{accountNumber}</p>
         </div>
