@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   title: string;
   backHref?: string;
+  onBack?: () => void;
 }
 
-export default function Header({ title, backHref }: HeaderProps) {
-  const router = useRouter();
-
+export default function Header({ title, backHref, onBack }: HeaderProps) {
   const handleBack = () => {
-    if (backHref) {
-      router.push(backHref);
+    if (onBack) {
+      onBack();
+    } else if (backHref) {
+      window.location.href = backHref;
     } else {
       window.history.back();
     }

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
+import Header from "@/components/common/Header";
 
 import EmailVerificationBlock from "@/app/signup/wallet/contact/components/EmailVerificationBlock";
 import PasswordInputBlock from "@/app/signup/wallet/contact/components/PasswordInputBlock";
@@ -143,28 +144,17 @@ export default function WalletContactPage() {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#F9FAFB]"
+            className="h-screen bg-[#F8F9FA]"
             initial="initial"
             animate="animate"
             exit="exit"
             variants={{ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }}
             transition={{ duration: 0.3 }}
         >
-            <header className="p-4 flex items-center">
-                <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
-                    <ArrowLeft className="h-5 w-5 text-[#1A1A1A]" />
-                </Button>
-                <motion.h1
-                    className="text-xl font-bold text-[#1A1A1A]"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                >
-                    연락처 정보
-                </motion.h1>
-            </header>
+            <Header title="연락처 정보" onBack={() => router.back()} />
 
-            <div className="flex-1 flex flex-col items-center p-6">
+            {/* Main content */}
+            <div className="flex flex-col items-center justiyfy-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-8 flex flex-col items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                         <div className="w-16 h-16 rounded-full bg-[#FFB020]/20 flex items-center justify-center mb-4">

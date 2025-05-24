@@ -12,7 +12,7 @@ export default function WalletIntro() {
 
     return (
         <motion.div
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
+            className="h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -34,14 +34,14 @@ export default function WalletIntro() {
             </header>
 
             {/* Content */}
-            <div className="flex-1 flex flex-col p-6">
+            <div className="h-screen flex flex-col items-center justify-center p-6">
                 <motion.div
                     className="mb-8 flex justify-center"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
                 >
-                    <div className="relative w-16 h-16">
+                    <div className="relative w-20 h-20">
                         <Image src="/images/bunny-mascot.png" alt="Tokkit 마스코트" fill className="object-contain" />
                     </div>
                 </motion.div>

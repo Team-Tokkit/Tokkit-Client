@@ -34,7 +34,7 @@ const TermsCardList: FC<TermsCardListProps> = ({
             transition={{ delay: 0.3 }}
         >
             {/* 모두 동의하기 */}
-            <div className="flex items-center border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
+            <div className="flex items-center border-b border-gray-100 dark:border-gray-700 pb-4">
                 <motion.div
                     className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 cursor-pointer transition-colors duration-200 ${
                         allAgreed

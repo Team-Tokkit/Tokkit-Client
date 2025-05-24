@@ -57,7 +57,7 @@ export default function WalletVerifyPage() {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#F9FAFB]"
+            className="min-h-screen flex flex-col bg-[#F8F9FA]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -78,7 +78,7 @@ export default function WalletVerifyPage() {
                 </motion.h1>
             </header>
 
-            <div className="flex-1 flex flex-col items-center px-4 pb-10">
+            <div className="flex-1 flex flex-col items-center justify-center px-4 pb-10">
                 <div className="w-full max-w-md">
                     <div className="flex flex-col items-center text-center mt-4 mb-6">
                         <ShieldCheck className="w-16 h-16 text-[#FFD485] mb-3" />
