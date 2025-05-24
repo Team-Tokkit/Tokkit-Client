@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react"
 import { useRouter } from "next/navigation"
-import { Wallet, Ticket, CreditCard, Bell, FileText } from "lucide-react"
+import {Wallet, Ticket, CreditCard, Bell, FileText, LockKeyholeOpen} from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
 import MenuList from "./components/MenuList"
 import LogoutDialog from "./components/LogoutDialog"
@@ -39,6 +39,13 @@ export default function MyPage() {
             action: () => router.push("/my-vouchers"),
             color: "from-[#10B981]/10 to-[#059669]/10",
             iconColor: "text-[#10B981]",
+        },
+        {
+            title: "비밀번호 변경",
+            icon: LockKeyholeOpen,
+            action: () => router.push("/mypage/change-password"),
+            color: "from-[#3B82F6]/10 to-[#2563EB]/10",
+            iconColor: "text-[#3B82F6]",
         },
         {
             title: "간편 비밀번호 변경",
