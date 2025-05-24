@@ -1,7 +1,7 @@
 "use client";
 
 import QRCode from "@/components/qr-code";
-import { mockStoreQR } from "@/data/payment/storeqr";
+import { mockStoreQR } from "@/app/merchant/mypage/qr-code/data/storeqr";
 
 function createTransactionId(merchantId: string, storeId: string): string {
     return `m${merchantId}s${storeId}`;

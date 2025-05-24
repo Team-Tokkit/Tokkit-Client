@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { myVouchers, Voucher } from "@/data/payment/payment";
+import { myVouchers, Voucher } from "@/app/merchant/mypage/qr-code/data/payment";
 import confetti from "canvas-confetti";
 
 import Header from "@/components/common/Header";
