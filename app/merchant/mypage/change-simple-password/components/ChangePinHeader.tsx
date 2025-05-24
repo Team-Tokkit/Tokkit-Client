@@ -10,7 +10,7 @@ export default function ChangePinHeader() {
     return (
         <header className="bg-[#F9FAFB] p-5 pt-8 pb-6">
             <div className="flex items-center justify-between mb-4 px-2">
-                <Button variant="ghost" size="icon" onClick={() => router.push("/mypage")}>
+                <Button variant="ghost" size="icon" onClick={() => router.push("/merchant/mypage")}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h1 className="text-2xl font-bold">간편 비밀번호 변경</h1>

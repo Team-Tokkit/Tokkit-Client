@@ -120,17 +120,15 @@ export default function MerchantDashboardPage() {
             {/* 메인 컨텐츠 */}
             <div className="flex-1 p-5 pb-8 space-y-5 -mt-6">
                 {/* 전자지갑 카드 */}
-                {walletInfo && (
-                    <WalletCard
-                        storeName={walletInfo.storeName}
-                        accountNumber={walletInfo.accountNumber}
-                        tokenBalance={walletInfo.tokenBalance}
-                        depositBalance={walletInfo.depositBalance}
-                        isLoading={false}
-                        onClick={() => router.push("/merchant/wallet")}
-                        onConvertClick={() => router.push("/merchant/wallet/convert")}
-                    />
-                )}
+                <WalletCard
+                    storeName={walletInfo?.storeName ?? ''}
+                    accountNumber={walletInfo?.accountNumber ?? ''}
+                    tokenBalance={walletInfo?.tokenBalance ?? 0}
+                    depositBalance={walletInfo?.depositBalance ?? 0}
+                    isLoading={!walletInfo}
+                    onClick={() => router.push("/merchant/wallet")}
+                    onConvertClick={() => router.push("/merchant/wallet/convert")}
+                />
 
                 {/* 매출 통계 카드 */}
                 <SalesStatistics
