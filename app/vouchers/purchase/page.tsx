@@ -23,7 +23,7 @@ export default function PurchasePage() {
   const [isHovering, setIsHovering] = useState(false)
 
   const [walletInfo, setWalletInfo] = useState<{
-    userName: string
+    name: string
     accountNumber: string
     tokenBalance: number
   } | null>(null)
@@ -38,7 +38,7 @@ export default function PurchasePage() {
     fetchWalletInfo(token)
       .then((data) =>
         setWalletInfo({
-          userName: data.userName,
+          name: data.name,
           accountNumber: data.accountNumber,
           tokenBalance: data.tokenBalance,
         }),
@@ -146,10 +146,9 @@ const handlePay = () => {
             ) : (
               walletInfo && (
                 <PurchaseTokenBalance
-                  userName={walletInfo.userName}
+                  name={walletInfo.name}
                   accountNumber={walletInfo.accountNumber}
                   tokenBalance={walletInfo.tokenBalance}
-                  price={voucher.price}
                 />
               )
             )}

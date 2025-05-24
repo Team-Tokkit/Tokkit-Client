@@ -1,44 +1,42 @@
-import { notFound } from "next/navigation"
-import { cookies } from "next/headers"
+'use client'
+
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { getVoucherDetails } from "@/lib/api/voucher"
 import HeaderImage from "@/app/vouchers/components/HeaderImage"
 import { VoucherInfo } from "@/app/vouchers/components/VoucherInfo"
 import { ExpandableSection } from "@/app/vouchers/components/ExpandableSection"
 import { StoreList } from "@/app/vouchers/components/StoreList"
 import { FileText, Building, CreditCard } from "lucide-react"
 import type { VoucherDetail } from "@/app/vouchers/types/voucher"
-import { getApiUrl } from "@/lib/getApiUrl"
+import { VoucherDetailSkeleton } from "./loading/Skeleton"
 
-interface Props {
-  params: { id: string }
-}
+export default function VoucherDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const router = useRouter()
 
-export default async function VoucherDetailPage({ params }: Props) {
-  const id = Number(params.id)
+  const [voucher, setVoucher] = useState<VoucherDetail | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  // next/headers의 cookies()로 브라우저 쿠키에서 토큰 꺼내기
-  const cookieStore = cookies()
-  const token = cookieStore.get("accessToken")?.value
+  useEffect(() => {
+    if (!id) return
+    const fetchData = async () => {
+      try {
+        const data = await getVoucherDetails(Number(id))
+        setVoucher(data)
+      } catch (e) {
+        console.error("바우처 조회 실패", e)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [id])
 
-  if (!token) {
-    // 토큰이 없으면 404 처리
-    notFound()
-  }
-
-  // API 호출 (SSR) — 브라우저 쿠키의 토큰을 Authorization 헤더에 포함
-  const res = await fetch(`${getApiUrl()}/api/vouchers/details/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  })
-
-  if (!res.ok) {
-    console.error("바우처 조회 실패:", res.status, res.statusText)
-    notFound()
-  }
-
-  const { result: voucher }: { result: VoucherDetail } = await res.json()
+  if (loading) return <VoucherDetailSkeleton />
+  if (error || !voucher) return <div className="p-4">바우처를 찾을 수 없습니다.</div>
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-5">
