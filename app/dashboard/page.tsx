@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
-import { getApiUrl } from "@/lib/getApiUrl";
-import { getCookie } from "@/lib/cookies";
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -14,24 +12,11 @@ import WalletCard from "./components/WalletCard";
 import QuickMenu from "@/app/dashboard/components/QuickMenu";
 import NoticesSection from "@/app/dashboard/components/NoticeSection";
 import FloatingPaymentButton from "@/app/dashboard/components/PaymentButton";
-import TransactionList from "@/components/common/TransactionList";
+import TransactionList from "@/app/wallet/components/common/TransactionList";
 import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-notice-preview"
 import type { Transaction as ApiTransaction } from "@/app/dashboard/api/fetch-recent-transactions";
 import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions";
-
-interface Transaction extends Omit<ApiTransaction, 'displayDescription'> {
-  displayDescription: string;
-}
-
-const API_URL = getApiUrl();
-
-interface Notice {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  isNew: boolean;
-}
+import {Transaction} from "@/app/wallet/api/fetch-transactions";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -129,13 +114,15 @@ export default function DashboardPage() {
           {loading ? (
             <p className="text-sm text-gray-400">최근 거래를 불러오는 중...</p>
           ) : (
-            <TransactionList
-              transactions={recentTransactions.map(t => ({
-                ...t,
-                displayDescription: t.displayDescription || ''
-              }))}
-              limit={3}
-            />
+              <TransactionList
+                  transactions={
+                    recentTransactions.map(t => ({
+                      ...t,
+                      displayDescription: t.displayDescription || ""
+                    })) as Transaction[]
+                  }
+                  limit={3}
+              />
           )}
           <div className="flex justify-center items-center h-8 mt-5">
             <Button
