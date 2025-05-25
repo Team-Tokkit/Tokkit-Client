@@ -1,32 +1,25 @@
-"use client";
+"use client"
 
-import QRCode from "@/components/qr-code";
-import { mockStoreQR } from "@/app/merchant/mypage/qr-code/data/storeqr";
+import QRPageHeader from "@/app/merchant/mypage/qr-code/components/QrHeader"
+import MerchantInfoCard from "@/app/merchant/mypage/qr-code/components/MerchantInfoCard"
+import QRCodeSection from "@/app/merchant/mypage/qr-code/components/QRCodeSection"
+import PaymentGuideSection from "@/app/merchant/mypage/qr-code/components/PaymentGuideSection"
+import { mockStoreQR } from "./data/storeqr"
 
-function createTransactionId(merchantId: string, storeId: string): string {
-    return `m${merchantId}s${storeId}`;
-}
+export default function MerchantQRCodePage() {
+    const storeId = "1"
+    const storeData = mockStoreQR[storeId]
 
-export default function QRTestPage() {
-    const entries = Object.entries(mockStoreQR);
+    const txId = `m${storeData.merchantId}s${storeData.storeId}`
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-xl font-bold mb-4">테스트용 QR 코드 목록</h1>
-            {entries.map(([storeId, store]) => {
-                const txId = createTransactionId(store.merchantId, store.storeId);
-
-                return (
-                    <div
-                        key={storeId}
-                        className="p-4 bg-white rounded-xl shadow-md w-fit flex flex-col items-center gap-2"
-                    >
-                        <h3 className="font-bold text-base">{store.storeId}</h3>
-                        <QRCode value={txId} size={150} />
-                        <p className="text-sm text-gray-500 mt-2">거래번호: <code>{txId}</code></p>
-                    </div>
-                );
-            })}
+        <div className="h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 flex flex-col max-w-md mx-auto">
+            <QRPageHeader />
+            <div className="flex-1 p-3 pb-6 flex flex-col min-h-0">
+                <MerchantInfoCard name={storeData.storeName} address={storeData.address} />
+                <QRCodeSection txId={txId} />
+                <PaymentGuideSection paymentCode={txId.slice(-6)} /> {/* 가짜 결제코드 표현 */}
+            </div>
         </div>
-    );
+    )
 }
