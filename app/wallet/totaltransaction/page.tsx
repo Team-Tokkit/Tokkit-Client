@@ -7,7 +7,7 @@ import Header from "@/components/common/Header";
 import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
 import Category from "@/app/wallet/components/totalhistory/Category";
 import Calendar from "@/app/wallet/components/totalhistory/Calendar";
-import TransactionList from "@/components/common/TransactionList";
+import TransactionList from "@/app/wallet/components/common/TransactionList";
 import {fetchTransactions, Transaction} from "@/app/wallet/api/fetch-transactions";
 
 interface WalletInfo {

@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Header from "@/components/common/Header";
 import WalletGuide from "@/app/wallet/components/common/WalletGuide";
-import TransactionList from "@/components/common/TransactionList";
+import TransactionList from "@/app/wallet/components/common/TransactionList";
 import ConvertButton from "@/app/wallet/components/common/ConvertButton";
 import WalletCard from "@/app/wallet/components/common/WalletCard";
 import { fetchWalletTransactions } from "@/app/wallet/api/wallet";
-import { getCookie } from "@/lib/cookies";
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
 
 export default function WalletPage() {
