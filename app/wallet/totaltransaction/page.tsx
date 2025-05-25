@@ -122,7 +122,7 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+      <div className=" px-4 py-5 rounded-xl">
         <TransactionList transactions={filteredTransactions} />
       </div>
     </div>
