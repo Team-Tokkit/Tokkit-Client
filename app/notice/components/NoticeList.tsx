@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import NoticeItem from "@/app/notice/components/NoticeItem";
+import NoticeItem from "@/app/notice/components/NoticeItem"
 
 interface Notice {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
+  id: number
+  title: string
+  content: string
+  createdAt: string
 }
 
 export default function NoticeList({
@@ -14,13 +14,13 @@ export default function NoticeList({
   latestNoticeIds = [],
   currentPage,
 }: {
-  notices: Notice[];
-  latestNoticeIds?: number[];
-  currentPage: number;
+  notices: Notice[]
+  latestNoticeIds?: number[]
+  currentPage: number
 }) {
   return (
-    <div className="bg-gray-50 rounded-xl shadow-sm min-h-[400px] p-2">
-      <div>
+    <div className="bg-gray-50 rounded-xl shadow-sm flex-1 p-2 overflow-y-auto">
+      <div className="space-y-2">
         {notices.map((notice) => (
           <NoticeItem
             key={notice.id}
@@ -31,5 +31,5 @@ export default function NoticeList({
         ))}
       </div>
     </div>
-  );
+  )
 }
