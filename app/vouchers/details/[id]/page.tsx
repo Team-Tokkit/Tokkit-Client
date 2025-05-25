@@ -9,6 +9,7 @@ import { ExpandableSection } from "@/app/vouchers/components/ExpandableSection"
 import { StoreList } from "@/app/vouchers/components/StoreList"
 import { FileText, Building, CreditCard } from "lucide-react"
 import type { VoucherDetail } from "@/app/vouchers/types/voucher"
+import {VoucherDetailSkeleton} from "@/app/vouchers/details/[id]/loading/Skeleton"
 
 export default function VoucherDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -34,7 +35,7 @@ export default function VoucherDetailPage() {
     fetchData()
   }, [id])
 
-  if (loading) return <div className="p-4">로딩 중...</div>
+  if (loading) return <VoucherDetailSkeleton/>
   if (error || !voucher) return <div className="p-4">바우처를 찾을 수 없습니다.</div>
 
   return (
@@ -48,6 +49,7 @@ export default function VoucherDetailPage() {
         <VoucherInfo
           amount={`${voucher.price.toLocaleString()}원`}
           validDate={voucher.validDate}
+          voucherId = {voucher.id}
         />
         <ExpandableSection
           title="상세 설명"
