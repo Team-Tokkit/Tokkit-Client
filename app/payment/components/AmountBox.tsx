@@ -1,5 +1,5 @@
 import AmountInput from "@/components/common/AmountInput";
-import { Voucher } from "@/data/payment/payment";
+import { Voucher } from "@/app/merchant/mypage/qr-code/data/payment";
 
 interface Props {
   amount: string;

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Voucher } from "@/data/payment/payment";
+import { Voucher } from "@/app/merchant/mypage/qr-code/data/payment";
 
 interface PaymentCarouselProps {
     vouchers: Voucher[];

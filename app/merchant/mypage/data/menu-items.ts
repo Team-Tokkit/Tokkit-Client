@@ -1,4 +1,4 @@
-import {CreditCard, Bell, FileText, Store, Lock, LockKeyholeOpen} from "lucide-react"
+import {CreditCard, Bell, FileText, Store, Lock, LockKeyholeOpen, ScanQrCodeIcon} from "lucide-react"
 import { useRouter } from "next/navigation"
 import {store} from "next/dist/build/output/store";
 
@@ -6,6 +6,13 @@ export const useMenuItems = () => {
     const router = useRouter()
 
     return [
+        {
+            title: "QR코드 확인하기",
+            icon: ScanQrCodeIcon,
+            action: () => router.push("/merchant/mypage/qr-code"),
+            color: "from-[#FFB020]/20 to-[#FFB020]/20",
+            iconColor: "text-[#FFB020]",
+        },
         {
             title: "비밀번호 변경",
             icon: LockKeyholeOpen,
