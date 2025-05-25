@@ -47,17 +47,13 @@ export default function ConvertPage() {
 
     const handlePasswordComplete = async (simplePassword: string) => {
         const amountNum = Number(amount);
-
         setIsLoading(true);
-
         await new Promise(resolve => setTimeout(resolve, 0));
 
         try {
-            await verifyMerchantSimplePassword(simplePassword);
             await tokenToDeposit(amountNum, simplePassword);
             await fetchBalance();
 
-            setIsLoading(false);
             setStep("processing");
             setTimeout(() => setStep("complete"), 5000);
         } catch (err: any) {
