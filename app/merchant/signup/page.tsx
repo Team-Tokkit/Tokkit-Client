@@ -111,7 +111,7 @@ export default function MerchantSignupPage() {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col bg-white dark:bg-gray-900"
+            className="h-screen flex flex-col bg-white dark:bg-gray-900"
             initial="initial"
             animate="animate"
             exit="exit"
@@ -119,7 +119,7 @@ export default function MerchantSignupPage() {
             transition={{ duration: 0.3 }}
         >
             <MerchantTermsHeader />
-            <div className="flex-1 flex flex-col items-center p-6">
+            <div className="items-center  justify-center flex-1 flex flex-col items-center p-6">
                 <div className="w-full max-w-md">
                     <TermsAlert show={showAlert} />
                     <TermsAgreementCard

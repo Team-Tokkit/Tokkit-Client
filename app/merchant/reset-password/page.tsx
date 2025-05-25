@@ -10,8 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
-import { BackButton } from "@/components/back-button"
-import { PageHeader } from "@/components/page-header"
+import Header from "@/components/common/Header"
 import Image from "next/image"
 import ResetPasswordForm from "@/app/merchant/reset-password/components/ResetPasswordForm";
 import ResetPasswordComplete from "@/app/merchant/reset-password/components/ResetPasswordComplete";
@@ -84,10 +83,7 @@ export default function MerchantResetPasswordPage() {
     return (
         <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col">
             {/* 헤더 */}
-            <header className="p-4 flex items-center">
-                <BackButton href="/merchant/login" />
-                <PageHeader title="비밀번호 찾기" />
-            </header>
+            <Header title="비밀번호 찾기"/>
 
             {/* 컨텐츠 */}
             <div className="flex-1 flex flex-col items-center p-6">

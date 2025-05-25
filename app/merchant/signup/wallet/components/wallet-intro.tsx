@@ -33,7 +33,7 @@ export default function WalletIntro() {
             </header>
 
             {/* Content */}
-            <div className="flex-1 flex flex-col p-6">
+            <div className="flex-1 flex itemts-center justify-center flex-col p-6">
                 <motion.div
                     className="mb-8 flex justify-center"
                     initial={{ scale: 0 }}
