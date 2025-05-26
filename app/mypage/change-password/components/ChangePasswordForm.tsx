@@ -90,7 +90,7 @@ export default function ChangePasswordForm({ onSuccess }: { onSuccess: () => voi
 
 
     return (
-        <Card className="shadow-lg border-0 overflow-hidden">
+        <Card className="items-center justify-center shadow-lg border-0 overflow-hidden ">
             <ChangePasswordCardHeader />
             <CardContent className="p-6">
                 <div className="flex justify-center mb-6">
