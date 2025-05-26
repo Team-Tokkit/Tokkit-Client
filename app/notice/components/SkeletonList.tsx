@@ -8,8 +8,8 @@ export function SkeletonList() {
       </div>
       <div className="bg-white border rounded-xl shadow-sm min-h-[700px] flex flex-col justify-between">
         <div className="p-4 space-y-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div key={index} className="rounded-md bg-gray-200 h-12 animate-pulse" />
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className="rounded-md bg-gray-200 h-20 animate-pulse" />
           ))}
         </div>
       </div>
