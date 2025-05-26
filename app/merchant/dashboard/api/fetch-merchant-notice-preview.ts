@@ -13,7 +13,7 @@ export interface NoticePreview {
 }
 
 export async function fetchNoticePreview(limit: number = 3): Promise<NoticePreview[]> {
-    const res = await fetchWithAuth(`${API_URL}/api/users/notice?page=0`, {
+    const res = await fetchWithAuth(`${API_URL}/api/merchants/notice?page=0`, {
         method: "GET",
         credentials: "include",
     });

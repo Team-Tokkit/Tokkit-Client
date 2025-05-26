@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import parseJwt from "@/lib/parseJwt";
 
 // 보호 경로 패턴
 const protectedPaths = [
@@ -16,7 +15,8 @@ const protectedPaths = [
     "/merchant/dashboard",
     "/merchant/wallet",
     "/merchant/notifications",
-    "merchant/mypage"
+    "/merchant/mypage",
+    "/merchant/vouchers",
 ];
 
 export function middleware(request: NextRequest) {
@@ -30,48 +30,17 @@ export function middleware(request: NextRequest) {
         (path) => path.startsWith("/merchant") && pathname.startsWith(path)
     );
 
-    // 보호 경로인데 토큰이 없으면 리다이렉트
+    // 보호 경로인데 토큰이 없으면 로그인 페이지로 리다이렉트
     if ((isUserProtected || isMerchantProtected) && !token) {
-        const redirectUrl = isMerchantProtected
-            ? "/merchant/login"
-            : "/login";
+        const redirectUrl = isMerchantProtected ? "/merchant/login" : "/login";
         return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
 
-    // 토큰이 존재하면 role까지 확인
-    if (token) {
-        const payload = parseJwt(token.value);
-        const role = payload?.role;
-
-        if (isUserProtected && role !== "USER") {
-            // 가맹점주가 일반 유저 보호 페이지 접근 시 → 일반 로그인 페이지로
-            return NextResponse.redirect(new URL("/login", request.url));
-        }
-
-        if (isMerchantProtected && role !== "MERCHANT") {
-            // 일반 유저가 가맹점 보호 페이지 접근 시 → 가맹점 로그인 페이지로
-            return NextResponse.redirect(new URL("/merchant/login", request.url));
-        }
-    }
-
+    // 토큰이 있으면 바로 통과 (role은 프론트에서 /me API로 확인)
     return NextResponse.next();
 }
 
 // matcher 설정
 export const config = {
-    matcher: [
-        "/dashboard/:path*",
-        "/mypage/:path*",
-        "/vouchers/:path*",
-        "/my-vouchers/:path*",
-        "/notice/:path*",
-        "/notifications/:path*",
-        "/offline-stores/:path*",
-        "/payment/:path*",
-        "/wallet/:path*",
-        "/merchant/dashboard/:path*",
-        "/merchant/wallet/:path*",
-        "/merchant/notifications/:path*",
-        "/merchant/mypage/:path*",
-    ],
+    matcher: protectedPaths.map((path) => `${path}/:path*`),
 };
