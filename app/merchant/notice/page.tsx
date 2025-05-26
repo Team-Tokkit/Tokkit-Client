@@ -48,22 +48,24 @@ export default function NoticesPage() {
     }
 
     return (
-        <div className="container mx-auto max-w-4xl px-4">
-            <div className="py-2">
+        <div className="min-h-screen flex flex-col">
+            <div className="container mx-auto max-w-4xl px-4 flex-1 flex flex-col">
+            <div className="py-2 flex-shrink-0">
                 <Header title="공지사항 🔔" backHref="/merchant/dashboard" />
             </div>
 
-            <NoticeList
-                notices={notices}
-                latestNoticeIds={latestNoticeIds}
-                currentPage={currentPage}
-            />
+            <div className="flex-1 flex flex-col">
+                <NoticeList notices={notices} latestNoticeIds={latestNoticeIds} currentPage={currentPage} />
+            </div>
 
+            <div className="flex-shrink-0 py-4">
             <Pagination
                 totalPages={totalPages}
                 currentPage={currentPage + 1}
                 onPageChange={(page) => router.push(`/merchant/notice?page=${page}`)}
             />
+            </div>
         </div>
+    </div>
     );
 }
