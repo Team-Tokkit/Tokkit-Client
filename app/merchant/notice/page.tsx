@@ -58,7 +58,7 @@ export default function NoticesPage() {
                 <NoticeList notices={notices} latestNoticeIds={latestNoticeIds} currentPage={currentPage} />
             </div>
 
-            <div className="flex-shrink-0 py-4">
+            <div className="flex-shrink-0 py-4 mb-4">
             <Pagination
                 totalPages={totalPages}
                 currentPage={currentPage + 1}

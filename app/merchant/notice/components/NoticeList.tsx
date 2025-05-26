@@ -19,8 +19,8 @@ export default function NoticeList({
   currentPage: number;
 }) {
   return (
-    <div className="bg-gray-50 rounded-xl shadow-sm min-h-[400px] p-2">
-      <div>
+    <div className="bg-gray-50 rounded-xl shadow-sm flex-1 p-2 overflow-y-auto">
+      <div className="space-y-2">
         {notices.map((notice) => (
           <NoticeItem
             key={notice.id}
@@ -31,5 +31,5 @@ export default function NoticeList({
         ))}
       </div>
     </div>
-  );
+  )
 }
