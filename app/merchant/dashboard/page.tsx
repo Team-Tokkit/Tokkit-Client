@@ -12,17 +12,7 @@ import {fetchDailyIncome} from "@/app/merchant/dashboard/api/daily-income";
 import {fetchMerchantRecentTransactions, MerchantTransaction} from "./api/merchant-recent-transactions";
 import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction";
 import NoticesSection from "@/app/merchant/dashboard/components/NoticeSection";
-import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-notice-preview"
-
-// 공지사항 데이터 타입 정의
-interface Notice {
-    id: string
-    title: string
-    content: string
-    date: string
-    isEvent: boolean
-    isNew: boolean
-}
+import { fetchNoticePreview, NoticePreview } from "@/app/merchant/dashboard/api/fetch-merchant-notice-preview"
 
 export default function MerchantDashboardPage() {
     const isMobile = useMobile()
