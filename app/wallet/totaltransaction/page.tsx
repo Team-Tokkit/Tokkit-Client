@@ -8,7 +8,7 @@ import SearchBar from "@/app/wallet/components/totalhistory/SearchBar"
 import Category from "@/app/wallet/components/totalhistory/Category"
 import Calendar from "@/app/wallet/components/totalhistory/Calendar"
 import TransactionList from "@/app/wallet/components/common/TransactionList"
-import { fetchTransactions, type Transaction } from "@/app/wallet/api/fetch-transactions"
+import { fetchTransactions, Transaction } from "@/app/wallet/api/fetch-transactions"
 import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton"
 
 interface WalletInfo {
@@ -71,8 +71,11 @@ export default function TransactionsPage() {
   }, [])
 
   const filteredTransactions = transactions.filter((tx: any) => {
-    if (searchTerm && !tx.description.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false
+    if (
+      searchTerm &&
+      !(tx.displayDescription ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
     }
 
     if (type !== "전체") {
