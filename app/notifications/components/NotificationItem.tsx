@@ -5,16 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 import NotificationIcon from "./NotificationIcon"
 
-type NotificationType = "system" | "payment" | "voucher" | "wallet"
+type NotificationType = "system" | "payment" | "voucher" | "token"
 
 interface Notification {
     id: string
     type: NotificationType
     title: string
     message: string
-    isRead: boolean
     createdAt: string
-    status: "active" | "deleted"
+    deleted: "active" | "deleted"
 }
 
 interface NotificationItemProps {
