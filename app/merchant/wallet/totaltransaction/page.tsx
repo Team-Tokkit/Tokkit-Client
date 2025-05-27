@@ -8,6 +8,7 @@ import SearchBar from "./components/SearchBar";
 import Calendar from "@/app/merchant/wallet/totaltransaction/components/Calendar";
 import Category from "@/app/merchant/wallet/totaltransaction/components/Category";
 import TransactionList from "@/app/merchant/dashboard/components/TransactionList";
+import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton"
 
 interface WalletInfo {
   storeName: string;
@@ -112,11 +113,7 @@ export default function TransactionsPage() {
   });
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">거래내역을 불러오는 중...</p>
-      </div>
-    );
+    return <SkeletonLoader />
   }
 
   return (
@@ -150,7 +147,7 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+      <div className=" px-4 py-5 rounded-xl">
         <TransactionList
             transactions={filteredTransactions}
         />

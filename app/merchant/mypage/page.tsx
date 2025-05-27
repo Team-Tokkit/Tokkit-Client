@@ -49,7 +49,7 @@ export default function MerchantMyPage() {
                 {/* 로그아웃 버튼 */}
                 <div className="mt-4 text-center">
                     <LogoutButton />
-                </div>
+                </div> 
             </div>
         </div>
     )

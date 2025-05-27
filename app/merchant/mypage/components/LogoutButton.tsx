@@ -33,29 +33,43 @@ export default function LogoutButton() {
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    로그아웃
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white w-[90%] max-w-sm rounded-xl p-6">
-                <DialogHeader>
-                    <DialogTitle className="text-lg font-semibold">로그아웃 하시겠습니까?</DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground">로그아웃 하시면 서비스 이용을 위해 <br /> 다시 로그인해야 합니다.</DialogDescription>
-                </DialogHeader>
-                <DialogFooter className="pt-6">
-                    <div className="flex w-full justify-center space-x-2">
-                        <DialogClose asChild>
-                            <Button variant="outline" className="w-24 h-10">취소</Button>
-                        </DialogClose>
-                        <Button onClick={handleLogout} className="w-24 h-10 bg-gray-800 text-white">
-                            로그아웃
-                        </Button>
-                    </div>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <div className="mt-4 text-center">
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" className="text-gray-500 hover:text-gray-700 items-center justify-center gap-2">
+                        <LogOut className="h-4 w-4" />
+                        로그아웃
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-white w-[90%] max-w-sm rounded-2xl p-8 shadow-lg border-0">
+                    <DialogHeader>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="bg-[#FFB020] bg-opacity-20 rounded-full p-3 mb-4">
+                                <LogOut className="h-7 w-7 text-[#FFB020]" />
+                            </div>
+                            <DialogTitle className="text-xl font-bold text-[#1A1A1A] mb-2">로그아웃 하시겠습니까?</DialogTitle>
+                            <DialogDescription className="text-base text-gray-500 text-center leading-relaxed">
+                                로그아웃 하시면 서비스 이용을 위해<br />다시 로그인해야 합니다.
+                            </DialogDescription>
+                        </div>
+                    </DialogHeader>
+                    <DialogFooter className="pt-4">
+                        <div className="flex w-full justify-center space-x-3">
+                            <DialogClose asChild>
+                                <Button variant="outline" className="w-28 h-11 rounded-lg border-gray-300 text-[#1A1A1A] bg-white hover:bg-gray-100">
+                                    취소
+                                </Button>
+                            </DialogClose>
+                            <Button
+                                onClick={handleLogout}
+                                className="w-28 h-11 rounded-lg bg-[#FFB020] hover:bg-[#FF9500] text-white font-semibold shadow-none border-0"
+                            >
+                                로그아웃
+                            </Button>
+                        </div>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
     )
 }

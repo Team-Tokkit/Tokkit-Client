@@ -5,8 +5,7 @@ import { useSearchParams } from "next/navigation"
 import VoucherCard from "./VoucherCard"
 import { getVouchers } from "@/lib/api/voucher"
 import type { Voucher } from "@/app/vouchers/types/voucher"
-import Pagination from "@/app/vouchers/components/Pagination"
-
+import Pagination from "@/components/common/Pagination"
 export default function VoucherList() {
   const [vouchers, setVouchers] = useState<Voucher[]>([])
   const [loading, setLoading] = useState(true)
