@@ -4,8 +4,8 @@
 //   it("카테고리 필터 및 검색 작동 확인", () => {
 //     // 1. 로그인
 //     cy.visit("/login");
-//     cy.get("#email").type("dlwjdals0726@gmail.com");
-//     cy.get("#password").type("Nji0Zd");
+//     cy.get("#email").type("ryj0330@naver.com");
+//     cy.get("#password").type("1234");
 //     cy.get("form").submit();
 //     cy.url({ timeout: 10000 }).should("include", "/dashboard");
 

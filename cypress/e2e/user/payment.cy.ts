@@ -23,7 +23,5 @@ describe("결제하기 버튼 테스트", () => {
     [..."123456"].forEach((digit) => {
       cy.contains(digit).click();
     });
-
-
   });
 });

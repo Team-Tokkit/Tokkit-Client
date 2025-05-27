@@ -4,8 +4,8 @@ describe("로그인 테스트", () => {
   });
 
   it("이메일과 비밀번호 입력 후 로그인 성공", () => {
-    cy.get("#email").should("be.visible").type("dlwjdals0726@gmail.com");
-    cy.get("#password").should("be.visible").type("Nji0Zd");
+    cy.get("#email").should("be.visible").type("ryj0330@naver.com");
+    cy.get("#password").should("be.visible").type("1234");
 
     cy.get("form").submit();
 
