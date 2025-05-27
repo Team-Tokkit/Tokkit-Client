@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Header from "@/components/common/Header";
 import TransactionCardContent from "@/app/wallet/components/common/TransactionCardContent";
 import {fetchTransactionDetail} from "@/app/wallet/api/fetch-transactions-detail";
+import Link from "next/link";
 
 
 interface TransactionDetail {
@@ -14,6 +15,7 @@ interface TransactionDetail {
     amount: number;
     displayDescription: string;
     createdAt: string;
+    txHash: string;
 }
 
 export default function TransactionDetailPage() {
@@ -123,7 +125,12 @@ export default function TransactionDetailPage() {
 
                 <div className="flex justify-between py-4">
                     <div className="text-gray-500">거래 설명</div>
-                    <div className="font-medium">{transaction.displayDescription}</div>
+                    <Link
+                        href={`/wallet/blockchain-details/${transaction.txHash}`}
+                        className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
+                    >
+                        {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
+                    </Link>
                 </div>
             </motion.div>
 
