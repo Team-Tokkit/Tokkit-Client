@@ -9,6 +9,7 @@ export interface TransactionDetail {
     amount: number;
     displayDescription: string;
     createdAt: string;
+    txHash: string;
 }
 
 export async function fetchTransactionDetail(id: string): Promise<TransactionDetail> {
