@@ -26,12 +26,12 @@ export default function Category({
 }: CategoryProps) {
   return (
     <Select onValueChange={onChange} value={value}>
-      <SelectTrigger className="h-9 rounded-lg border-[#E0E0E0] bg-white">
+      <SelectTrigger data-cy={`type-select`} className="h-9 rounded-lg border-[#E0E0E0] bg-white">
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent className="bg-white z-50">
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+          <SelectItem key={option.value} value={option.value} data-cy={`type-option-${option.label}`}>
             {option.label}
           </SelectItem>
         ))}
