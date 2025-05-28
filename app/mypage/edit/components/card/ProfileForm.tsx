@@ -4,7 +4,6 @@ import { Mail, Phone, User, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import EmailChangeDialog from "./EmailChangeDialog"
 import { motion } from "framer-motion"
 
 interface ProfileFormProps {
@@ -107,11 +106,10 @@ export default function ProfileForm({
                             disabled
                             className="bg-gray-100 border-gray-200 text-gray-500"
                         />
-                        <EmailChangeDialog {...emailDialogProps} />
                     </div>
                     <p className="text-xs text-gray-500 mt-1 flex items-center">
                         <Info className="h-3 w-3 mr-1" />
-                        이메일 변경 시 인증 과정이 필요합니다.
+                        이메일은 변경이 불가능합니다.
                     </p>
                 </div>
             </motion.div>
