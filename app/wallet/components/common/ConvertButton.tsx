@@ -8,6 +8,7 @@ export default function ConvertButton() {
   return (
     <div className="grid grid-cols-2 gap-4 mb-6">
       <Button
+        data-testid="convert-deposit-to-token"
         className="group h-16 bg-white hover:bg-[#FFF6E0]
              text-[#1A1A1A] border border-[#E0E0E0]
              rounded-xl shadow-sm flex items-center justify-center gap-[6px]"
@@ -24,6 +25,7 @@ export default function ConvertButton() {
       </Button>
 
       <Button
+        data-testid="convert-token-to-deposit"
         className="group h-16 bg-white hover:bg-[#FFF6E0]
              text-[#1A1A1A] border border-[#E0E0E0]
              rounded-xl shadow-sm flex items-center justify-center gap-[6px]"

@@ -6,7 +6,7 @@ import { Eye, EyeOff, AlertCircle } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 
-interface PasswordInputProps {
+interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     id: string
     label: string
     name: string
@@ -16,7 +16,16 @@ interface PasswordInputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function PasswordInput({ id, label, name, value, error, placeholder, onChange }: PasswordInputProps) {
+export default function PasswordInput({
+    id,
+    label,
+    name,
+    value,
+    error,
+    placeholder,
+    onChange,
+    ...props // ✅ 받기
+}: PasswordInputProps) {
     const [show, setShow] = useState(false)
 
     return (
@@ -29,10 +38,11 @@ export default function PasswordInput({ id, label, name, value, error, placehold
                     type={show ? "text" : "password"}
                     value={value}
                     onChange={onChange}
+                    placeholder={placeholder}
                     className={`pr-10 ${
                         error ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-amber-500 focus:ring-amber-500"
                     }`}
-                    placeholder={placeholder}
+                    {...props} // ✅ 전달
                 />
                 <button
                     type="button"

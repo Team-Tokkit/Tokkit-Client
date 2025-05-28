@@ -28,6 +28,7 @@ export default function HeaderSection() {
                 <Button
                     variant="ghost"
                     size="icon"
+                    data-testid="user-button" 
                     className="rounded-full text-[#4B5563] h-10 w-10 hover:bg-[#FFD485]/10 bg-white/80 shadow-sm backdrop-blur-sm"
                     onClick={() => router.push("/mypage")}
                 >

@@ -39,6 +39,7 @@ export default function VoucherCard({
 
   return (
     <motion.div
+      data-cy="voucher-card"
       className="bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer"
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}

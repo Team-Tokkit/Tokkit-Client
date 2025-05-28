@@ -46,6 +46,7 @@ export default function PaymentCarousel({
       </button>
 
       <button
+        data-testid="carousel-next-button"
         aria-label="carousel-next"
         onClick={handleNext}
         className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-1 shadow-md"

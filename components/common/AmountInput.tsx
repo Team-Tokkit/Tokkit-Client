@@ -40,6 +40,7 @@ export default function AmountInput({
           </div>
           <div className="relative">
               <Input
+                  data-testid="amount-input"
                   id="amount"
                   value={amount ? Number.parseInt(amount).toLocaleString() : ""}
                   onChange={handleInputChange}
