@@ -9,12 +9,6 @@ interface AddressSearchModalProps {
     onClose: () => void
 }
 
-declare global {
-    interface Window {
-        kakao: any
-    }
-}
-
 export default function AddressSearchModal({ onClose }: AddressSearchModalProps) {
     const [scriptLoaded, setScriptLoaded] = useState(false)
     const [searchingAddress, setSearchingAddress] = useState(false)
@@ -22,11 +16,14 @@ export default function AddressSearchModal({ onClose }: AddressSearchModalProps)
     const [addressResults, setAddressResults] = useState<any[]>([])
 
     useEffect(() => {
+        if (typeof window === "undefined") return
+
         const script = document.createElement("script")
         script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`
         script.async = true
         script.onload = () => {
-            window.kakao.maps.load(() => setScriptLoaded(true))
+            const kakao = (window as any).kakao
+            kakao.maps.load(() => setScriptLoaded(true))
         }
         document.head.appendChild(script)
         return () => {
@@ -40,18 +37,19 @@ export default function AddressSearchModal({ onClose }: AddressSearchModalProps)
         setSearchingAddress(true)
         setAddressResults([])
 
-        const geocoder = new window.kakao.maps.services.Geocoder()
-        const places = new window.kakao.maps.services.Places()
+        const kakao = (window as any).kakao
+        const geocoder = new kakao.maps.services.Geocoder()
+        const places = new kakao.maps.services.Places()
 
         places.keywordSearch(addressKeyword, (result: any, status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
+            if (status === kakao.maps.services.Status.OK) {
                 const filtered = result.filter((r: any) => r.address_name)
                 setAddressResults(filtered)
             }
 
             geocoder.addressSearch(addressKeyword, (geoResult: any, geoStatus: any) => {
                 setSearchingAddress(false)
-                if (geoStatus === window.kakao.maps.services.Status.OK) {
+                if (geoStatus === kakao.maps.services.Status.OK) {
                     setAddressResults((prev) => {
                         const combined = [...prev]
                         geoResult.forEach((item: any) => {
