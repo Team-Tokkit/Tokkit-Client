@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {fetchMerchantWalletInfo} from "@/app/merchant/dashboard/api/merchant-wallet-info";
+import { fetchMerchantWalletInfo } from "@/app/merchant/dashboard/api/merchant-wallet-info";
 import fetchMerchantTransactions from "@/app/merchant/dashboard/api/merchant-recent-transactions";
 import Header from "@/components/common/Header";
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SearchBar from "./components/SearchBar";
-import Calendar from "@/app/merchant/wallet/totaltransaction/components/Calendar";
+import Calendar from "@/components/common/Calendar";
 import Category from "@/app/merchant/wallet/totaltransaction/components/Category";
 import TransactionList from "@/app/merchant/dashboard/components/TransactionList";
-import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton"
+import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton";
 
 interface WalletInfo {
   storeName: string;
@@ -27,11 +29,16 @@ interface MerchantTransaction {
 
 export default function TransactionsPage() {
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
-  const [merchantTransactions, setMerchantTransactions] = useState<MerchantTransaction[]>([]);
+  const [merchantTransactions, setMerchantTransactions] = useState<
+    MerchantTransaction[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<{ from?: Date; to?: Date } | undefined>(
+    undefined
+  );
+
   const [type, setType] = useState("전체");
   const [period, setPeriod] = useState("전체 기간");
 
@@ -42,7 +49,7 @@ export default function TransactionsPage() {
 
   const typeOptions = [
     { label: "전체", value: "전체" },
-    { label: "결제", value: "결제" },
+    { label: "정산", value: "정산" },
     { label: "변환", value: "변환" },
   ];
 
@@ -67,18 +74,18 @@ export default function TransactionsPage() {
 
   useEffect(() => {
     fetchMerchantTransactions()
-        .then(setMerchantTransactions)
-        .catch((error) => {
-          console.error("거래내역 조회 오류:", error);
-          alert("거래내역 불러오기 중 오류 발생");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      .then(setMerchantTransactions)
+      .catch((error) => {
+        console.error("거래내역 조회 오류:", error);
+        alert("거래내역 불러오기 중 오류 발생");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-    const filteredTransactions = merchantTransactions.filter((tx) => {
-          if (!tx.displayDescription) return false;
+  const filteredTransactions = merchantTransactions.filter((tx) => {
+    if (!tx.displayDescription) return false;
     if (
       searchTerm &&
       !tx.displayDescription?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -88,8 +95,7 @@ export default function TransactionsPage() {
 
     if (type !== "전체") {
       const typeMap: Record<string, string> = {
-        결제: "PAYMENT",
-        충전: "CHARGE",
+        정산: "RECEIVE",
         변환: "CONVERT",
       };
       if (tx.type !== typeMap[type]) return false;
@@ -104,16 +110,23 @@ export default function TransactionsPage() {
       if (period === "month" && diff > 30 * 86400000) return false;
     }
 
-    if (date) {
+    if (date?.from) {
       const txDate = new Date(tx.createdAt);
-      if (txDate.toDateString() !== date.toDateString()) return false;
+      const from = new Date(date.from);
+      const to = date.to ? new Date(date.to) : from;
+
+      txDate.setHours(0, 0, 0, 0);
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      if (txDate < from || txDate > to) return false;
     }
 
     return true;
   });
 
   if (loading) {
-    return <SkeletonLoader />
+    return <SkeletonLoader />;
   }
 
   return (
@@ -121,8 +134,46 @@ export default function TransactionsPage() {
       <Header title="거래내역" />
 
       <div className="p-4 bg-white shadow-sm">
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-2">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          <Button
+            variant="outline"
+            className="flex gap-2 items-center"
+            onClick={() => {
+              setSearchTerm("");
+              setType("전체");
+              setPeriod("전체 기간");
+              setDate(undefined);
+
+              setLoading(true);
+              fetchMerchantTransactions()
+                .then(setMerchantTransactions)
+                .catch((err) => {
+                  alert("거래내역 다시 불러오는 중 오류 발생");
+                  console.error(err);
+                })
+                .finally(() => setLoading(false));
+            }}
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="flex gap-2 items-center mb-2">
+          <div
+            className={`flex items-center text-sm rounded-md border h-10 px-4 w-full
+              ${
+                date?.from
+                  ? "bg-white text-gray-800 border-[#E0E0E0]"
+                  : "bg-[#F5F5F5] text-gray-400 border-gray-300 cursor-not-allowed"
+              }`}
+          >
+            {date?.from
+              ? `${date.from.toLocaleDateString()} ${
+                  date.to ? `~ ${date.to.toLocaleDateString()}` : ""
+                }`
+              : "날짜를 선택해주세요"}
+          </div>
           <Calendar
             selected={date}
             onSelect={setDate}
@@ -148,9 +199,7 @@ export default function TransactionsPage() {
       </div>
 
       <div className=" px-4 py-5 rounded-xl">
-        <TransactionList
-            transactions={filteredTransactions}
-        />
+        <TransactionList transactions={filteredTransactions} />
       </div>
     </div>
   );
