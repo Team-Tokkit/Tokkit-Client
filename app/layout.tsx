@@ -13,8 +13,13 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Tokkit - 스마트한 금융의 시작",
   description: "Tokkit과 함께 더 스마트하고 안전한 금융 서비스를 경험하세요",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
+}
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({
