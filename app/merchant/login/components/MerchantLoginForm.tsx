@@ -4,10 +4,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Eye, EyeOff } from "lucide-react"
-import {loginMerchant} from "@/app/merchant/login/api/merchant-login";
+import { loginMerchant } from "@/app/merchant/login/api/merchant-login"
 
 export default function MerchantLoginForm() {
     const router = useRouter()
@@ -15,7 +14,22 @@ export default function MerchantLoginForm() {
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false)
+
+    const formatBusinessNumber = (value: string) => {
+        const onlyNums = value.replace(/\D/g, "").slice(0, 10)
+        if (onlyNums.length >= 6) {
+            return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 5)}-${onlyNums.slice(5)}`
+        } else if (onlyNums.length >= 4) {
+            return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`
+        } else {
+            return onlyNums
+        }
+    }
+
+    const handleBusinessIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formatted = formatBusinessNumber(e.target.value)
+        setBusinessId(formatted)
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -43,8 +57,8 @@ export default function MerchantLoginForm() {
                 <Input
                     id="businessId"
                     value={businessId}
-                    onChange={(e) => setBusinessId(e.target.value)}
-                    placeholder="사업자 등록번호를 입력하세요"
+                    onChange={handleBusinessIdChange}
+                    placeholder="000-00-00000"
                     className="h-12 rounded-xl border-[#E0E0E0] dark:border-[#333333] bg-white dark:bg-[#1E1E1E] focus-visible:ring-[#FFD485] dark:focus-visible:ring-[#FFB020] focus-visible:ring-offset-0"
                     required
                 />
