@@ -262,7 +262,7 @@ export default function PaymentPage() {
         <LoadingOverlay message={isProcessing ? "결제 요청 중입니다..." : " QR 인식 중입니다. 잠시만 기다려주세요..."} />
       )}
       <Header title="결제하기" />
-      <div className="flex-1 min-h-[calc(90vh-60px)] overflow-x-hidden overflow-y-visible p-4">
+      <div className="flex-1 min-h-[calc(90vh-60px)] overflow-visible p-4">
         <AnimatePresence mode="wait">
           {paymentStep === "scan" && (
             <motion.div
@@ -330,7 +330,7 @@ export default function PaymentPage() {
                   onCancel={handleCancel}
                   onSubmit={() => setPaymentStep("password")}
                 >
-                  <div className="mb-4 overflow-visible">
+                  <div className="mb-4">
                     <PaymentCarousel
                       vouchers={usableVouchers}
                       currentIndex={carouselIndex}

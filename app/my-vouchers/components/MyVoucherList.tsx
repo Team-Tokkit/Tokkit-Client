@@ -12,7 +12,7 @@ interface Props {
 export default function MyVoucherList({ vouchers, loading, onDelete }: Props) {
 if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4" >
         {Array.from({ length: 3 }).map((_, idx) => (
           <div
             key={idx}
@@ -52,7 +52,7 @@ if (loading) {
   }
 
   return (
-    <div className="space-y-4">
+    <div data-cy="my-voucher-card" className="space-y-4" >
       {vouchers.map((voucher) => (
         <MyVoucherCard key={voucher.id} voucher={voucher} onDelete={onDelete} />
       ))}

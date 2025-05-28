@@ -36,6 +36,7 @@ export default function TransactionList({
                         <Card
                             key={tx.id ?? index}
                             onClick={handleClick}
+                            data-cy="transaction-item"
                             className="bg-white border-none shadow-sm hover:bg-gray-50 transition-colors cursor-pointer"
                         >
                             <CardContent className="p-4">

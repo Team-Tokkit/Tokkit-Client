@@ -50,6 +50,7 @@ export default function ManualBox({ onSubmit, onCancel }: ManualBoxProps) {
           type="text"
           placeholder="예: m001s00001"
           value={input}
+          data-cy="manual-transaction-input"
           onChange={(e) => {
             setInput(e.target.value);
             if (error) setError("");
