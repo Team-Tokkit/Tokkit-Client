@@ -16,7 +16,6 @@ import LoadingOverlay from "@/components/common/LoadingOverlay";
 interface NotificationSettings {
     SYSTEM: boolean
     PAYMENT: boolean
-    VOUCHER: boolean
     TOKEN: boolean
 }
 
@@ -24,7 +23,6 @@ export default function NotificationSettingsPage() {
     const [settings, setSettings] = useState<NotificationSettings>({
         SYSTEM: true,
         PAYMENT: true,
-        VOUCHER: true,
         TOKEN: true,
     })
     const [isLoading, setIsLoading] = useState(true)
@@ -54,7 +52,6 @@ export default function NotificationSettingsPage() {
         setSettings({
             SYSTEM: checked,
             PAYMENT: checked,
-            VOUCHER: checked,
             TOKEN: checked,
         })
     }
@@ -67,7 +64,7 @@ export default function NotificationSettingsPage() {
         setIsSaving(true)
         try {
             const body = Object.entries(settings).map(([category, enabled]) => ({
-                category: category as "SYSTEM" | "PAYMENT" | "VOUCHER" | "TOKEN",
+                category: category as "SYSTEM" | "PAYMENT" | "TOKEN",
                 enabled,
             }))
             await updateNotificationSettings(body)
@@ -107,7 +104,6 @@ export default function NotificationSettingsPage() {
                                 checked={
                                     settings.SYSTEM &&
                                     settings.PAYMENT &&
-                                    settings.VOUCHER &&
                                     settings.TOKEN
                                 }
                                 onChange={handleAllChange}
@@ -134,17 +130,6 @@ export default function NotificationSettingsPage() {
                                 checked={settings.PAYMENT}
                                 onChange={(c) => handleSettingChange("PAYMENT", c)}
                                 ariaLabel="결제 알림 설정"
-                            />
-                            <Separator className="my-1" />
-                            <NotificationSettingItem
-                                icon={Wallet}
-                                iconColor="text-purple-500"
-                                iconBg="bg-purple-100"
-                                title="바우처"
-                                description="바우처 관련 알림"
-                                checked={settings.VOUCHER}
-                                onChange={(c) => handleSettingChange("VOUCHER", c)}
-                                ariaLabel="바우처 알림 설정"
                             />
                             <Separator className="my-1" />
                             <NotificationSettingItem
