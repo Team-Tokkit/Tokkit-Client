@@ -9,7 +9,6 @@ import SuccessNotice from "@/app/mypage/edit/components/SuccessNotice";
 import ProfileForm from "@/app/mypage/edit/components/card/ProfileForm";
 import {getCookie} from "@/lib/cookies";
 import {getUserInfo} from "@/app/mypage/api/user-info";
-import { requestEmailVerification, verifyEmailCode, updateEmail } from "@/app/mypage/edit/api/email";
 import {updateUserInfo} from "@/app/mypage/edit/api/update-user-info";
 
 
@@ -24,10 +23,6 @@ export default function ProfileEditPage() {
         phoneNumber: "",
     })
 
-    const [newEmail, setNewEmail] = useState("")
-    const [verificationCode, setVerificationCode] = useState("")
-    const [isVerificationSent, setIsVerificationSent] = useState(false)
-    const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false)
     const [isSaveSuccess, setIsSaveSuccess] = useState(false)
 
     useEffect(() => {
@@ -55,10 +50,7 @@ export default function ProfileEditPage() {
         setIsSubmitting(true)
 
         try {
-            const token = getCookie("accessToken")
-            if (!token) throw new Error("토큰 없음")
-
-            await updateUserInfo(token, {
+            await updateUserInfo({
                 name: user.name,
                 phoneNumber: user.phoneNumber,
             });
@@ -69,33 +61,6 @@ export default function ProfileEditPage() {
             console.error("프로필 저장 실패:", error)
         } finally {
             setIsSubmitting(false)
-        }
-    }
-
-    const handleSendVerification = async () => {
-        try {
-            await requestEmailVerification(newEmail)
-            setIsVerificationSent(true)
-        } catch (err) {
-            console.error("이메일 인증 요청 실패:", err)
-        }
-    }
-
-    const handleVerifyEmail = async () => {
-        try {
-            await verifyEmailCode(newEmail, verificationCode)
-
-            const token = getCookie("accessToken")
-            if (!token) throw new Error("토큰 없음")
-
-            await updateEmail(token, newEmail)
-            setUser((prev) => ({ ...prev, email: newEmail }))
-            setIsEmailDialogOpen(false)
-            setNewEmail("")
-            setVerificationCode("")
-            setIsVerificationSent(false)
-        } catch (err) {
-            console.error("이메일 인증 실패:", err)
         }
     }
 
@@ -115,17 +80,6 @@ export default function ProfileEditPage() {
                             onChange={handleChange}
                             onSubmit={handleSubmit}
                             onCancel={() => router.back()}
-                            emailDialogProps={{
-                                isOpen: isEmailDialogOpen,
-                                setIsOpen: setIsEmailDialogOpen,
-                                newEmail,
-                                setNewEmail,
-                                verificationCode,
-                                setVerificationCode,
-                                isVerificationSent,
-                                handleSendVerification,
-                                handleVerifyEmail,
-                            }}
                         />
                     )}
                 </ProfileCard>
