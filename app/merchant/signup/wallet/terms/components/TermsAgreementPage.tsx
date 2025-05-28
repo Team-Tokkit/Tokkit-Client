@@ -126,7 +126,7 @@ export default function TermsAgreementPage({ terms, title = "약관 동의", des
                 </motion.h1>
             </header>
 
-            <div className="flex-1 flex flex-col justify-center items-center items-center p-6">
+            <div className="flex-1 flex flex-col justify-center items-center text-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{title}</h2>

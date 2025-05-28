@@ -8,10 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { fetchSidoList, fetchSigunguList } from "@/app/merchant/signup/business/api/region"
+import AddressSearchModal from "./AddressSearchModal"
 
-interface InfoStepProps {
-    onAddressSearch: () => void
-}
+interface InfoStepProps {}
 
 const STORE_CATEGORIES = [
     { value: "음식점", label: "음식점" },
@@ -22,7 +21,7 @@ const STORE_CATEGORIES = [
     { value: "교육", label: "교육" },
 ]
 
-export default function InfoStep({ onAddressSearch }: InfoStepProps) {
+export default function InfoStep() {
     const router = useRouter()
     const [businessNumber, setBusinessNumber] = useState("")
     const [storeName, setStoreName] = useState("")
@@ -35,22 +34,24 @@ export default function InfoStep({ onAddressSearch }: InfoStepProps) {
     const [sidoList, setSidoList] = useState<string[]>([])
     const [sigunguList, setSigunguList] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const refreshAddressFromSession = () => {
-        const savedAddressJson = sessionStorage.getItem("businessAddressData")
-        if (savedAddressJson) {
-            try {
-                const parsed = JSON.parse(savedAddressJson)
-                if (parsed.businessAddress) setRoadAddress(parsed.businessAddress)
-                if (parsed.sido) setSelectedSido(parsed.sido)
-                if (parsed.sigungu) setSelectedSigungu(parsed.sigungu)
-            } catch (e) {
-                console.error("주소 검색 결과 파싱 실패", e)
-            }
-        }
+    // 주소 선택 콜백
+    const handleAddressSelected = (data: {
+        businessAddress: string
+        sido: string
+        sigungu: string
+        latitude: string
+        longitude: string
+        zipcode: string
+    }) => {
+        sessionStorage.setItem("businessAddressData", JSON.stringify(data))
+        setRoadAddress(data.businessAddress)
+        setSelectedSido(data.sido)
+        setSelectedSigungu(data.sigungu)
     }
 
-    // OCR 결과 불러오기 + 주소 갱신 반영
+    // 초기화 시 OCR 세션 반영
     useEffect(() => {
         const savedBusinessNumber = sessionStorage.getItem("businessNumber") || ""
         const savedStoreName = sessionStorage.getItem("storeName") || ""
@@ -62,7 +63,16 @@ export default function InfoStep({ onAddressSearch }: InfoStepProps) {
         setName(savedName)
         setRoadAddress(savedRoadAddress)
 
-        refreshAddressFromSession() // 주소 검색 결과 반영도 함께 수행
+        const savedAddressJson = sessionStorage.getItem("businessAddressData")
+        if (savedAddressJson) {
+            try {
+                const parsed = JSON.parse(savedAddressJson)
+                if (parsed.sido) setSelectedSido(parsed.sido)
+                if (parsed.sigungu) setSelectedSigungu(parsed.sigungu)
+            } catch (e) {
+                console.error("주소 파싱 실패:", e)
+            }
+        }
     }, [])
 
     useEffect(() => {
@@ -95,18 +105,6 @@ export default function InfoStep({ onAddressSearch }: InfoStepProps) {
         }
     }, [selectedSido])
 
-    useEffect(() => {
-        const handleFocus = () => {
-            refreshAddressFromSession()
-        }
-
-        window.addEventListener("focus", handleFocus)
-        return () => {
-            window.removeEventListener("focus", handleFocus)
-        }
-    }, [])
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
@@ -127,13 +125,6 @@ export default function InfoStep({ onAddressSearch }: InfoStepProps) {
         }
 
         sessionStorage.setItem("businessInfo", JSON.stringify(payload))
-
-        sessionStorage.removeItem("businessNumber")
-        sessionStorage.removeItem("storeName")
-        sessionStorage.removeItem("name")
-        sessionStorage.removeItem("roadAddress")
-        sessionStorage.removeItem("businessAddressData")
-
         setLoading(true)
         await new Promise((res) => setTimeout(res, 1000))
         setLoading(false)
@@ -142,123 +133,130 @@ export default function InfoStep({ onAddressSearch }: InfoStepProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md mx-auto">
-            <div className="space-y-2">
-                <Label>사업자 등록번호</Label>
-                <Input
-                    value={businessNumber}
-                    onChange={(e) => setBusinessNumber(e.target.value.replace(/\D/g, ""))}
-                    placeholder="0000000000"
-                    maxLength={10}
-                    required
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label>상호명</Label>
-                <Input
-                    value={storeName}
-                    onChange={(e) => setStoreName(e.target.value)}
-                    placeholder="상호명을 입력하세요"
-                    required
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label>대표자명</Label>
-                <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="대표자명을 입력하세요"
-                    required
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label>사업장 주소</Label>
-                <div className="relative">
+        <>
+            <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md mx-auto">
+                <div className="space-y-2">
+                    <Label>사업자 등록번호</Label>
                     <Input
-                        value={roadAddress}
-                        onClick={onAddressSearch}
-                        readOnly
-                        placeholder="주소 검색 버튼을 클릭하세요"
-                        className="pr-10"
+                        value={businessNumber}
+                        onChange={(e) => setBusinessNumber(e.target.value.replace(/\D/g, ""))}
+                        placeholder="0000000000"
+                        maxLength={10}
+                        required
                     />
-                    <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-1 top-1/2 -translate-y-1/2"
-                        onClick={onAddressSearch}
-                    >
-                        <Search className="h-4 w-4" />
-                    </Button>
                 </div>
-                <Input
-                    value={detailAddress}
-                    onChange={(e) => setDetailAddress(e.target.value)}
-                    placeholder="상세 주소 입력 (선택)"
-                    className="text-sm mt-2"
+
+                <div className="space-y-2">
+                    <Label>상호명</Label>
+                    <Input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="상호명" required />
+                </div>
+
+                <div className="space-y-2">
+                    <Label>대표자명</Label>
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="대표자명" required />
+                </div>
+
+                <div className="space-y-2">
+                    <Label>사업장 주소</Label>
+                    <div className="relative">
+                        <Input
+                            value={roadAddress}
+                            readOnly
+                            onClick={() => setIsModalOpen(true)}
+                            placeholder="주소 검색 버튼을 클릭하세요"
+                            className="pr-10"
+                        />
+                        <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="absolute right-1 top-1/2 -translate-y-1/2"
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            <Search className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    <Input
+                        value={detailAddress}
+                        onChange={(e) => setDetailAddress(e.target.value)}
+                        placeholder="상세 주소 입력 (선택)"
+                        className="text-sm mt-2"
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label>시/도</Label>
+                        <Select value={selectedSido} onValueChange={setSelectedSido}>
+                            <SelectTrigger className="bg-white">
+                                <SelectValue placeholder="시/도 선택" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-100">
+                                {sidoList.map((sido) => (
+                                    <SelectItem
+                                        key={sido}
+                                        value={sido}
+                                        className="bg-white px-4 py-2 rounded-md hover:bg-[#FFFAEB] hover:text-[#FF9500] transition-all cursor-pointer"
+                                    >
+                                        {sido}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>시/군/구</Label>
+                        <Select value={selectedSigungu} onValueChange={setSelectedSigungu} disabled={!sigunguList.length}>
+                            <SelectTrigger className="bg-white">
+                                <SelectValue placeholder="시/군/구 선택" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-100">
+                                {sigunguList.map((s) => (
+                                    <SelectItem
+                                        key={s}
+                                        value={s}
+                                        className="bg-white px-4 py-2 rounded-md hover:bg-[#FFFAEB] hover:text-[#FF9500] transition-all cursor-pointer"
+                                    >
+                                        {s}
+                                    </SelectItem>
+
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>상점 카테고리</Label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger className="bg-white">
+                            <SelectValue placeholder="카테고리 선택" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-100">
+                            {STORE_CATEGORIES.map((c) => (
+                                <SelectItem
+                                    key={c.value}
+                                    value={c.value}
+                                    className="bg-white px-4 py-2 rounded-md hover:bg-[#FFFAEB] hover:text-[#FF9500] transition-all cursor-pointer"
+                                >
+                                    {c.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <Button type="submit" disabled={loading} className="w-full mt-4 bg-[#FFB020] hover:bg-[#FF9500] text-white">
+                    {loading ? "처리 중..." : "다음"}
+                </Button>
+            </form>
+
+            {isModalOpen && (
+                <AddressSearchModal
+                    onClose={() => setIsModalOpen(false)}
+                    onSelect={handleAddressSelected}
                 />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label>시/도</Label>
-                    <Select value={selectedSido} onValueChange={setSelectedSido}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="시/도 선택" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                            {sidoList.map((sido) => (
-                                <SelectItem key={sido} value={sido}>
-                                    {sido}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="space-y-2">
-                    <Label>시/군/구</Label>
-                    <Select
-                        value={selectedSigungu}
-                        onValueChange={setSelectedSigungu}
-                        disabled={!sigunguList.length}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="시/군/구 선택" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                            {sigunguList.map((s) => (
-                                <SelectItem key={s} value={s}>
-                                    {s}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-
-            <div className="space-y-2">
-                <Label>상점 카테고리</Label>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="카테고리 선택" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                        {STORE_CATEGORIES.map((c) => (
-                            <SelectItem key={c.value} value={c.value}>
-                                {c.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-
-            <Button type="submit" disabled={loading} className="w-full mt-4 bg-[#FFB020] hover:bg-[#FF9500] text-white">
-                {loading ? "처리 중..." : "다음"}
-            </Button>
-        </form>
+            )}
+        </>
     )
 }
