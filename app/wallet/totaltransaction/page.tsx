@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react"
-import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
-
-import Header from "@/components/common/Header"
-import SearchBar from "@/app/wallet/components/totalhistory/SearchBar"
-import Category from "@/app/wallet/components/totalhistory/Category"
-import Calendar from "@/app/wallet/components/totalhistory/Calendar"
-import TransactionList from "@/app/wallet/components/common/TransactionList"
-import { fetchTransactions, type Transaction } from "@/app/wallet/api/fetch-transactions"
-import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton"
+import { useEffect, useState } from "react";
+import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Header from "@/components/common/Header";
+import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
+import Category from "@/app/wallet/components/totalhistory/Category";
+import Calendar from "@/components/common/Calendar";
+import TransactionList from "@/app/wallet/components/common/TransactionList";
+import {
+  fetchTransactions,
+  type Transaction,
+} from "@/app/wallet/api/fetch-transactions";
+import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton";
 
 interface WalletInfo {
   userId: number;
@@ -76,8 +80,11 @@ export default function TransactionsPage() {
   }, []);
 
   const filteredTransactions = transactions.filter((tx: any) => {
-    if (searchTerm && !tx.description.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false
+    if (
+      searchTerm &&
+      !tx.displayDescription?.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
     }
 
     if (type !== "전체") {
