@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { motion } from "framer-motion"
+import { useState } from "react"
 
 interface ProfileFormProps {
     user: {
@@ -30,12 +31,18 @@ const itemVariants = {
     },
 }
 
+// 전화번호 입력 시 자동 하이픈 포맷
 function formatPhoneNumber(value: string): string {
     const onlyNums = value.replace(/\D/g, "").slice(0, 11); // 최대 11자리 제한
 
     if (onlyNums.length < 4) return onlyNums;
     if (onlyNums.length < 8) return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`;
     return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 7)}-${onlyNums.slice(7)}`;
+}
+
+// 유효한 전화번호 형식인지 검사
+function isValidPhoneNumber(phone: string): boolean {
+    return /^010-\d{4}-\d{4}$/.test(phone);
 }
 
 export default function ProfileForm({
@@ -45,8 +52,13 @@ export default function ProfileForm({
                                         onSubmit,
                                         onCancel,
                                     }: ProfileFormProps) {
+    const [phoneError, setPhoneError] = useState<string | null>(null)
+
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatPhoneNumber(e.target.value);
+        const isValid = isValidPhoneNumber(formatted);
+        setPhoneError(isValid ? null : "010-0000-0000 형식으로 입력해주세요.");
+
         const syntheticEvent = {
             ...e,
             target: {
@@ -61,7 +73,7 @@ export default function ProfileForm({
 
     return (
         <form onSubmit={onSubmit} className="space-y-6 p-6">
-        {/* 이름 */}
+            {/* 이름 */}
             <motion.div variants={itemVariants} className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="name" className="flex items-center text-sm font-medium">
@@ -117,6 +129,9 @@ export default function ProfileForm({
                         onChange={handlePhoneChange}
                         className="border-gray-300 focus:border-amber-500 focus:ring-amber-500 transition-all"
                     />
+                    {phoneError && (
+                        <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+                    )}
                 </div>
             </motion.div>
 
@@ -135,33 +150,33 @@ export default function ProfileForm({
                 </Button>
                 <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !!phoneError}
                     className="bg-amber-500 hover:bg-amber-600 text-white transition-all"
                 >
                     {isSubmitting ? (
                         <span className="flex items-center">
-              <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-              >
-                <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                ></circle>
-                <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              저장 중...
-            </span>
+                            <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                ></circle>
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                            </svg>
+                            저장 중...
+                        </span>
                     ) : (
                         "저장"
                     )}
