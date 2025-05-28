@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CreditCard, Shield, Megaphone, Bell } from "lucide-react"
+import { CreditCard, Shield, Megaphone, Bell, AlertCircle, Wallet, Coins } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/components/ui/use-toast"
@@ -9,62 +9,66 @@ import NotificationSettingsHeader from "@/app/notifications/settings/components/
 import NotificationSettingItem from "@/app/notifications/settings/components/NotificationSettingItem"
 import NotificationSettingsSkeleton from "@/app/notifications/settings/components/NotificationSettingSkeleton"
 import NotificationPolicyInfo from "@/app/notifications/settings/components/NotificationPolicyInfo"
+import { fetchNotificationSettings } from "@/app/notifications/settings/api/fetch-notification-setting"
+import { updateNotificationSettings } from "@/app/notifications/settings/api/update-notification-setting"
+import LoadingOverlay from "@/components/common/LoadingOverlay";
 
 interface NotificationSettings {
-    allNotifications: boolean
-    tokenAndPayment: boolean
-    security: boolean
-    activityAndNews: boolean
+    SYSTEM: boolean
+    PAYMENT: boolean
+    TOKEN: boolean
 }
 
 export default function NotificationSettingsPage() {
     const [settings, setSettings] = useState<NotificationSettings>({
-        allNotifications: true,
-        tokenAndPayment: true,
-        security: true,
-        activityAndNews: true,
+        SYSTEM: true,
+        PAYMENT: true,
+        TOKEN: true,
     })
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
 
     useEffect(() => {
-        const fetchSettings = async () => {
+        const load = async () => {
             setIsLoading(true)
             try {
-                const saved = localStorage.getItem("notificationSettings")
-                if (saved) {
-                    setSettings(JSON.parse(saved))
-                }
-                setIsLoading(false)
+                const result = await fetchNotificationSettings()
+                const mapped = result.reduce((acc, cur) => {
+                    acc[cur.category] = cur.enabled
+                    return acc
+                }, {} as NotificationSettings)
+                setSettings(mapped)
             } catch (e) {
-                console.error("설정 로딩 실패:", e)
+                console.error("알림 설정 불러오기 실패", e)
+            } finally {
                 setIsLoading(false)
             }
         }
-        fetchSettings()
+
+        load()
     }, [])
 
     const handleAllChange = (checked: boolean) => {
         setSettings({
-            allNotifications: checked,
-            tokenAndPayment: checked,
-            security: checked,
-            activityAndNews: checked,
+            SYSTEM: checked,
+            PAYMENT: checked,
+            TOKEN: checked,
         })
     }
 
-    const handleSettingChange = (key: keyof NotificationSettings, checked: boolean) => {
-        setSettings(prev => {
-            const updated = { ...prev, [key]: checked }
-            const allEnabled = updated.tokenAndPayment && updated.security && updated.activityAndNews
-            return { ...updated, allNotifications: allEnabled }
-        })
+    const handleSettingChange = (category: keyof NotificationSettings, checked: boolean) => {
+        setSettings(prev => ({ ...prev, [category]: checked }))
     }
 
     const saveSettings = async () => {
         setIsSaving(true)
         try {
-            localStorage.setItem("notificationSettings", JSON.stringify(settings))
+            const body = Object.entries(settings).map(([category, enabled]) => ({
+                category: category as "SYSTEM" | "PAYMENT" | "TOKEN",
+                enabled,
+            }))
+            await updateNotificationSettings(body)
+
             toast({
                 title: "설정이 저장되었습니다",
                 description: "알림 설정이 성공적으로 업데이트되었습니다.",
@@ -93,49 +97,50 @@ export default function NotificationSettingsPage() {
                         <>
                             <NotificationSettingItem
                                 icon={Bell}
-                                iconColor="text-blue-500"
-                                iconBg="bg-blue-100 dark:bg-blue-900/20"
+                                iconColor="text-red-500"
+                                iconBg="bg-red-100"
                                 title="모든 알림"
                                 description="모든 알림을 한 번에 설정합니다"
-                                checked={settings.allNotifications}
+                                checked={
+                                    settings.SYSTEM &&
+                                    settings.PAYMENT &&
+                                    settings.TOKEN
+                                }
                                 onChange={handleAllChange}
                                 ariaLabel="모든 알림 설정"
                             />
                             <Separator className="my-1" />
-
+                            <NotificationSettingItem
+                                icon={AlertCircle}
+                                iconColor="text-blue-500"
+                                iconBg="bg-blue-100"
+                                title="시스템"
+                                description="시스템 관련 알림"
+                                checked={settings.SYSTEM}
+                                onChange={(c) => handleSettingChange("SYSTEM", c)}
+                                ariaLabel="시스템 알림 설정"
+                            />
+                            <Separator className="my-1" />
                             <NotificationSettingItem
                                 icon={CreditCard}
                                 iconColor="text-green-500"
-                                iconBg="bg-green-100 dark:bg-green-900/20"
-                                title="토큰 및 결제"
-                                description="토큰 전환, 결제, 충전 관련 알림"
-                                checked={settings.tokenAndPayment}
-                                onChange={(c) => handleSettingChange("tokenAndPayment", c)}
-                                ariaLabel="토큰 및 결제 알림 설정"
+                                iconBg="bg-green-100"
+                                title="결제"
+                                description="결제 관련 알림"
+                                checked={settings.PAYMENT}
+                                onChange={(c) => handleSettingChange("PAYMENT", c)}
+                                ariaLabel="결제 알림 설정"
                             />
                             <Separator className="my-1" />
-
                             <NotificationSettingItem
-                                icon={Shield}
-                                iconColor="text-red-500"
-                                iconBg="bg-red-100 dark:bg-red-900/20"
-                                title="보안"
-                                description="로그인, 비밀번호 변경, 보안 관련 알림"
-                                checked={settings.security}
-                                onChange={(c) => handleSettingChange("security", c)}
-                                ariaLabel="보안 알림 설정"
-                            />
-                            <Separator className="my-1" />
-
-                            <NotificationSettingItem
-                                icon={Megaphone}
-                                iconColor="text-purple-500"
-                                iconBg="bg-purple-100 dark:bg-purple-900/20"
-                                title="활동 및 소식"
-                                description="이벤트, 프로모션, 서비스 업데이트 알림"
-                                checked={settings.activityAndNews}
-                                onChange={(c) => handleSettingChange("activityAndNews", c)}
-                                ariaLabel="활동 및 소식 알림 설정"
+                                icon={Coins}
+                                iconColor="text-amber-500"
+                                iconBg="bg-amber-100"
+                                title="토큰"
+                                description="토큰 전환, 충전 관련 알림"
+                                checked={settings.TOKEN}
+                                onChange={(c) => handleSettingChange("TOKEN", c)}
+                                ariaLabel="토큰 알림 설정"
                             />
                         </>
                     )}
@@ -152,6 +157,7 @@ export default function NotificationSettingsPage() {
                         {isSaving ? "저장 중..." : "설정 저장"}
                     </Button>
                 </div>
+                {isSaving && <LoadingOverlay message="알림 설정을 저장 중입니다..." />}
             </div>
         </div>
     )

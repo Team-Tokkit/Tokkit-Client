@@ -15,7 +15,7 @@ export default function MerchantLoginPage() {
 
     return (
         <motion.div
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
+            className="h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
             initial="initial"
             animate="animate"
             exit="exit"
@@ -23,7 +23,7 @@ export default function MerchantLoginPage() {
             transition={{ duration: 0.3 }}
         >
             <MerchantLoginHeader />
-            <div className="flex-1 flex flex-col items-center pt-12 p-6">
+            <div className="flex-1 flex flex-col items-center justify-center pt-12 p-6">
                 <div className="w-full max-w-xs">
                     <MerchantLogo />
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>

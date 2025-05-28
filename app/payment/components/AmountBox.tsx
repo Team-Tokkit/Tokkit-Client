@@ -1,5 +1,5 @@
 import AmountInput from "@/components/common/AmountInput";
-import { Voucher } from "@/data/payment/payment";
+import { Voucher } from "@/app/merchant/mypage/qr-code/data/payment";
 
 interface Props {
   amount: string;
@@ -58,6 +58,7 @@ export default function AmountBox({
             취소
           </button>
           <button
+            data-testid="amount-submit-button"
             type="button"
             onClick={onSubmit}
             className="flex-1 h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white rounded-lg"

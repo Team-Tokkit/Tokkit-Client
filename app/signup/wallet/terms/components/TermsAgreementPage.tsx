@@ -115,8 +115,10 @@ export default function TermsAgreementPage({ terms, redirectTo, title = "약관 
     }
 
     return (
-        <motion.div className="min-h-screen flex flex-col bg-white dark:bg-gray-900" initial="initial" animate="animate" exit="exit"
+        <motion.div className="min-h-screen flex flex-col bg-[#F8F9FA]" initial="initial" animate="animate" exit="exit"
                     variants={{ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }}>
+            
+            {/* header */}
             <header className="p-4 flex items-center border-b border-gray-100 dark:border-gray-800">
                 <Button variant="ghost" size="icon" className="mr-2 text-gray-500 dark:text-gray-400" onClick={() => router.back()}>
                     <ArrowLeft className="h-5 w-5" />
@@ -127,11 +129,12 @@ export default function TermsAgreementPage({ terms, redirectTo, title = "약관 
                 </motion.h1>
             </header>
 
-            <div className="flex-1 flex flex-col items-center p-6">
+            {/* content */}
+            <div className="flex-1 flex flex-col items-center justify-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-                        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{title}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">{description}</p>
+                        <h2 className="flex flex-col items-center text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">{title}</h2>
+                        <p className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-sm">{description}</p>
                     </motion.div>
 
                     <AnimatePresence>

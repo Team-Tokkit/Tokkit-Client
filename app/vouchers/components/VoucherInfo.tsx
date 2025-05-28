@@ -1,14 +1,19 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 interface VoucherInfoProps {
   amount: string
   validDate: string
+  voucherId: number
 }
 
-export function VoucherInfo({ amount, validDate }: VoucherInfoProps) {
-  const handleApply = () => {
-    alert("바우처 구매하기")
-  }
+export function VoucherInfo({ amount, validDate, voucherId }: VoucherInfoProps) {
+  const router = useRouter()
+
+  const handleApply = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/vouchers/purchase?voucherId=${voucherId}`); 
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 mb-4">

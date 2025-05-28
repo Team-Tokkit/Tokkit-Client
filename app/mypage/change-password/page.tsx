@@ -20,17 +20,17 @@ export default function ChangePasswordPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] py-8 px-4">
-            <div className="max-w-md mx-auto">
-                <ChangePasswordHeader />
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                    {step === "form" ? (
-                        <ChangePasswordForm onSuccess={() => setStep("success")} />
-                    ) : (
-                        <ChangePasswordSuccess />
-                    )}
-                </motion.div>
-            </div>
+        <div className="bg-[#F9FAFB] h-[100dvh] px-4 flex flex-col">
+        <ChangePasswordHeader />
+        <div className="flex-1 flex items-center justify-center">
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                {step === "form" ? (
+                    <ChangePasswordForm onSuccess={() => setStep("success")} />
+                ) : (
+                    <ChangePasswordSuccess />
+                )}
+            </motion.div>
         </div>
+    </div>
     )
 }

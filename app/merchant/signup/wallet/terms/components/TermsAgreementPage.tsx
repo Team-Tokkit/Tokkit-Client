@@ -114,7 +114,7 @@ export default function TermsAgreementPage({ terms, title = "약관 동의", des
     }
 
     return (
-        <motion.div className="min-h-screen flex flex-col bg-white dark:bg-gray-900" initial="initial" animate="animate" exit="exit"
+        <motion.div className="min-h-screen flex flex-col bg-[#F8F9FA] dark:bg-gray-900" initial="initial" animate="animate" exit="exit"
                     variants={{ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }}>
             <header className="p-4 flex items-center border-b border-gray-100 dark:border-gray-800">
                 <Button variant="ghost" size="icon" className="mr-2 text-gray-500 dark:text-gray-400" onClick={() => router.back()}>
@@ -126,7 +126,7 @@ export default function TermsAgreementPage({ terms, title = "약관 동의", des
                 </motion.h1>
             </header>
 
-            <div className="flex-1 flex flex-col items-center p-6">
+            <div className="flex-1 flex flex-col justify-center items-center items-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{title}</h2>

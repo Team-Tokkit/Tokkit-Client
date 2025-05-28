@@ -1,4 +1,3 @@
-// app/dashboard/api/fetchNoticePreview.ts 또는 lib/api/fetchNoticePreview.ts
 import { getApiUrl } from "@/lib/getApiUrl";
 import { getCookie } from "@/lib/cookies";
 import {fetchWithAuth} from "@/lib/fetchWithAuth";

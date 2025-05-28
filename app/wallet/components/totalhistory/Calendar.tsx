@@ -23,6 +23,7 @@ export default function Calendar({ selected, onSelect, onResetFilters }: Calenda
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          data-cy="calendar-toggle-button"
           variant="outline"
           size="icon"
           className="h-10 w-10 rounded-lg border-[#E0E0E0] bg-white"

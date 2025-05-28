@@ -16,7 +16,8 @@ const protectedPaths = [
     "/merchant/dashboard",
     "/merchant/wallet",
     "/merchant/notifications",
-    "merchant/mypage"
+    "/merchant/mypage"
+
 ];
 
 export function middleware(request: NextRequest) {

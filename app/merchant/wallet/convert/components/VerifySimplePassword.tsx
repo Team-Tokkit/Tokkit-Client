@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VirtualKeypad from "@/components/virtual-keypad";
-import {verifyMerchantSimplePassword} from "@/app/merchant/wallet/convert/api/verify-merchant-simple-password";
 
 interface VirtualKeypadProps {
     onComplete: (pinCode: string) => Promise<void>;
@@ -27,16 +26,8 @@ export default function VerifySimplePassword({ onVerified }: Props) {
         setError(null);
 
         try {
-            const success = await verifyMerchantSimplePassword(pinCode);
-            if (success) {
-                setPassword(pinCode);
-                onVerified(pinCode); // 인증 성공 시 즉시 콜백
-                return;
-            } else {
-                setError("비밀번호가 일치하지 않습니다.");
-            }
-        } catch (e) {
-            setError("비밀번호 검증에 실패했습니다.");
+            setPassword(pinCode);
+            onVerified(pinCode);
         } finally {
             setIsLoading(false);
         }
@@ -61,6 +52,7 @@ export default function VerifySimplePassword({ onVerified }: Props) {
             <VirtualKeypad
                 onComplete={handleKeypadComplete}
                 maxLength={6}
+                disabled={isLoading}
             />
 
             <AnimatePresence>

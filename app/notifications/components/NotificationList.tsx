@@ -3,16 +3,15 @@
 import { AnimatePresence } from "framer-motion"
 import NotificationItem from "./NotificationItem"
 
-type NotificationType = "system" | "payment" | "voucher" | "wallet"
+type NotificationType = "system" | "payment" | "token"
 
 interface Notification {
     id: string
     type: NotificationType
     title: string
     message: string
-    isRead: boolean
     createdAt: string
-    status: "active" | "deleted"
+    deleted: "active" | "deleted"
 }
 
 interface NotificationListProps {

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "cypress": "npx cypress open"
   },
   "dependencies": {
     "@auth/core": "latest",
@@ -46,6 +47,7 @@
     "cmdk": "1.0.4",
     "date-fns": "latest",
     "embla-carousel-react": "8.5.1",
+    "event-source-polyfill": "^1.0.31",
     "framer-motion": "latest",
     "html5-qrcode": "latest",
     "input-otp": "1.4.1",
@@ -55,6 +57,7 @@
     "next-themes": "^0.4.4",
     "nodemailer": "latest",
     "qrcode": "latest",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-day-picker": "8.10.1",
     "react-dom": "^18.3.1",
@@ -71,11 +74,14 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
+    "@types/event-source-polyfill": "^1.0.5",
     "@types/node": "^22",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-window": "^1.8.8",
+    "cypress": "^14.4.0",
+    "cypress-file-upload": "^5.0.8",
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"

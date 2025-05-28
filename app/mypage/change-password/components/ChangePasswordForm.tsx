@@ -90,17 +90,17 @@ export default function ChangePasswordForm({ onSuccess }: { onSuccess: () => voi
 
 
     return (
-        <Card className="shadow-lg border-0 overflow-hidden">
+        <Card className="items-center justify-center shadow-lg border-0 overflow-hidden ">
             <ChangePasswordCardHeader />
             <CardContent className="p-6">
                 <div className="flex justify-center mb-6">
                     <Image src="/images/bunny-lock.png" alt="보안 마스코트" width={120} height={120} className="h-28 w-28" />
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <PasswordInput id="currentPassword" label="현재 비밀번호" name="currentPassword" value={formData.currentPassword} onChange={handleChange} error={errors.currentPassword} placeholder="현재 비밀번호를 입력하세요" />
-                    <PasswordInput id="newPassword" label="새 비밀번호" name="newPassword" value={formData.newPassword} onChange={handleChange} error={errors.newPassword} placeholder="새 비밀번호를 입력하세요" />
-                    <PasswordInput id="confirmPassword" label="비밀번호 확인" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} error={errors.confirmPassword} placeholder="새 비밀번호를 다시 입력하세요" />
-                    <Button type="submit" disabled={isSubmitting} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-lg font-medium transition-all">
+                    <PasswordInput id="currentPassword" data-testid="input-current" label="현재 비밀번호" name="currentPassword" value={formData.currentPassword} onChange={handleChange} error={errors.currentPassword} placeholder="현재 비밀번호를 입력하세요" />
+                    <PasswordInput id="newPassword" data-testid="input-new" label="새 비밀번호" name="newPassword" value={formData.newPassword} onChange={handleChange} error={errors.newPassword} placeholder="새 비밀번호를 입력하세요" />
+                    <PasswordInput id="confirmPassword" data-testid="input-confirm" label="비밀번호 확인" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} error={errors.confirmPassword} placeholder="새 비밀번호를 다시 입력하세요" />
+                    <Button type="submit" data-testid="submit-button" disabled={isSubmitting} className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-lg font-medium transition-all">
                         {isSubmitting ? "처리 중..." : "비밀번호 변경하기"}
                     </Button>
                 </form>

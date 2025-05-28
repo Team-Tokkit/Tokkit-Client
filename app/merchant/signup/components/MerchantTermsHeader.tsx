@@ -9,7 +9,7 @@ export default function MerchantTermsHeader() {
     const router = useRouter()
 
     return (
-        <header className="p-4 flex items-center border-b border-gray-100 dark:border-gray-800">
+        <header className="p-4 flex bg-[#F8F9FA] items-center border-b border-100 dark:border-gray-800">
             <Button
                 variant="ghost"
                 size="icon"

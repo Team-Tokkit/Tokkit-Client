@@ -13,9 +13,9 @@ export default function MyPageHeader({ user }: Props) {
     const router = useRouter()
 
     return (
-        <header className="bg-[#F9FAFB] p-5 pt-8 pb-6">
+        <header className="bg-[#F9FAFB] p-5 pt-8 pb-10">
             <div className="flex items-center justify-between mb-8 px-2">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                <Button variant="ghost" size="icon" onClick={() => router.push("/dashboard")}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h1 className="text-2xl font-bold">마이페이지</h1>
@@ -33,7 +33,7 @@ export default function MyPageHeader({ user }: Props) {
             >
                 <div className="relative z-10 p-6">
                     <div className="flex items-center mb-2">
-                        <div className="w-12 h-12 rounded-full bg-[#F3F4F6] flex items-center justify-center mr-3">
+                        <div className="w-12 h-12 rounded-full bg-[#F3F4F6] flex items-center justify-center mr-4">
                             <span className="text-xl font-semibold text-gray-500">{user.name.charAt(0)}</span>
                         </div>
                         <div>
@@ -41,9 +41,6 @@ export default function MyPageHeader({ user }: Props) {
                             <p className="text-sm text-gray-500">{user.email}</p>
                         </div>
                         <ChevronRight className="ml-auto h-5 w-5 text-gray-400" />
-                    </div>
-                    <div className="mt-2">
-                        <p className="text-sm text-gray-500">{user.phoneNumber}</p>
                     </div>
                 </div>
             </motion.div>

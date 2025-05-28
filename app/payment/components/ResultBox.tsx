@@ -1,4 +1,4 @@
-import { Voucher } from "@/data/payment/payment";
+import { Voucher } from "@/app/merchant/mypage/qr-code/data/payment";
 import {StoreInfoResponse} from "@/app/payment/api/payment";
 
 interface ResultBoxProps {

@@ -11,6 +11,7 @@ import { getVoucherDetails, getMyVouchers } from "@/lib/api/voucher"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
 import type { Voucher } from "@/app/vouchers/types/voucher"
 import type { MyVoucher } from "@/app/my-vouchers/types/my-voucher"
+import Header from "@/app/vouchers/components/VoucherPurchaseHeader"
 
 export default function PurchasePage() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function PurchasePage() {
   const [isHovering, setIsHovering] = useState(false)
 
   const [walletInfo, setWalletInfo] = useState<{
-    userName: string
+    name: string
     accountNumber: string
     tokenBalance: number
   } | null>(null)
@@ -38,7 +39,7 @@ export default function PurchasePage() {
     fetchWalletInfo(token)
       .then((data) =>
         setWalletInfo({
-          userName: data.userName,
+          name: data.name,
           accountNumber: data.accountNumber,
           tokenBalance: data.tokenBalance,
         }),
@@ -72,8 +73,9 @@ const handlePay = () => {
   const hasEnoughBalance = walletInfo && walletInfo.tokenBalance >= voucher.price
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]  pb-20">
-      <div className="max-w-lg mx-auto p-6">
+    <div className="min-h-screen bg-[#F9FAFB]">
+      <div className="max-w-lg pr-6 pl-6 pb-6">
+        <Header title="바우처 구매하기" />
         {/* Progress Steps */}
         <div className="flex justify-between items-center mb-8 px-2">
           <div className="flex flex-col items-center">
@@ -146,10 +148,9 @@ const handlePay = () => {
             ) : (
               walletInfo && (
                 <PurchaseTokenBalance
-                  userName={walletInfo.userName}
+                  name={walletInfo.name}
                   accountNumber={walletInfo.accountNumber}
                   tokenBalance={walletInfo.tokenBalance}
-                  price={voucher.price}
                 />
               )
             )}

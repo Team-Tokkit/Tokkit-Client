@@ -12,7 +12,7 @@ export default function ChangePasswordHeader() {
         <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="flex items-center mb-6"
+            className="flex items-center pr-4 pt-8 ml-4 "
         >
             <Button
                 variant="ghost"

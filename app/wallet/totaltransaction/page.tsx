@@ -2,13 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info";
-
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/common/Header";
 import SearchBar from "@/app/wallet/components/totalhistory/SearchBar";
 import Category from "@/app/wallet/components/totalhistory/Category";
-import Calendar from "@/app/wallet/components/totalhistory/Calendar";
-import TransactionList from "@/components/common/TransactionList";
-import {fetchTransactions, Transaction} from "@/app/wallet/api/fetch-transactions";
+import Calendar from "@/components/common/Calendar";
+import TransactionList from "@/app/wallet/components/common/TransactionList";
+import {
+  fetchTransactions,
+  type Transaction,
+} from "@/app/wallet/api/fetch-transactions";
+import { SkeletonLoader } from "@/app/wallet/totaltransaction/loading/skeleton";
 
 interface WalletInfo {
   userId: number;
@@ -23,7 +28,10 @@ export default function TransactionsPage() {
   const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<{ from?: Date; to?: Date } | undefined>(
+    undefined
+  );
+
   const [type, setType] = useState("전체");
   const [period, setPeriod] = useState("전체 기간");
 
@@ -59,28 +67,29 @@ export default function TransactionsPage() {
 
   useEffect(() => {
     fetchTransactions()
-        .then(setTransactions)
-        .catch((error) => {
-          console.error("거래내역 조회 오류:", error);
-          alert("거래내역 불러오기 중 오류 발생");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      .then((data) => {
+        setTransactions(data);
+      })
+      .catch((error) => {
+        console.error("거래내역 조회 오류:", error);
+        alert("거래내역 불러오기 중 오류 발생");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const filteredTransactions = transactions.filter((tx: any) => {
     if (
       searchTerm &&
-      !tx.description.toLowerCase().includes(searchTerm.toLowerCase())
+      !tx.displayDescription?.toLowerCase().includes(searchTerm.toLowerCase())
     ) {
       return false;
     }
 
     if (type !== "전체") {
       const typeMap: Record<string, string> = {
-        결제: "PAYMENT",
-        충전: "CHARGE",
+        결제: "PURCHASE",
         변환: "CONVERT",
       };
       if (tx.type !== typeMap[type]) return false;
@@ -95,29 +104,70 @@ export default function TransactionsPage() {
       if (period === "month" && diff > 30 * 86400000) return false;
     }
 
-    if (date) {
+    if (date?.from) {
       const txDate = new Date(tx.createdAt);
-      if (txDate.toDateString() !== date.toDateString()) return false;
+      const from = new Date(date.from);
+      const to = date.to ? new Date(date.to) : from;
+
+      txDate.setHours(0, 0, 0, 0);
+      from.setHours(0, 0, 0, 0);
+      to.setHours(23, 59, 59, 999);
+
+      if (txDate < from || txDate > to) return false;
     }
 
     return true;
   });
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">거래내역을 불러오는 중...</p>
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       <Header title="거래내역" />
 
-      <div className="p-4 bg-white shadow-sm">
-        <div className="flex gap-2 mb-4">
+      <div className="p-3 bg-white shadow-sm">
+        <div className="flex gap-1 mb-2">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          <Button
+            variant="outline"
+            className="flex gap-2 items-center"
+            onClick={() => {
+              setSearchTerm("");
+              setType("전체");
+              setPeriod("전체 기간");
+              setDate(undefined);
+
+              setLoading(true);
+              fetchTransactions()
+                .then(setTransactions)
+                .catch((err) => {
+                  alert("거래내역 다시 불러오는 중 오류 발생");
+                  console.error(err);
+                })
+                .finally(() => setLoading(false));
+            }}
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="flex gap-1 items-center mb-2">
+          <div
+            className={`flex items-center text-sm rounded-md border h-10 px-4 w-full
+      ${
+        date?.from
+          ? "bg-white text-gray-800 border-[#E0E0E0]"
+          : "bg-[#F5F5F5] text-gray-400 border-gray-300 cursor-not-allowed"
+      }`}
+          >
+            {date?.from
+              ? `${date.from.toLocaleDateString()} ${
+                  date.to ? `~ ${date.to.toLocaleDateString()}` : ""
+                }`
+              : "날짜를 선택해주세요"}
+          </div>
           <Calendar
             selected={date}
             onSelect={setDate}
@@ -125,7 +175,7 @@ export default function TransactionsPage() {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <Category
             label="거래 유형"
             options={typeOptions}
@@ -142,7 +192,7 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+      <div className=" px-4 py-5 rounded-xl">
         <TransactionList transactions={filteredTransactions} />
       </div>
     </div>

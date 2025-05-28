@@ -78,7 +78,7 @@ export default function WalletVerifyPage() {
                 </motion.h1>
             </header>
 
-            <div className="flex-1 flex flex-col items-center px-4 pb-10">
+            <div className="flex-1 justify-center items-center flex flex-col items-center px-4 pb-10">
                 <div className="w-full max-w-md">
                     <div className="flex flex-col items-center text-center mt-4 mb-6">
                         <ShieldCheck className="w-16 h-16 text-[#FFD485] mb-3" />

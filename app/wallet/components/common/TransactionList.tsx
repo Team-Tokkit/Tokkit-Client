@@ -1,14 +1,7 @@
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import TransactionCardContent from "@/app/wallet/components/common/TransactionCardContent";
-
-interface Transaction {
-    id?: number;
-    type: string;
-    amount: number;
-    displayDescription: string;
-    createdAt: string;
-}
+import TransactionCardContent from "./TransactionCardContent"
+import { Transaction } from "@/app/wallet/api/fetch-transactions";
 
 interface TransactionListProps {
     label?: string;
@@ -43,6 +36,7 @@ export default function TransactionList({
                         <Card
                             key={tx.id ?? index}
                             onClick={handleClick}
+                            data-cy="transaction-item"
                             className="bg-white border-none shadow-sm hover:bg-gray-50 transition-colors cursor-pointer"
                         >
                             <CardContent className="p-4">
@@ -50,6 +44,7 @@ export default function TransactionList({
                                     displayDescription={tx.displayDescription}
                                     amount={tx.amount}
                                     createdAt={tx.createdAt}
+                                    type={tx.type}
                                 />
                             </CardContent>
                         </Card>

@@ -16,8 +16,7 @@ const categories: Category[] = [
     { id: "all", label: "전체" },
     { id: "system", label: "시스템" },
     { id: "payment", label: "결제" },
-    { id: "voucher", label: "바우처" },
-    { id: "wallet", label: "지갑" },
+    { id: "token", label: "토큰" },
 ]
 
 export default function NotificationTabs({ activeTab, onChange }: NotificationTabsProps) {
