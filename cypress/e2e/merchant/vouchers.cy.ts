@@ -29,6 +29,6 @@ describe("가맹점 바우처 페이지 통합 테스트", () => {
     // 5. 검색 결과가 없을 경우 확인
     cy.get('input[placeholder="바우처 검색"]').clear().type("우리FISA");
     cy.wait("@getVouchers", { timeout: 10000 });
-    cy.get(".no-results-message").should("contain", "검색 결과가 없습니다");
+    cy.get("p").should("contain", "검색 결과가 없습니다");
   });
 });
