@@ -57,6 +57,7 @@ export default function PaymentCarousel({
         className="overflow-hidden"
         style={{
           width: `${CONTAINER_WIDTH_PX}px`,
+          height: `160px`,
         }}
       >
         <motion.div
@@ -75,8 +76,8 @@ export default function PaymentCarousel({
             return (
               <div
                 key={voucher.id}
-                style={{ width: `${CARD_WIDTH_PX}px` }}
-                className="flex-shrink-0 px-2"
+                style={{ width: `${CARD_WIDTH_PX}px`, height: "160px" }} // ✅ 높이 추가
+      className="flex-shrink-0 px-2 flex items-center justify-center"
                 onClick={() => !voucher.disabled && onSelect(index)}
               >
                 <motion.div
@@ -91,7 +92,7 @@ export default function PaymentCarousel({
                       : "0 1px 3px rgba(0, 0, 0, 0.04)",
                   }}
                   transition={{ duration: 0.3 }}
-                  className={`w-full h-full p-3 rounded-xl border transition-all duration-300 ease-in-out cursor-pointer ${
+                  className={`w-full h-[120px] p-4 rounded-xl border transition-all duration-300 ease-in-out cursor-pointer ${
                     voucher.disabled ? "brightness-50 pointer-events-none" : ""
                   }`}
                 >
@@ -107,10 +108,12 @@ export default function PaymentCarousel({
                         {voucher.balance.toLocaleString()}원
                       </p>
                     </div>
+                    {voucher.title !== "토큰으로 결제" && (
                     <div className="text-right">
                       <p className="text-xs text-gray-500">만료일</p>
                       <p className="text-sm text-[#1A1A1A]">{voucher.expiryDate}</p>
                     </div>
+                  )}
                   </div>
                 </motion.div>
               </div>

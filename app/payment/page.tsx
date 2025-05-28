@@ -330,7 +330,7 @@ export default function PaymentPage() {
                   onCancel={handleCancel}
                   onSubmit={() => setPaymentStep("password")}
                 >
-                  <div className="mb-4 overflow-visible">
+                  <div className="mb-4">
                     <PaymentCarousel
                       vouchers={usableVouchers}
                       currentIndex={carouselIndex}
