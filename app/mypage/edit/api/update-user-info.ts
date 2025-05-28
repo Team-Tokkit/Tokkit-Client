@@ -3,12 +3,11 @@ import {fetchWithAuth} from "@/lib/fetchWithAuth";
 
 const API_URL = getApiUrl();
 
-export async function updateUserInfo(accessToken: string, data: { name: string; phoneNumber: string }) {
+export async function updateUserInfo(data: { name: string; phoneNumber: string }) {
     const res = await fetchWithAuth(`${API_URL}/api/users/info-update`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
         },
         credentials: "include",
         body: JSON.stringify(data),

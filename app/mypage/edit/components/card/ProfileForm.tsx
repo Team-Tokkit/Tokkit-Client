@@ -16,17 +16,6 @@ interface ProfileFormProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onSubmit: (e: React.FormEvent) => void
     onCancel: () => void
-    emailDialogProps: {
-        isOpen: boolean
-        setIsOpen: (open: boolean) => void
-        newEmail: string
-        setNewEmail: (value: string) => void
-        verificationCode: string
-        setVerificationCode: (value: string) => void
-        isVerificationSent: boolean
-        handleSendVerification: () => void
-        handleVerifyEmail: () => void
-    }
 }
 
 const itemVariants = {
@@ -55,7 +44,6 @@ export default function ProfileForm({
                                         onChange,
                                         onSubmit,
                                         onCancel,
-                                        emailDialogProps,
                                     }: ProfileFormProps) {
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatPhoneNumber(e.target.value);
