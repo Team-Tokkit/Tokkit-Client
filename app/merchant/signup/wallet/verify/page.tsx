@@ -64,7 +64,7 @@ export default function WalletVerifyPage() {
             transition={{ duration: 0.3 }}
         >
             {/* 헤더 */}
-            <header className="p-4 flex items-center">
+            <header className="p-4 flex items-center bg-[#F8F9FA] border-b border-100">
                 <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
                     <ArrowLeft className="h-5 w-5 text-[#1A1A1A]" />
                 </Button>
@@ -78,7 +78,7 @@ export default function WalletVerifyPage() {
                 </motion.h1>
             </header>
 
-            <div className="flex-1 justify-center items-center flex flex-col items-center px-4 pb-10">
+            <div className="flex-1 justify-center items-center flex flex-col items-center px-4 pb-10 bg-[#F8F9FA]">
                 <div className="w-full max-w-md">
                     <div className="flex flex-col items-center text-center mt-4 mb-6">
                         <ShieldCheck className="w-16 h-16 text-[#FFD485] mb-3" />
