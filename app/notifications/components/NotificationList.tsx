@@ -3,7 +3,7 @@
 import { AnimatePresence } from "framer-motion"
 import NotificationItem from "./NotificationItem"
 
-type NotificationType = "system" | "payment" | "voucher" | "token"
+type NotificationType = "system" | "payment" | "token"
 
 interface Notification {
     id: string

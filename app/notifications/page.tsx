@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
-type NotificationType = "system" | "payment" | "voucher" | "token"
+type NotificationType = "system" | "payment" | "token"
 
 interface Notification {
     id: string

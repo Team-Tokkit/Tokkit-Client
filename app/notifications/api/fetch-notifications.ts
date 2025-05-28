@@ -7,7 +7,7 @@ const API_URL = getApiUrl();
 
 export interface Notification {
     id: string
-    type: "system" | "payment" | "voucher" | "token"
+    type: "system" | "payment" | "token"
     title: string
     message: string
     createdAt: string

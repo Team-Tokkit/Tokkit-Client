@@ -6,7 +6,7 @@ import {getApiUrl} from "@/lib/getApiUrl";
 const API_URL = getApiUrl();
 
 export interface NotificationCategorySetting {
-    category: "SYSTEM" | "PAYMENT" | "VOUCHER" | "TOKEN"
+    category: "SYSTEM" | "PAYMENT" | "TOKEN"
     enabled: boolean
 }
 
