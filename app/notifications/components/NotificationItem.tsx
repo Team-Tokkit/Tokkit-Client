@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 import NotificationIcon from "./NotificationIcon"
 
-type NotificationType = "system" | "payment" | "voucher" | "token"
+type NotificationType = "system" | "payment" | "token"
 
 interface Notification {
     id: string

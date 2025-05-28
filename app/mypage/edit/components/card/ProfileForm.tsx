@@ -4,8 +4,8 @@ import { Mail, Phone, User, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import EmailChangeDialog from "./EmailChangeDialog"
 import { motion } from "framer-motion"
+import { useState } from "react"
 
 interface ProfileFormProps {
     user: {
@@ -17,17 +17,6 @@ interface ProfileFormProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onSubmit: (e: React.FormEvent) => void
     onCancel: () => void
-    emailDialogProps: {
-        isOpen: boolean
-        setIsOpen: (open: boolean) => void
-        newEmail: string
-        setNewEmail: (value: string) => void
-        verificationCode: string
-        setVerificationCode: (value: string) => void
-        isVerificationSent: boolean
-        handleSendVerification: () => void
-        handleVerifyEmail: () => void
-    }
 }
 
 const itemVariants = {
@@ -42,6 +31,7 @@ const itemVariants = {
     },
 }
 
+// 전화번호 입력 시 자동 하이픈 포맷
 function formatPhoneNumber(value: string): string {
     const onlyNums = value.replace(/\D/g, "").slice(0, 11); // 최대 11자리 제한
 
@@ -50,16 +40,25 @@ function formatPhoneNumber(value: string): string {
     return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 7)}-${onlyNums.slice(7)}`;
 }
 
+// 유효한 전화번호 형식인지 검사
+function isValidPhoneNumber(phone: string): boolean {
+    return /^010-\d{4}-\d{4}$/.test(phone);
+}
+
 export default function ProfileForm({
                                         user,
                                         isSubmitting,
                                         onChange,
                                         onSubmit,
                                         onCancel,
-                                        emailDialogProps,
                                     }: ProfileFormProps) {
+    const [phoneError, setPhoneError] = useState<string | null>(null)
+
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatPhoneNumber(e.target.value);
+        const isValid = isValidPhoneNumber(formatted);
+        setPhoneError(isValid ? null : "010-0000-0000 형식으로 입력해주세요.");
+
         const syntheticEvent = {
             ...e,
             target: {
@@ -74,7 +73,7 @@ export default function ProfileForm({
 
     return (
         <form onSubmit={onSubmit} className="space-y-6 p-6">
-        {/* 이름 */}
+            {/* 이름 */}
             <motion.div variants={itemVariants} className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="name" className="flex items-center text-sm font-medium">
@@ -107,11 +106,10 @@ export default function ProfileForm({
                             disabled
                             className="bg-gray-100 border-gray-200 text-gray-500"
                         />
-                        <EmailChangeDialog {...emailDialogProps} />
                     </div>
                     <p className="text-xs text-gray-500 mt-1 flex items-center">
                         <Info className="h-3 w-3 mr-1" />
-                        이메일 변경 시 인증 과정이 필요합니다.
+                        이메일은 변경이 불가능합니다.
                     </p>
                 </div>
             </motion.div>
@@ -131,6 +129,9 @@ export default function ProfileForm({
                         onChange={handlePhoneChange}
                         className="border-gray-300 focus:border-amber-500 focus:ring-amber-500 transition-all"
                     />
+                    {phoneError && (
+                        <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+                    )}
                 </div>
             </motion.div>
 
@@ -149,33 +150,33 @@ export default function ProfileForm({
                 </Button>
                 <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !!phoneError}
                     className="bg-amber-500 hover:bg-amber-600 text-white transition-all"
                 >
                     {isSubmitting ? (
                         <span className="flex items-center">
-              <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-              >
-                <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                ></circle>
-                <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              저장 중...
-            </span>
+                            <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                ></circle>
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                            </svg>
+                            저장 중...
+                        </span>
                     ) : (
                         "저장"
                     )}

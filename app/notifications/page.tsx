@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
-type NotificationType = "system" | "payment" | "voucher" | "token"
+type NotificationType = "system" | "payment" | "token"
 
 interface Notification {
     id: string
@@ -102,7 +102,7 @@ export default function NotificationsPage() {
             </div>
 
             <Dialog open={!!openDialogId} onOpenChange={() => setOpenDialogId(null)}>
-                <DialogContent className="bg-white w-3/4 rounded-3xl">
+                <DialogContent className="bg-white w-5/6 rounded-3xl">
                     <DialogHeader>
                         <DialogTitle>알림을 삭제하시겠습니까?</DialogTitle>
                         <DialogDescription>
