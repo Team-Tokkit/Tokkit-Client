@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 
 import NoticeList from "@/app/notice/components/NoticeList"
@@ -11,7 +11,7 @@ import Header from "@/components/common/Header"
 import { fetchNoticeList, type Notice } from "@/app/notice/api/notice-api"
 import { filterLatestNoticeIds } from "@/lib/filterLatestNotices"
 
-export default function NoticesPage() {
+function NoticesContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentPage = Number.parseInt(searchParams.get("page") ?? "1", 10) - 1
@@ -67,5 +67,13 @@ export default function NoticesPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function NoticesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NoticesContent />
+    </Suspense>
   )
 }

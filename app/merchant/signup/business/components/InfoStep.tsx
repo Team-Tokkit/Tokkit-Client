@@ -10,7 +10,9 @@ import { useRouter } from "next/navigation"
 import { fetchSidoList, fetchSigunguList } from "@/app/merchant/signup/business/api/region"
 import AddressSearchModal from "./AddressSearchModal"
 
-interface InfoStepProps {}
+interface InfoStepProps {
+    onAddressSearch: () => void;
+}
 
 const STORE_CATEGORIES = [
     { value: "음식점", label: "음식점" },
@@ -21,7 +23,7 @@ const STORE_CATEGORIES = [
     { value: "교육", label: "교육" },
 ]
 
-export default function InfoStep() {
+export default function InfoStep({onAddressSearch}: InfoStepProps) {
     const router = useRouter()
     const [businessNumber, setBusinessNumber] = useState("")
     const [storeName, setStoreName] = useState("")

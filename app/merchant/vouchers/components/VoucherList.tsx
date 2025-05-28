@@ -1,3 +1,5 @@
+'use client'
+
 import VoucherCard from "@/app/merchant/vouchers/components/VoucherCard"
 import { getVouchers } from "@/app/merchant/vouchers/api/voucher"
 import { useEffect, useState } from "react"
