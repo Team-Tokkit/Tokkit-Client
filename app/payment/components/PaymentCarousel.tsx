@@ -44,6 +44,7 @@ export default function PaymentCarousel({
         <ChevronLeft className="h-5 w-5 text-[#1A1A1A]" />
       </button>
       <button
+        data-testid="carousel-next-button"
         onClick={handleNext}
         className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full p-1 shadow-md translate-x-1/2"
       >
