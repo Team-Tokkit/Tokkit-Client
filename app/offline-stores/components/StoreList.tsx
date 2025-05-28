@@ -94,7 +94,7 @@ function Row({
     const store = stores[index]
 
     return (
-        <div style={style} key={store.id}>
+        <div data-cy="store-list-item" style={style} key={store.id}> 
             <StoreItem
                 store={store}
                 isSelected={selectedStore === store.id}
