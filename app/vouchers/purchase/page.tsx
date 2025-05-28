@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, ShieldCheck, CheckCircle2, CreditCard, Clock } from "lucide-react"
 import VoucherPurchaseCard from "@/app/vouchers/components/VoucherPurchaseCard"
@@ -12,7 +12,7 @@ import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
 import type { MyVoucher, MyVoucherDetail } from "@/app/my-vouchers/types/my-voucher"
 import Header from "@/app/vouchers/components/VoucherPurchaseHeader"
 
-export default function PurchasePage() {
+function PurchaseContent() {
   const router = useRouter()
   const params = useSearchParams()
   const voucherId = Number(params.get("voucherId"))
@@ -42,7 +42,7 @@ export default function PurchasePage() {
           name: data.name,
           accountNumber: data.accountNumber,
           tokenBalance: data.tokenBalance,
-        })
+        }),
       )
       .catch(() => setWalletError("지갑 정보를 불러올 수 없습니다."))
       .finally(() => setLoadingWallet(false))
@@ -228,5 +228,13 @@ export default function PurchasePage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function PurchasePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PurchaseContent />
+    </Suspense>
   )
 }

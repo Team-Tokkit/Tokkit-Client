@@ -1,16 +1,16 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useRef, useState } from "react"
+import { useRef, useState, Suspense } from "react"
 import PurchasePassword from "../../components/PurchasePassword"
 import { purchaseVoucher } from "@/lib/api/voucher"
 import { verifySimplePassword } from "@/app/payment/api/payment"
-import { VirtualKeypadHandle } from "@/components/virtual-keypad"
+import type { VirtualKeypadHandle } from "@/components/virtual-keypad"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
 import LoadingOverlay from "@/components/common/LoadingOverlay"
 
-export default function VoucherPurchaseVerifyPage() {
+function VoucherPurchaseVerifyContent() {
   const router = useRouter()
   const params = useSearchParams()
   const voucherId = Number(params.get("voucherId"))
@@ -18,7 +18,6 @@ export default function VoucherPurchaseVerifyPage() {
   const [error, setError] = useState<string | null>(null)
   const [failCount, setFailCount] = useState(0)
   const keypadRef = useRef<VirtualKeypadHandle>(null)
-
 
   // 비밀번호 입력 완료 핸들러
   const handleComplete = async (input: string) => {
@@ -63,7 +62,7 @@ export default function VoucherPurchaseVerifyPage() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-8">
-      {loading && <LoadingOverlay/>}
+      {loading && <LoadingOverlay />}
       <div className="w-full max-w-md flex flex-col items-center">
         {/* Header */}
         <div className="w-full flex items-center mb-5">
@@ -73,24 +72,12 @@ export default function VoucherPurchaseVerifyPage() {
           <span className="text-xl text-gray-700 font-bold ml-2">비밀번호 입력</span>
         </div>
 
-        <Image
-          src="/images/bunny-mascot.png"
-          alt="바우처 마스코트"
-          width={80}
-          height={120}
-          className="mb-4"
-        />
+        <Image src="/images/bunny-mascot.png" alt="바우처 마스코트" width={80} height={120} className="mb-4" />
 
         <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">간편 비밀번호 입력</h2>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          바우처 구매를 위해 간편 비밀번호를 입력해주세요.
-        </p>
+        <p className="text-sm text-gray-500 text-center mb-6">바우처 구매를 위해 간편 비밀번호를 입력해주세요.</p>
 
-        {failCount > 0 && (
-          <p className="text-xs text-red-500 font-semibold text-center mb-4">
-            오류 {failCount}/5
-          </p>
-        )}
+        {failCount > 0 && <p className="text-xs text-red-500 font-semibold text-center mb-4">오류 {failCount}/5</p>}
 
         <div className="w-full">
           <PurchasePassword ref={keypadRef} onComplete={handleComplete} />
@@ -106,5 +93,13 @@ export default function VoucherPurchaseVerifyPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function VoucherPurchaseVerifyPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VoucherPurchaseVerifyContent />
+    </Suspense>
   )
 }
