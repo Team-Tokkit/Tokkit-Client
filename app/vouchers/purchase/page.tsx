@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, ShieldCheck, CheckCircle2, CreditCard, Clock } from "lucide-react"
 import VoucherPurchaseCard from "@/app/vouchers/components/VoucherPurchaseCard"
@@ -9,16 +9,15 @@ import PurchaseTokenBalance from "@/app/vouchers/components/PurchaseTokenBalance
 import { Button } from "@/components/ui/button"
 import { getVoucherDetails, getMyVouchers } from "@/lib/api/voucher"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
-import type { Voucher } from "@/app/vouchers/types/voucher"
-import type { MyVoucher } from "@/app/my-vouchers/types/my-voucher"
+import type { MyVoucher, MyVoucherDetail } from "@/app/my-vouchers/types/my-voucher"
 import Header from "@/app/vouchers/components/VoucherPurchaseHeader"
 
-export default function PurchasePage() {
+function PurchaseContent() {
   const router = useRouter()
   const params = useSearchParams()
   const voucherId = Number(params.get("voucherId"))
 
-  const [voucher, setVoucher] = useState<Voucher | null>(null)
+  const [voucher, setVoucher] = useState<MyVoucherDetail | null>(null)
   const [methods, setMethods] = useState<MyVoucher[]>([])
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [isHovering, setIsHovering] = useState(false)
@@ -32,11 +31,12 @@ export default function PurchasePage() {
   const [walletError, setWalletError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (voucherId) getVoucherDetails(voucherId).then(setVoucher)
+    if (voucherId) {
+      getVoucherDetails(voucherId).then((data) => setVoucher(data as unknown as MyVoucherDetail))
+    }
     getMyVouchers().then((res) => setMethods(res.content))
 
-    const token = localStorage.getItem("accessToken")!
-    fetchWalletInfo(token)
+    fetchWalletInfo()
       .then((data) =>
         setWalletInfo({
           name: data.name,
@@ -48,11 +48,10 @@ export default function PurchasePage() {
       .finally(() => setLoadingWallet(false))
   }, [voucherId])
 
-const handlePay = () => {
-  if (!voucher) return;
-  router.push(`/vouchers/purchase/verify?voucherId=${voucher.id}`);
-};
-
+  const handlePay = () => {
+    if (!voucher) return
+    router.push(`/vouchers/purchase/verify?voucherId=${voucher.id}`)
+  }
 
   if (!voucher) {
     return (
@@ -68,7 +67,6 @@ const handlePay = () => {
       </div>
     )
   }
-
 
   const hasEnoughBalance = walletInfo && walletInfo.tokenBalance >= voucher.price
 
@@ -125,7 +123,18 @@ const handlePay = () => {
               </span>
               구매 상품
             </h2>
-            <VoucherPurchaseCard voucher={voucher} />
+            <VoucherPurchaseCard
+              voucher={{
+                id: voucher.id,
+                name: voucher.voucherName,
+                description: voucher.voucherDetailDescription,
+                validDate: voucher.voucherValidDate,
+                remainingCount: voucher.remainingAmount,
+                totalCount: 0,
+                price: voucher.price,
+                imageUrl: voucher.imageUrl,
+              }}
+            />
           </motion.div>
 
           {/* 2. 토큰 잔액 */}
@@ -219,5 +228,13 @@ const handlePay = () => {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function PurchasePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PurchaseContent />
+    </Suspense>
   )
 }

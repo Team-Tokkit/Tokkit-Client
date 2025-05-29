@@ -27,7 +27,7 @@ export default function MerchantRecentTransaction({ transactions, loading }: Pro
                     <TransactionList
                         transactions={transactions.map(t => ({
                             ...t,
-                            description: t.description || ''
+                            description: t.displayDescription || ''
                         }))}
                         limit={3}
                     />
