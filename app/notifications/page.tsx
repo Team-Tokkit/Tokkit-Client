@@ -83,6 +83,7 @@ export default function NotificationsPage() {
         if (activeTab === "all") return true
         return n.type === activeTab
     })
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
 
     return (
         <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#121212] flex flex-col">
