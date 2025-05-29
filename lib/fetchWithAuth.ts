@@ -31,29 +31,30 @@ export async function fetchWithAuth(input: RequestInfo, init: RequestInit = {}):
                 const newAccessToken = data.result.accessToken
                 setCookie("accessToken", newAccessToken)
 
-                // 재요청
-                res = await fetch(input, {
-                    ...init,
-                    headers: {
-                        ...(init.headers || {}),
-                        Authorization: `Bearer ${newAccessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                })
-            } else {
-                // refresh 실패 → 로그아웃
-                deleteCookie("accessToken")
-                deleteCookie("refreshToken")
-                window.location.href = "/login"
-            }
-        } catch (err) {
-            console.error("토큰 재발급 실패", err)
-            deleteCookie("accessToken")
-            deleteCookie("refreshToken")
-            window.location.href = "/login"
-        }
+        // 재요청
+        res = await fetch(input, {
+          ...init,
+          headers: {
+            ...(init.headers || {}),
+            Authorization: `Bearer ${newAccessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+      } else {
+        alert("장시간 활동이 없어 세션이 만료되었습니다. 다시 로그인 해주세요.")
+        deleteCookie("accessToken")
+        deleteCookie("refreshToken")
+        window.location.href = "/login"
+      }
+    } catch (err) {
+      console.error("토큰 재발급 실패", err)
+      alert("장시간 활동이 없어 세션이 만료되었습니다. 다시 로그인 해주세요.")
+      deleteCookie("accessToken")
+      deleteCookie("refreshToken")
+      window.location.href = "/login"
     }
+  }
 
     return res
 }
