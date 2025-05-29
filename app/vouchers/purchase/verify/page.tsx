@@ -61,36 +61,40 @@ function VoucherPurchaseVerifyContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-8">
+    <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
       {loading && <LoadingOverlay />}
-      <div className="w-full max-w-md flex flex-col items-center">
-        {/* Header */}
-        <div className="w-full flex items-center mb-5">
-          <button onClick={() => router.back()} className="p-2">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className="text-xl text-gray-700 font-bold ml-2">비밀번호 입력</span>
+
+      {/* Header - 상단 고정 */}
+      <div className="w-full bg-[#F9FAFB] px-4 py-4 flex items-center">
+        <button onClick={() => router.back()} className="p-2">
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <span className="text-xl text-gray-700 font-bold ml-2">비밀번호 입력</span>
+      </div>
+
+      {/* Content - 나머지 공간에서 중앙 정렬 */}
+      <div className="flex-1 flex items-center justify-center px-8">
+        <div className="w-full max-w-md flex flex-col items-center">
+          <Image src="/images/bunny-mascot.png" alt="바우처 마스코트" width={80} height={120} className="mb-4" />
+
+          <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">간편 비밀번호 입력</h2>
+          <p className="text-sm text-gray-500 text-center mb-6">바우처 구매를 위해 간편 비밀번호를 입력해주세요.</p>
+
+          {failCount > 0 && <p className="text-xs text-red-500 font-semibold text-center mb-4">오류 {failCount}/5</p>}
+
+          <div className="w-full">
+            <PurchasePassword ref={keypadRef} onComplete={handleComplete} />
+          </div>
+
+          {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
+
+          <p
+            className="text-sm text-gray-500 text-center mt-8 underline cursor-pointer hover:text-gray-700"
+            onClick={handleForgotPassword}
+          >
+            비밀번호를 잊으셨나요?
+          </p>
         </div>
-
-        <Image src="/images/bunny-mascot.png" alt="바우처 마스코트" width={80} height={120} className="mb-4" />
-
-        <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">간편 비밀번호 입력</h2>
-        <p className="text-sm text-gray-500 text-center mb-6">바우처 구매를 위해 간편 비밀번호를 입력해주세요.</p>
-
-        {failCount > 0 && <p className="text-xs text-red-500 font-semibold text-center mb-4">오류 {failCount}/5</p>}
-
-        <div className="w-full">
-          <PurchasePassword ref={keypadRef} onComplete={handleComplete} />
-        </div>
-
-        {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
-
-        <p
-          className="text-sm text-gray-500 text-center mt-8 underline cursor-pointer hover:text-gray-700"
-          onClick={handleForgotPassword}
-        >
-          비밀번호를 잊으셨나요?
-        </p>
       </div>
     </div>
   )
