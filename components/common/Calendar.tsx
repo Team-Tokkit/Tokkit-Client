@@ -57,6 +57,7 @@ export default function Calendar({
           variant="outline"
           size="icon"
           className="h-10 w-14 rounded-lg border-[#E0E0E0] bg-white"
+          data-testid="calendar-trigger"
         >
           <CalendarIcon className="h-5 w-5 text-[#666666]" />
         </Button>
@@ -74,13 +75,11 @@ export default function Calendar({
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            // 오늘 이후 날짜는 선택 불가
             if (r?.from && isAfter(r.from, today)) return;
             if (r?.to && isAfter(r.to, today)) return;
 
             setRange(r);
 
-            // 범위가 완성되면 확정하고 캘린더 닫기
             if (r?.from && r?.to) {
               onSelect(r);
               setOpen(false);
@@ -98,18 +97,6 @@ export default function Calendar({
             day_disabled: "text-gray-300 cursor-not-allowed",
           }}
         />
-
-        <Button
-          variant="ghost"
-          className="w-full text-center text-xs text-[#999] hover:bg-[#F5F5F5] transition mt-2"
-          onClick={() => {
-            onSelect(undefined);
-            onResetFilters?.();
-            setOpen(false);
-          }}
-        >
-          전체 날짜 보기
-        </Button>
       </PopoverContent>
     </Popover>
   );
