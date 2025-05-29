@@ -5,10 +5,10 @@ interface MarkerWithStoreId extends kakao.maps.Marker {
 }
 export const CATEGORIES = ["전체", "음식점", "의료", "서비스", "관광", "숙박", "교육"]
 export const loadKakaoMapScript = (
-    setIsMapLoaded: (val: boolean) => void,
-    initializeMap: () => void,
-    scriptLoadAttemptRef: React.MutableRefObject<number>,
-    setMapError: (msg: string | null) => void
+  setIsMapLoaded: (val: boolean) => void,
+  initializeMap: () => void,
+  scriptLoadAttemptRef: React.MutableRefObject<number>,
+  setMapError: (msg: string | null) => void
 ) => {
   const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY
   scriptLoadAttemptRef.current++
@@ -43,12 +43,12 @@ export const loadKakaoMapScript = (
 }
 
 export const initializeMap = (
-    mapRef: any,
-    currentLocation: { lat: number; lng: number },
-    mapBoundsRef: React.MutableRefObject<any>, // ← 타입 변경
-    fetchStores: (params: StoreSearchParams) => void,
-    addCurrentLocationMarker: () => void,
-    DEFAULT_ZOOM_LEVEL: number
+  mapRef: any,
+  currentLocation: { lat: number; lng: number },
+  mapBoundsRef: React.MutableRefObject<any>, // ← 타입 변경
+  fetchStores: (params: StoreSearchParams) => void,
+  addCurrentLocationMarker: () => void,
+  DEFAULT_ZOOM_LEVEL: number
 ) => {
   if (!window.kakao || !window.kakao.maps || !currentLocation) return
 
@@ -79,9 +79,9 @@ export const initializeMap = (
 
 
 export const addCurrentLocationMarker = (
-    mapRef: any,
-    currentLocation: { lat: number; lng: number },
-    currentLocationMarkerRef: any
+  mapRef: any,
+  currentLocation: { lat: number; lng: number },
+  currentLocationMarkerRef: any
 ) => {
   if (!mapRef.current || !currentLocation) return
 
@@ -90,9 +90,9 @@ export const addCurrentLocationMarker = (
   }
 
   const markerImage = new window.kakao.maps.MarkerImage(
-      "/images/current-location-marker.png",
-      new window.kakao.maps.Size(40, 40),
-      { offset: new window.kakao.maps.Point(20, 40) }
+    "/images/current-location-marker.png",
+    new window.kakao.maps.Size(40, 40),
+    { offset: new window.kakao.maps.Point(20, 40) }
   )
 
   const position = new window.kakao.maps.LatLng(currentLocation.lat, currentLocation.lng)
@@ -107,12 +107,13 @@ export const addCurrentLocationMarker = (
 }
 
 export const updateMarkers = (
-    stores: Store[],
-    mapRef: any,
-    markersRef: any,
-    overlaysRef: any,
-    setSelectedStore: (id: number | null) => void,
-    createOverlay: (store: Store, marker: any) => void
+  stores: Store[],
+  mapRef: any,
+  markersRef: any,
+  overlaysRef: any,
+  setSelectedStore: (id: number | null) => void,
+  createOverlay: (store: Store, marker: any) => void,
+  clustererRef?: any
 ) => {
   if (!mapRef.current || !window.kakao) return
   markersRef.current.forEach((m: any) => m.setMap(null))
@@ -120,34 +121,54 @@ export const updateMarkers = (
   markersRef.current = []
   overlaysRef.current = []
 
+  if (clustererRef && clustererRef.current) {
+    clustererRef.current.setMap(null)
+    clustererRef.current = null
+  }
+
   const markerImage = new window.kakao.maps.MarkerImage(
-      "/images/tokkit-marker.png",
-      new window.kakao.maps.Size(40, 40),
-      { offset: new window.kakao.maps.Point(20, 40) }
+    "/images/tokkit-marker.png",
+    new window.kakao.maps.Size(40, 40),
+    { offset: new window.kakao.maps.Point(20, 40) }
   )
+
+  const markers: kakao.maps.Marker[] = []
 
   stores.forEach((store) => {
     const position = new window.kakao.maps.LatLng(store.latitude, store.longitude)
-    const marker = new window.kakao.maps.Marker({ position, map: mapRef.current, image: markerImage }) as MarkerWithStoreId
-    marker.storeId = store.id // Store the store ID in the marker
+    const marker = new window.kakao.maps.Marker({ position, image: markerImage }) as MarkerWithStoreId
+    marker.storeId = store.id
 
     window.kakao.maps.event.addListener(marker, "click", () => {
       setSelectedStore(store.id)
-
       const yOffset = 100
       const projection = mapRef.current.getProjection()
       const point = projection.containerPointFromCoords(position)
       const adjusted = new window.kakao.maps.Point(point.x, point.y - yOffset)
       const newCenter = projection.coordsFromContainerPoint(adjusted)
       mapRef.current.setCenter(newCenter)
-
       overlaysRef.current.forEach((o: any) => o.setMap(null))
       overlaysRef.current = []
       createOverlay(store, marker)
+      window.location.href = `/offline-stores/${store.id}`
     })
-
+    markers.push(marker)
     markersRef.current.push(marker)
   })
+
+  if (window.kakao.maps.MarkerClusterer) {
+    const clusterer = new window.kakao.maps.MarkerClusterer({
+      map: mapRef.current,
+      markers,
+      gridSize: 60,
+      minLevel: 5,
+      disableClickZoom: false,
+      averageCenter: true,
+    })
+    if (clustererRef) clustererRef.current = clusterer
+  } else {
+    markers.forEach((marker) => (marker as any).setMap(mapRef.current))
+  }
 }
 
 export const calculateMapRadius = (bounds: any): number => {
