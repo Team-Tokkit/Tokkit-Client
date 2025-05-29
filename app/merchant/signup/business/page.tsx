@@ -11,8 +11,8 @@ export default function BusinessSignupPage() {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [roadAddress, setRoadAddress] = useState("");
 
-  return (
-    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col">
+    return (
+         <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       {/* 헤더 + 마스코트 이미지 */}
       <BusinessHeader onBack={() => window.history.back()} />
 
@@ -37,5 +37,5 @@ export default function BusinessSignupPage() {
         />
       )}
     </div>
-  );
+    )
 }

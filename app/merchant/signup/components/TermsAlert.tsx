@@ -12,7 +12,7 @@ export default function TermsAlert({ show }: TermsAlertProps) {
         <AnimatePresence>
             {show && (
                 <motion.div
-                    className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center text-red-500 dark:text-red-400 shadow-sm"
+                    className="mb-4 p-4 bg-red-50  rounded-xl flex items-center text-red-500  shadow-sm"
                     initial={{ opacity: 0, y: -10, height: 0 }}
                     animate={{ opacity: 1, y: 0, height: "auto" }}
                     exit={{ opacity: 0, y: -10, height: 0 }}

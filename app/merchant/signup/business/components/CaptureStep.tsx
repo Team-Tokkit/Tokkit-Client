@@ -119,10 +119,10 @@ export default function CaptureStep({ onNext }: CaptureStepProps) {
 
     return (
         <div className="w-full max-w-md mx-auto">
-            <h2 className="text-xl font-bold text-[#1A1A1A] dark:text-white mb-2 text-center">
+            <h2 className="text-xl font-bold text-[#1A1A1A]  mb-2 text-center">
                 사업자등록증 촬영
             </h2>
-            <p className="text-sm text-[#666666] dark:text-[#BBBBBB] mb-6 text-center">
+            <p className="text-sm text-[#666666]  mb-6 text-center">
                 사업자등록증을 촬영하거나 이미지를 업로드해주세요
             </p>
 
@@ -161,7 +161,7 @@ export default function CaptureStep({ onNext }: CaptureStepProps) {
                     <Button
                         onClick={captureImage}
                         disabled={!!cameraError}
-                        className="w-full h-14 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-xl shadow-md"
+                        className="w-full h-14 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-xl shadow-md"
                     >
                         <Camera className="h-5 w-5 mr-2" />
                         촬영하기
@@ -184,7 +184,7 @@ export default function CaptureStep({ onNext }: CaptureStepProps) {
                             className="border-2 border-dashed border-[#E0E0E0] rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer hover:border-[#FFB020] transition-colors h-[320px] mb-4"
                         >
                             <Upload className="h-4 w-12 text-[#999999] mb-4" />
-                            <p className="text-base font-medium text-[#666666] dark:text-[#BBBBBB] text-center mb-2">
+                            <p className="text-base font-medium text-[#666666]  text-center mb-2">
                                 사업자등록증 업로드
                             </p>
                             <p className="text-xs text-[#999999] text-center">
@@ -204,9 +204,9 @@ export default function CaptureStep({ onNext }: CaptureStepProps) {
             </Tabs>
 
             {processingOcr && (
-                <div className="mt-6 p-4 bg-white dark:bg-[#1E1E1E] rounded-xl border border-[#E0E0E0] dark:border-[#333333] flex items-center justify-center">
-                    <RefreshCw className="h-5 w-5 text-[#3182CE] dark:text-[#63B3ED] animate-spin mr-3" />
-                    <p className="text-sm text-[#3182CE] dark:text-[#63B3ED]">사업자등록증 정보를 인식하고 있습니다...</p>
+                <div className="mt-6 p-4 bg-white  rounded-xl border border-[#E0E0E0]  flex items-center justify-center">
+                    <RefreshCw className="h-5 w-5 text-[#3182CE]  animate-spin mr-3" />
+                    <p className="text-sm text-[#3182CE] ">사업자등록증 정보를 인식하고 있습니다...</p>
                 </div>
             )}
         </div>

@@ -9,6 +9,7 @@ import WalletGuide from "@/app/wallet/components/common/WalletGuide"
 import TransactionList from "@/app/wallet/components/common/TransactionList"
 import ConvertButton from "@/app/wallet/components/common/ConvertButton"
 import WalletCard from "@/app/wallet/components/common/WalletCard"
+import WalletSkeleton from "@/app/wallet/components/common/WalletSkeletion"
 import { fetchWalletTransactions } from "@/app/wallet/api/wallet"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
 
@@ -48,6 +49,10 @@ function WalletContent() {
 
   const recentTransactions = transactions.slice(0, 3)
 
+  if (loading) {
+    return <WalletSkeleton />
+  }
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <header className="bg-white">
@@ -64,11 +69,7 @@ function WalletContent() {
           <ConvertButton />
 
           <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
-            {loading ? (
-              <p className="text-sm text-gray-400">최근 거래를 불러오는 중...</p>
-            ) : (
-              <TransactionList label="최근 거래" transactions={recentTransactions} limit={3} />
-            )}
+            <TransactionList label="최근 거래" transactions={recentTransactions} limit={3} />
             <div className="flex justify-center items-center h-8 mt-5">
               <Button
                 variant="ghost"
@@ -90,7 +91,7 @@ function WalletContent() {
 
 export default function WalletPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<WalletSkeleton />}>
       <WalletContent />
     </Suspense>
   )

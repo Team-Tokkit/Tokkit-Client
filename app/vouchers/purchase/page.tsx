@@ -7,21 +7,20 @@ import { ArrowRight, ShieldCheck, CheckCircle2, CreditCard, Clock } from "lucide
 import VoucherPurchaseCard from "@/app/vouchers/components/VoucherPurchaseCard"
 import PurchaseTokenBalance from "@/app/vouchers/components/PurchaseTokenBalance"
 import { Button } from "@/components/ui/button"
-import { getVoucherDetails, getMyVouchers } from "@/lib/api/voucher"
+import { getMyVouchers } from "@/lib/api/voucher"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
-import type { MyVoucher, MyVoucherDetail } from "@/app/my-vouchers/types/my-voucher"
 import Header from "@/app/vouchers/components/VoucherPurchaseHeader"
+import type { Voucher } from "@/app/vouchers/types/voucher"
+import type { MyVoucher } from "@/app/my-vouchers/types/my-voucher"
 
 function PurchaseContent() {
   const router = useRouter()
   const params = useSearchParams()
   const voucherId = Number(params.get("voucherId"))
 
-  const [voucher, setVoucher] = useState<MyVoucherDetail | null>(null)
+  const [voucher, setVoucher] = useState<Voucher | null>(null) // ✅ Voucher 타입
   const [methods, setMethods] = useState<MyVoucher[]>([])
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [isHovering, setIsHovering] = useState(false)
-
   const [walletInfo, setWalletInfo] = useState<{
     name: string
     accountNumber: string
@@ -31,9 +30,19 @@ function PurchaseContent() {
   const [walletError, setWalletError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (voucherId) {
-      getVoucherDetails(voucherId).then((data) => setVoucher(data as unknown as MyVoucherDetail))
+    // sessionStorage에서 selectedVoucher 불러오기
+    const stored = sessionStorage.getItem("selectedVoucher")
+    if (stored) {
+      try {
+        const parsed: Voucher = JSON.parse(stored)
+        if (parsed.id === voucherId) {
+          setVoucher(parsed)
+        }
+      } catch (e) {
+        console.warn("Invalid voucher in storage", e)
+      }
     }
+
     getMyVouchers().then((res) => setMethods(res.content))
 
     fetchWalletInfo()
@@ -42,7 +51,7 @@ function PurchaseContent() {
           name: data.name,
           accountNumber: data.accountNumber,
           tokenBalance: data.tokenBalance,
-        }),
+        })
       )
       .catch(() => setWalletError("지갑 정보를 불러올 수 없습니다."))
       .finally(() => setLoadingWallet(false))
@@ -54,18 +63,7 @@ function PurchaseContent() {
   }
 
   if (!voucher) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse flex flex-col items-center p-6 w-full max-w-lg">
-          <div className="h-8 w-48 bg-gray-200 rounded-lg mb-2"></div>
-          <div className="h-4 w-64 bg-gray-200 rounded-lg mb-8"></div>
-          <div className="h-64 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
-          <div className="h-32 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
-          <div className="h-24 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
-          <div className="h-14 w-full bg-gray-200 rounded-xl"></div>
-        </div>
-      </div>
-    )
+    return <div className="text-center text-gray-500 mt-10">바우처 정보를 불러오는 중입니다...</div>
   }
 
   const hasEnoughBalance = walletInfo && walletInfo.tokenBalance >= voucher.price
@@ -111,31 +109,7 @@ function PurchaseContent() {
           </div>
 
           {/* 1. 바우처 카드 */}
-          <motion.div
-            className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 overflow-hidden relative"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full -mt-10 -mr-10"></div>
-            <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center">
-              <span className="bg-[#FFB020]/10 text-[#FFB020] w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">
-                1
-              </span>
-              구매 상품
-            </h2>
-            <VoucherPurchaseCard
-              voucher={{
-                id: voucher.id,
-                name: voucher.voucherName,
-                description: voucher.voucherDetailDescription,
-                validDate: voucher.voucherValidDate,
-                remainingCount: voucher.remainingAmount,
-                totalCount: 0,
-                price: voucher.price,
-                imageUrl: voucher.imageUrl,
-              }}
-            />
-          </motion.div>
+           <VoucherPurchaseCard voucher={voucher} />
 
           {/* 2. 토큰 잔액 */}
           <motion.div

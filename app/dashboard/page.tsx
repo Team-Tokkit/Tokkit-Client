@@ -142,16 +142,23 @@ export default function DashboardPage() {
     if (!mounted) return null
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto relative">
+        <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
 
             <HeaderSection />
-            <WalletCard
-                userName={walletInfo?.name ?? ""}
-                accountNumber={walletInfo?.accountNumber ?? ""}
-                tokenBalance={walletInfo?.tokenBalance ?? 0}
-            />
-            <div className="flex-1 flex flex-col p-5 px-6 pt-8 pb-24">
-                <QuickMenu />
+
+            {/* 메인 컨텐츠 */}
+            <div className="flex-1 p-4 pb-8 space-y-5 -mt-8">
+                {/* 전자지갑 */}
+                <div className="pb-5">
+                    <WalletCard
+                    userName={walletInfo?.name ?? ""}
+                    accountNumber={walletInfo?.accountNumber ?? ""}
+                    tokenBalance={walletInfo?.tokenBalance ?? 0}
+                />
+                </div>
+
+                {/* 빠른 메뉴 */}
+                <QuickMenu/>
                 <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
                     <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
                     최근 거래 내역
@@ -181,13 +188,17 @@ export default function DashboardPage() {
                         </Button>
                     </div>
                 </div>
+                <div className="pb-8">
                 <NoticesSection
                     notices={notices}
                     currentNotice={currentNotice}
                     onNoticeChange={handleNoticeChange}
-                />
+                />  
+                </div>
             </div>
+            <div>
             <FloatingPaymentButton />
+            </div>
             <NotificationToast
                 title={toastMessage.title}
                 content={toastMessage.content}

@@ -11,7 +11,7 @@ export default function WalletIntro() {
 
     return (
         <motion.div
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
+            className="min-h-screen bg-[#FAFAFA]  flex flex-col"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -20,10 +20,10 @@ export default function WalletIntro() {
             {/* Header */}
             <header className="p-4 flex items-center">
                 <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.push("/")}>
-                    <ArrowLeft className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
+                    <ArrowLeft className="h-5 w-5 text-[#1A1A1A] " />
                 </Button>
                 <motion.h1
-                    className="text-xl font-bold text-[#1A1A1A] dark:text-white"
+                    className="text-xl font-bold text-[#1A1A1A] "
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
@@ -46,7 +46,7 @@ export default function WalletIntro() {
                 </motion.div>
 
                 <motion.h2
-                    className="text-xl font-bold text-[#1A1A1A] dark:text-white mb-2 text-center"
+                    className="text-xl font-bold text-[#1A1A1A]  mb-2 text-center"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
@@ -55,7 +55,7 @@ export default function WalletIntro() {
                 </motion.h2>
 
                 <motion.p
-                    className="text-sm text-[#666666] dark:text-[#BBBBBB] mb-6 text-center"
+                    className="text-sm text-[#666666]  mb-6 text-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
@@ -70,17 +70,17 @@ export default function WalletIntro() {
                     transition={{ delay: 0.5 }}
                 >
                     <div className="space-y-6">
-                        <div className="bg-white dark:bg-[#1A1A1A] rounded-xl p-5 shadow-sm">
-                            <h3 className="text-lg font-bold text-[#1A1A1A] dark:text-white mb-3">전자지갑 개설 절차</h3>
+                        <div className="bg-white  rounded-xl p-5 shadow-sm">
+                            <h3 className="text-lg font-bold text-[#1A1A1A]  mb-3">전자지갑 개설 절차</h3>
                             <ol className="space-y-3">
                                 {steps.map((step, idx) => (
                                     <li key={idx} className="flex items-start">
-                                        <div className="w-6 h-6 rounded-full bg-[#FFB020] dark:bg-[#FFD485] text-white dark:text-[#1A1A1A] flex items-center justify-center mr-3 font-medium text-sm">
+                                        <div className="w-6 h-6 rounded-full bg-[#FFB020]  text-white  flex items-center justify-center mr-3 font-medium text-sm">
                                             {idx + 1}
                                         </div>
                                         <div>
-                                            <p className="text-sm text-[#1A1A1A] dark:text-white">{step.title}</p>
-                                            <p className="text-xs text-[#666666] dark:text-[#BBBBBB]">{step.description}</p>
+                                            <p className="text-sm text-[#1A1A1A] ">{step.title}</p>
+                                            <p className="text-xs text-[#666666] ">{step.description}</p>
                                         </div>
                                     </li>
                                 ))}
@@ -88,7 +88,7 @@ export default function WalletIntro() {
                         </div>
 
                         <Button
-                            className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-xl shadow-md shadow-[#FFB020]/20 dark:shadow-[#FFD485]/10"
+                            className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-xl shadow-md shadow-[#FFB020]/20 "
                             onClick={() => router.push("/merchant/signup/wallet/terms")}
                         >
                             시작하기

@@ -20,7 +20,7 @@ export default function MyVoucherTabFilter() {
 
   return (
     <Tabs value={sort} onValueChange={handleSortChange}>
-      <TabsList className="w-full bg-gray-100 dark:bg-gray-800 rounded-lg p-1 gap-2">
+      <TabsList className="w-full bg-gray-100  rounded-lg p-1 gap-2">
         <TabsTrigger value="recent" className="flex-1 text-sm font-medium py-1 rounded-md">최신순</TabsTrigger>
         <TabsTrigger value="amount" className="flex-1 text-sm font-medium py-1 rounded-md">금액순</TabsTrigger>
         <TabsTrigger value="expiry" className="flex-1 text-sm font-medium py-1 rounded-md">만료순</TabsTrigger>

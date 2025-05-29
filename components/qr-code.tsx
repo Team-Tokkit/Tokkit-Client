@@ -32,7 +32,7 @@ export default function QRCode({
           margin: includeMargin ? 4 : 0,
           errorCorrectionLevel: level,
           color: {
-            dark: color,
+             color,
             light: backgroundColor,
           },
         },

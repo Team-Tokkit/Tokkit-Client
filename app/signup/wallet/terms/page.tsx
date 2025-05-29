@@ -15,7 +15,7 @@ function WalletTermsContent() {
 
 export default function WalletTermsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <WalletTermsContent />
     </Suspense>
   )
