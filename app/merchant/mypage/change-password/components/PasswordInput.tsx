@@ -14,6 +14,7 @@ interface PasswordInputProps {
   error?: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  dataCy?: string;
 }
 
 export default function PasswordInput({
@@ -24,6 +25,7 @@ export default function PasswordInput({
   error,
   placeholder,
   onChange,
+  dataCy,
 }: PasswordInputProps) {
   const [show, setShow] = useState(false);
 
@@ -45,7 +47,7 @@ export default function PasswordInput({
               : "border-gray-300 focus:border-amber-500 focus:ring-amber-500"
           }`}
           placeholder={placeholder}
-          data-cy={`${name}-input`}
+          data-cy={dataCy}
         />
         <button
           type="button"
