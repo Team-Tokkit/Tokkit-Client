@@ -49,11 +49,6 @@ export default function ConvertPage() {
 
   const handlePasswordComplete = async (password: string) => {
     const amountNum = Number(amount)
-    try {
-      await verifyPassword(password)
-    } catch (err: any) {
-      throw new Error("비밀번호가 일치하지 않습니다.")
-    }
 
     setStep("processing")
     await new Promise((resolve) => setTimeout(resolve, 2000))
