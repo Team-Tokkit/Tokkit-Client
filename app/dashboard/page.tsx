@@ -45,10 +45,19 @@ export default function DashboardPage() {
         setTimeout(() => setToastVisible(false), 4000)
     }, [])
 
+    // SSE 연결 객체를 전역 Ref로 유지
+    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
+
     useEffect(() => {
         const API_URL = getApiUrl()
         const accessToken = getCookie("accessToken")
         if (!accessToken) return
+
+        if (eventSourceRef.current) {
+            console.log("🔌 기존 SSE 연결 닫기")
+            eventSourceRef.current.close()
+            eventSourceRef.current = null
+        }
 
         const eventSource = new EventSourcePolyfill(`${API_URL}/api/users/notifications/subscribe`, {
             headers: {
@@ -58,23 +67,36 @@ export default function DashboardPage() {
             heartbeatTimeout: 60000,
         })
 
+        // 알림 이벤트 수신 처리
         eventSource.addEventListener("notification", (event) => {
             try {
                 const { title, content } = JSON.parse((event as MessageEvent).data)
                 console.log("📥 알림 수신:", title, content)
                 showToast(title, content)
             } catch (e) {
-                console.error("알림 파싱 오류", e)
+                console.error("❗ 알림 파싱 오류", e)
             }
         })
 
+        // 연결 확인 로그
+        eventSource.addEventListener("connect", (event) => {
+            console.log("✅ SSE 연결 이벤트 전체:", event)
+            console.log("✅ SSE 연결 완료:", (event as MessageEvent).data)
+        })
+
+        // 에러 처리
         eventSource.onerror = (err) => {
-            console.error("SSE 오류:", err)
+            console.error("❌ SSE 오류:", err)
             eventSource.close()
+            eventSourceRef.current = null
         }
 
+        eventSourceRef.current = eventSource
+
         return () => {
-            eventSource.close()
+            console.log("🚪 DashboardPage unmount, SSE 연결 닫기")
+            eventSourceRef.current?.close()
+            eventSourceRef.current = null
         }
     }, [showToast])
 
