@@ -52,9 +52,7 @@ export default function ConvertPage() {
     try {
       await verifyPassword(password)
     } catch (err: any) {
-      alert(err.message)
-      setStep("password")
-      return
+      throw new Error("비밀번호가 일치하지 않습니다.")
     }
 
     setStep("processing")
