@@ -125,13 +125,19 @@ export default function TransactionDetailPage() {
 
                 <div className="flex justify-between py-4">
                     <div className="text-gray-500">거래 설명</div>
-                    <Link
-                        href={`/wallet/blockchain-details/${transaction.txHash}`}
-                        className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
-                    >
-                        {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
-                    </Link>
+
+                    {transaction.txHash ? ( // txHash가 존재하는 경우만 렌더링
+                        <Link
+                            href={`/wallet/blockchain-details/${transaction.txHash}`}
+                            className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
+                        >
+                            {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
+                        </Link>
+                    ) : (
+                        <div className="text-gray-400">연결 정보 없음</div> // fallback UI
+                    )}
                 </div>
+
             </motion.div>
 
             <div className="mt-6" />
