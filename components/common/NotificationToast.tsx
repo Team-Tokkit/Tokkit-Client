@@ -29,8 +29,8 @@ export default function NotificationToast({ title, content, visible }: Props) {
     if (!isVisible) return null
 
     return (
-        <div className="fixed top-6 right-4 z-[9999] animate-fade-in">
-            <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-[320px] flex items-start space-x-3 transition-all">
+        <div className="fixed top-0 left-0 right-0 z-[9999] animate-fade-in px-4 pt-4">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 w-full flex items-start space-x-3">
                 <div className="bg-amber-100 rounded-full p-2">
                     <Bell className="w-5 h-5 text-amber-600" />
                 </div>

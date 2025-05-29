@@ -154,6 +154,7 @@ export default function TransactionsPage() {
                 })
                 .finally(() => setLoading(false));
             }}
+            data-testid="refresh-button"
           >
             <RotateCcw className="w-4 h-4" />
           </Button>

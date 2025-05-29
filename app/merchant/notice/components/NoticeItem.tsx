@@ -20,6 +20,7 @@ export default function NoticeItem({
 
   return (
     <div
+      data-cy={`notice-item-${notice.id}`}
       onClick={handleClick}
       className="bg-white rounded-lg shadow-sm p-4 m-2 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition"
     >
