@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {Wallet, Ticket, CreditCard, Bell, FileText, LockKeyholeOpen} from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
+import MyPageHeaderSkeleton from "./components/MypageSkeleton"
 import MenuList from "./components/MenuList"
 import LogoutDialog from "./components/LogoutDialog"
 import { getUserInfo, UserInfo } from "@/app/mypage/api/user-info";
@@ -70,13 +71,19 @@ export default function MyPage() {
         },
     ]
 
-    return (
-        <div className="h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
-            <MyPageHeader user={user || { name: '', email: '', phoneNumber: '' }} />
-            <main className="flex-1 flex flex-col p-5 px-6 pt-4 ">
-                <MenuList menuItems={menuItems} />
-                <LogoutDialog />
-            </main>
-        </div>
-    )
+  return (
+    <div className="h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
+      {/* ✅ 유저 정보 로딩 여부에 따라 스켈레톤 UI 렌더 */}
+      {user ? (
+        <MyPageHeader user={user} />
+      ) : (
+        <MyPageHeaderSkeleton />
+      )}
+
+      <main className="flex-1 flex flex-col p-5 px-6 pt-4 ">
+        <MenuList menuItems={menuItems} />
+        <LogoutDialog />
+      </main>
+    </div>
+  )
 }
