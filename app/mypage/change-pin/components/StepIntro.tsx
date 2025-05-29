@@ -11,7 +11,7 @@ interface Props {
 export default function StepIntro({ title, subtitle }: Props) {
     return (
         <motion.div
-            className="mb-8 text-center"
+            className="text-center"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
