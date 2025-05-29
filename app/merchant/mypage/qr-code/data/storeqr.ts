@@ -7,9 +7,9 @@ export interface StoreQRInfo {
 
 export const mockStoreQR: Record<string, StoreQRInfo> = {
   "1": {
-    storeId: "682025",
-    merchantId: "104",
-    storeName: "포토이즘",
-    address: "경기 양주시 옥정동로7다길 54",
+    storeId: "682027",
+    merchantId: "109",
+    storeName: "영재상사",
+    address: "서울 종로구 자하문로 21 1층",
   }
 };
