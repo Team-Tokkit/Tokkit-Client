@@ -10,7 +10,7 @@ interface PullHandleProps {
 export default function PullHandle({ onPull }: PullHandleProps) {
     return (
         <motion.div
-            className="bg-[#FFB020] dark:bg-[#FFD485] h-16 w-6 rounded-l-lg flex items-center justify-center cursor-grab shadow-md active:cursor-grabbing"
+            className="bg-[#FFB020] h-16 w-6 rounded-l-lg flex items-center justify-center cursor-grab shadow-md active:cursor-grabbing"
             drag="x"
             dragConstraints={{ left: -50, right: 0 }}
             dragElastic={0.1}
@@ -22,7 +22,7 @@ export default function PullHandle({ onPull }: PullHandleProps) {
                 }
             }}
         >
-            <ChevronLeft className="h-4 w-4 text-white dark:text-[#1A1A1A]" />
+            <ChevronLeft className="h-4 w-4 text-white" />
         </motion.div>
     )
 }

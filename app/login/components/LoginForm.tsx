@@ -37,7 +37,7 @@ export default function LoginForm() {
   return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-[#444444] dark:text-[#BBBBBB] text-sm font-medium">
+          <Label htmlFor="email" className="text-[#444444]  text-sm font-medium">
             아이디
           </Label>
           <Input
@@ -46,19 +46,19 @@ export default function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="아이디를 입력하세요"
-              className="h-10 rounded-lg border-[#E0E0E0] dark:border-[#333333] bg-white dark:bg-[#1E1E1E] focus-visible:ring-[#FFD485] dark:focus-visible:ring-[#FFB020] focus-visible:ring-offset-0"
+              className="h-10 rounded-lg border-[#E0E0E0]  bg-white  focus-visible:ring-[#FFD485]  focus-visible:ring-offset-0"
               required
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-[#444444] dark:text-[#BBBBBB] text-sm font-medium">
+            <Label htmlFor="password" className="text-[#444444]  text-sm font-medium">
               비밀번호
             </Label>
             <button
                 type="button"
-                className="text-xs text-[#FFB020] hover:text-[#FF9500] dark:text-[#FFD485] dark:hover:text-[#FFE8CC] transition-colors"
+                className="text-xs text-[#FFB020] hover:text-[#FF9500]   transition-colors"
                 onClick={() => router.push("/reset-password")}
             >
               비밀번호 찾기
@@ -71,12 +71,12 @@ export default function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="h-10 rounded-lg border-[#E0E0E0] dark:border-[#333333] bg-white dark:bg-[#1E1E1E] focus-visible:ring-[#FFD485] dark:focus-visible:ring-[#FFB020] focus-visible:ring-offset-0 pr-10"
+                className="h-10 rounded-lg border-[#E0E0E0]  bg-white  focus-visible:ring-[#FFD485]  focus-visible:ring-offset-0 pr-10"
                 required
             />
             <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] dark:text-[#777777] hover:text-[#666666] dark:hover:text-[#BBBBBB] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]  hover:text-[#666666]  transition-colors"
                 onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -86,7 +86,7 @@ export default function LoginForm() {
 
         <Button
             type="submit"
-            className="w-full h-10 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-lg shadow-md shadow-[#FFB020]/20 dark:shadow-[#FFD485]/10"
+            className="w-full h-10 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-lg shadow-md shadow-[#FFB020]/20 "
             disabled={loading}
         >
           {loading ? "로그인 중..." : "로그인"}

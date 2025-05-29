@@ -16,7 +16,7 @@ export default function ErrorScreen({
   onRetry,
 }: ErrorScreenProps) {
   return (
-    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-[#FAFAFA]  flex flex-col items-center justify-center p-6">
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -27,7 +27,7 @@ export default function ErrorScreen({
       </motion.div>
 
       <motion.h1
-        className="text-2xl font-bold text-[#1A1A1A] dark:text-white mb-2 text-center"
+        className="text-2xl font-bold text-[#1A1A1A]  mb-2 text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
@@ -36,7 +36,7 @@ export default function ErrorScreen({
       </motion.h1>
 
       <motion.p
-        className="text-[#666666] dark:text-[#BBBBBB] mb-8 text-center"
+        className="text-[#666666]  mb-8 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
@@ -47,7 +47,7 @@ export default function ErrorScreen({
       {onRetry && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
           <Button
-            className="bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A]"
+            className="bg-[#FFB020] hover:bg-[#FF9500]   text-white "
             onClick={onRetry}
           >
             다시 시도

@@ -21,18 +21,18 @@ export default function BusinessHeader({ onBack }: BusinessHeaderProps) {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="h-5 w-5 text-[#1A1A1A] dark:text-white"
+                        className="h-5 w-5 text-[#1A1A1A] "
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </Button>
                 <motion.h1
-                    className="text-xl font-bold text-[#1A1A1A] dark:text-white flex items-center"
+                    className="text-xl font-bold text-[#1A1A1A]  flex items-center"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <Store className="h-5 w-5 mr-2 text-[#FFB020] dark:text-[#FFD485]" />
+                    <Store className="h-5 w-5 mr-2 text-[#FFB020] " />
                     사업자 정보 입력
                 </motion.h1>
             </header>

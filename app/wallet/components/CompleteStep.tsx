@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { LoaderCircle, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import BalanceCard from "@/app/wallet/components/convert/BalanceCard";
-import confetti from "canvas-confetti";
+"use client"
+
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { LoaderCircle, CheckCircle } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import BalanceCard from "@/app/wallet/components/convert/BalanceCard"
 
 interface CompleteStepProps {
   type: "deposit-to-token" | "token-to-deposit";
@@ -20,40 +21,9 @@ export default function CompleteStep({
   tokenBalance,
   onBackToWallet,
 }: CompleteStepProps) {
-  const [done, setDone] = useState(false);
-  const parsedAmount = Number(amount);
-  const isDepositToToken = type === "deposit-to-token";
-
-  useEffect(() => {
-    if (!done) return;
-
-    const duration = 3 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min;
-    }
-
-    const interval = setInterval(() => {
-      const timeLeft = animationEnd - Date.now();
-      if (timeLeft <= 0) return clearInterval(interval);
-
-      const particleCount = 50 * (timeLeft / duration);
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      });
-    }, 450);
-
-    return () => clearInterval(interval);
-  }, [done]);
+  const [done, setDone] = useState(false)
+  const parsedAmount = Number(amount)
+  const isDepositToToken = type === "deposit-to-token"
 
   return (
     <motion.div
@@ -93,12 +63,8 @@ export default function CompleteStep({
         {isDepositToToken ? "토큰으로" : "예금으로"} 변환되었습니다.
       </p>
 
-      <div className="w-full max-w-md mb-2">
-        <BalanceCard
-          type={type}
-          depositBalance={depositBalance}
-          tokenBalance={tokenBalance}
-        />
+      <div className="w-full max-w-sm mb-2">
+        <BalanceCard type={type} depositBalance={depositBalance} tokenBalance={tokenBalance} />
       </div>
 
       <Button

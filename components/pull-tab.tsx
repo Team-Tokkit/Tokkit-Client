@@ -60,7 +60,7 @@ export default function PullTab({ children, tabState, setTabState }: PullTabProp
 
   return (
     <motion.div
-      className="fixed top-0 bottom-0 right-0 w-[350px] bg-white dark:bg-[#1E1E1E] shadow-lg z-50 flex"
+      className="fixed top-0 bottom-0 right-0 w-[350px] bg-white  shadow-lg z-50 flex"
       initial={{ x: closedPosition }}
       animate={controls}
       drag="x"
@@ -71,11 +71,11 @@ export default function PullTab({ children, tabState, setTabState }: PullTabProp
       {/* Tab handle */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full">
         <div
-          className="bg-[#FFB020] dark:bg-[#FFD485] h-24 w-10 rounded-l-lg flex items-center justify-center cursor-pointer shadow-md"
+          className="bg-[#FFB020]  h-24 w-10 rounded-l-lg flex items-center justify-center cursor-pointer shadow-md"
           onClick={() => setTabState(tabState === "closed" ? "peek" : tabState === "peek" ? "open" : "closed")}
         >
           <ChevronLeft
-            className={`h-6 w-6 text-white dark:text-[#1A1A1A] transition-transform duration-300 ${
+            className={`h-6 w-6 text-white  transition-transform duration-300 ${
               tabState !== "closed" ? "rotate-180" : ""
             }`}
           />

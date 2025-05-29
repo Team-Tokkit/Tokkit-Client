@@ -27,14 +27,14 @@ export function AuthButtons({
     >
       <Button
         onClick={onLogin}
-        className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-[#1A1A1A] font-medium rounded-xl shadow-md shadow-[#FFB020]/20 dark:shadow-[#FFD485]/10"
+        className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-xl shadow-md shadow-[#FFB020]/20 "
       >
         {loginText}
       </Button>
       <Button
         onClick={onSignup}
         variant="outline"
-        className="w-full h-12 border-[#FFB020] dark:border-[#FFD485] text-[#FFB020] dark:text-[#FFD485] hover:bg-[#FFB020]/10 dark:hover:bg-[#FFD485]/10 font-medium rounded-xl"
+        className="w-full h-12 border-[#FFB020]  text-[#FFB020]  hover:bg-[#FFB020]/10  font-medium rounded-xl"
       >
         {signupText}
       </Button>

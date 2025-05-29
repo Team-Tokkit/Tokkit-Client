@@ -81,7 +81,7 @@ export default function MerchantResetPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col">
+        <div className="min-h-screen bg-[#FAFAFA]  flex flex-col">
             {/* 헤더 */}
             <Header title="비밀번호 찾기"/>
 

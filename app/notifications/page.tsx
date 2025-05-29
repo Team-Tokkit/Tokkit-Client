@@ -86,7 +86,7 @@ export default function NotificationsPage() {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
 
     return (
-        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#121212] flex flex-col">
+        <div className="min-h-screen bg-[#F8F9FA]  flex flex-col">
             <NotificationHeader />
             <NotificationTabs activeTab={activeTab} onChange={setActiveTab} />
             <div className="flex-1 p-4">

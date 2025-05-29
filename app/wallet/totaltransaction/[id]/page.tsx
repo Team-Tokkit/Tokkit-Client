@@ -47,12 +47,71 @@ export default function TransactionDetailPage() {
 
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
-                <p className="text-gray-500">거래내역을 불러오는 중...</p>
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col px-4">
+        <Header title="상세 내역" />
+
+        {/* Transaction Card Skeleton */}
+        <motion.div
+          className="bg-white rounded-xl px-6 py-6 mb-4 shadow-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="h-5 bg-gray-200 rounded animate-pulse mb-2 w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
             </div>
-        );
-    }
+            <div className="text-right">
+              <div className="h-6 bg-gray-200 rounded animate-pulse mb-1 w-20"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Transaction Info Skeleton */}
+        <motion.div
+          className="bg-white rounded-xl px-6 py-6 mb-4 shadow-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <div className="h-6 bg-gray-200 rounded animate-pulse mb-4 w-20"></div>
+
+          <div className="flex justify-between py-4 border-b border-gray-100">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-12"></div>
+          </div>
+
+          <div className="flex justify-between py-4">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-32"></div>
+          </div>
+        </motion.div>
+
+        {/* Time Info Skeleton */}
+        <motion.div
+          className="bg-white rounded-xl px-6 py-6 shadow-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <div className="h-6 bg-gray-200 rounded animate-pulse mb-4 w-20"></div>
+
+          <div className="flex justify-between py-4 border-b border-gray-100">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+          </div>
+
+          <div className="flex justify-between py-4">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
 
     if (!transaction) {
         return (
@@ -125,13 +184,19 @@ export default function TransactionDetailPage() {
 
                 <div className="flex justify-between py-4">
                     <div className="text-gray-500">거래 설명</div>
-                    <Link
-                        href={`/wallet/blockchain-details/${transaction.txHash}`}
-                        className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
-                    >
-                        {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
-                    </Link>
+
+                    {transaction.txHash ? ( // txHash가 존재하는 경우만 렌더링
+                        <Link
+                            href={`/wallet/blockchain-details/${transaction.txHash}`}
+                            className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
+                        >
+                            {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
+                        </Link>
+                    ) : (
+                        <div className="text-gray-400">연결 정보 없음</div> // fallback UI
+                    )}
                 </div>
+
             </motion.div>
 
             <div className="mt-6" />

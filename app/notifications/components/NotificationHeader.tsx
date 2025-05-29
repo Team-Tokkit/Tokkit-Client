@@ -8,7 +8,7 @@ export default function NotificationHeader() {
     const router = useRouter()
 
     return (
-        <header className="bg-white dark:bg-[#1A1A1A] p-5 pt-8 pb-4 shadow-sm sticky top-0 z-10">
+        <header className="bg-white  p-5 pt-8 pb-4 shadow-sm sticky top-0 z-10">
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     <Button variant="ghost" size="icon" className="mr-2 rounded-full" onClick={() => router.back()}>

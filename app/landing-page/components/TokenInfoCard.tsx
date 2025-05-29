@@ -24,7 +24,7 @@ export default function TokenInfoCard({
 
     return (
         <motion.div
-            className="w-[85vw] max-w-[260px] bg-white dark:bg-[#2A2A2A] rounded-2xl overflow-hidden shadow-lg h-[350px]"
+            className="w-[85vw] max-w-[260px] bg-white  rounded-2xl overflow-hidden shadow-lg h-[350px]"
             whileHover={{ y: -5 }}
         >
             {/* 상단 색 바 */}
@@ -39,11 +39,11 @@ export default function TokenInfoCard({
                     >
                         {icon}
                     </div>
-                    <h3 className="text-xl font-bold text-[#1A1A1A] dark:text-white">{title}</h3>
+                    <h3 className="text-xl font-bold text-[#1A1A1A] ">{title}</h3>
                 </div>
 
                 {/* 설명 텍스트 */}
-                <p className="text-[#666666] dark:text-[#BBBBBB] text-sm leading-relaxed mb-6 flex-grow">
+                <p className="text-[#666666]  text-sm leading-relaxed mb-6 flex-grow">
                     {description}
                 </p>
 

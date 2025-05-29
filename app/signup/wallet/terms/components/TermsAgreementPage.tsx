@@ -119,11 +119,11 @@ export default function TermsAgreementPage({ terms, redirectTo, title = "약관 
                     variants={{ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }}>
             
             {/* header */}
-            <header className="p-4 flex items-center border-b border-gray-100 dark:border-gray-800">
-                <Button variant="ghost" size="icon" className="mr-2 text-gray-500 dark:text-gray-400" onClick={() => router.back()}>
+            <header className="p-4 flex items-center border-b border-gray-100 ">
+                <Button variant="ghost" size="icon" className="mr-2 text-gray-500 " onClick={() => router.back()}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <motion.h1 className="text-xl font-bold text-gray-800 dark:text-gray-100"
+                <motion.h1 className="text-xl font-bold text-gray-800 "
                            initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
                     {title}
                 </motion.h1>
@@ -133,13 +133,13 @@ export default function TermsAgreementPage({ terms, redirectTo, title = "약관 
             <div className="flex-1 flex flex-col items-center justify-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-                        <h2 className="flex flex-col items-center text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">{title}</h2>
-                        <p className="flex flex-col items-center text-gray-600 dark:text-gray-400 text-sm">{description}</p>
+                        <h2 className="flex flex-col items-center text-2xl font-bold text-gray-800  mb-4">{title}</h2>
+                        <p className="flex flex-col items-center text-gray-600  text-sm">{description}</p>
                     </motion.div>
 
                     <AnimatePresence>
                         {showAlert && (
-                            <motion.div key="terms-alert" className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center text-red-500 dark:text-red-400 shadow-sm"
+                            <motion.div key="terms-alert" className="mb-4 p-4 bg-red-50  rounded-xl flex items-center text-red-500  shadow-sm"
                                         initial={{ opacity: 0, y: -10, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }}
                                         exit={{ opacity: 0, y: -10, height: 0 }} transition={{ duration: 0.2 }}>
                                 <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
@@ -160,7 +160,7 @@ export default function TermsAgreementPage({ terms, redirectTo, title = "약관 
 
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="relative mt-6">
                         <Button
-                            className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-gray-900 font-medium rounded-xl shadow-md transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-xl shadow-md transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                             onClick={handleSubmit}
                             disabled={!terms.filter(term => term.required).every(term => agreedTerms.includes(term.id))}
                         >

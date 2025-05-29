@@ -20,12 +20,12 @@ export default function ProcessingStep({ type }: ProcessingStepProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex-1 flex flex-col items-center justify-center"
+      className="min-h-[calc(100vh-120px)] flex flex-col items-center justify-center px-5"
     >
       <div className="flex flex-col items-center">
         <div className="mb-8">
           <Image
-            src={imageSrc}
+            src={imageSrc || "/placeholder.svg"}
             alt={altText}
             width={200}
             height={200}

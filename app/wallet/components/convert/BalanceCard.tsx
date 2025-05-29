@@ -15,7 +15,7 @@ export default function BalanceCard({
   const secondaryStyle = "text-base text-[#666666]";
 
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm mb-6">
+    <div className="bg-white rounded-xl p-4 shadow-sm mb-6 max-w-sm mx-auto">
       {isDepositToToken ? (
         <>
           <div className="flex justify-between items-center mb-2">
