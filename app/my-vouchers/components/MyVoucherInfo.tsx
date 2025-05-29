@@ -21,7 +21,7 @@ export default function MyVoucherInfo({ voucher }: Props) {
   }
 
   return (
-    <div className="bg-white  rounded-xl shadow-sm p-4 mb-4">
+    <div className="bg-white rounded-xl shadow-sm p-4 mb-4">
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-xs text-[#666666]">잔액</p>
@@ -36,7 +36,8 @@ export default function MyVoucherInfo({ voucher }: Props) {
           </p>
         </div>
       </div>
-      <div className="w-full bg-gray-200  rounded-full h-2 mb-3">
+
+      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${
             isDisabled ? "bg-gray-400" : "bg-green-600"
@@ -46,7 +47,8 @@ export default function MyVoucherInfo({ voucher }: Props) {
           }}
         />
       </div>
-      <div className="flex items-center text-sm text-[#666666]  mb-4">
+
+      <div className="flex items-center text-sm text-[#666666] mb-4">
         <Calendar className="h-4 w-4 text-[#666666] mr-2" />
         <p className="text-xs text-[#666666]">
           유효기간: {voucher.voucherValidDate}
@@ -56,7 +58,7 @@ export default function MyVoucherInfo({ voucher }: Props) {
       <Button
         className={`w-full ${
           isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-[#FFB020] hover:bg-[#FF9500]"
-        } text-white 
+        } text-white`}
         disabled={isDisabled}
         onClick={handleClick}
       >
