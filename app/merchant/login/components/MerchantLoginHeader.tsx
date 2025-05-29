@@ -11,10 +11,10 @@ export default function MerchantLoginHeader() {
     return (
         <header className="p-4 flex items-center">
             <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.push("/merchant")}>
-                <ArrowLeft className="h-5 w-5 text-[#1A1A1A] dark:text-white" />
+                <ArrowLeft className="h-5 w-5 text-[#1A1A1A] " />
             </Button>
             <motion.h1
-                className="text-xl font-bold text-[#1A1A1A] dark:text-white flex items-center"
+                className="text-xl font-bold text-[#1A1A1A]  flex items-center"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}

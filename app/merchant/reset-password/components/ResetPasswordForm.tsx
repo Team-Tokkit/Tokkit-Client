@@ -32,14 +32,14 @@ export default function ResetPasswordForm({
                 />
             </div>
 
-            <h2 className="text-xl font-bold text-center mb-4 text-[#1A1A1A] dark:text-white">비밀번호 찾기</h2>
-            <p className="text-sm text-[#666666] dark:text-[#BBBBBB] text-center mb-6">
+            <h2 className="text-xl font-bold text-center mb-4 text-[#1A1A1A] ">비밀번호 찾기</h2>
+            <p className="text-sm text-[#666666]  text-center mb-6">
                 가입하신 사업자 등록번호를 입력하시면 등록된 이메일로 임시 비밀번호를 발급해 드립니다.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                    <Label htmlFor="businessId" className="text-[#444444] dark:text-[#BBBBBB] text-sm font-medium">
+                    <Label htmlFor="businessId" className="text-[#444444]  text-sm font-medium">
                         사업자 등록번호
                     </Label>
                     <Input
@@ -49,7 +49,7 @@ export default function ResetPasswordForm({
                         placeholder="사업자 등록번호를 입력하세요"
                         required
                         disabled={loading}
-                        className="h-12 rounded-xl border-[#E0E0E0] dark:border-[#333333] bg-white focus-visible:ring-[#FFD485] focus-visible:ring-offset-0"
+                        className="h-12 rounded-xl border-[#E0E0E0]  bg-white focus-visible:ring-[#FFD485] focus-visible:ring-offset-0"
                     />
                 </div>
 

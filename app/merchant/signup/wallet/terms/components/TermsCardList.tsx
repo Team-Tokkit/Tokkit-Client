@@ -28,18 +28,18 @@ const TermsCardList: FC<TermsCardListProps> = ({
                                                }) => {
     return (
         <motion.div
-            className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 mb-6"
+            className="bg-white  p-5 rounded-xl shadow-md border border-gray-100  mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
         >
             {/* 모두 동의하기 */}
-            <div className="flex items-center border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
+            <div className="flex items-center border-b border-gray-100  pb-4 mb-4">
                 <motion.div
                     className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 cursor-pointer transition-colors duration-200 ${
                         allAgreed
-                            ? "bg-[#FFB020] dark:bg-[#FFD485]"
-                            : "border-2 border-[#FFB020]/50 dark:border-[#FFD485]/50"
+                            ? "bg-[#FFB020] "
+                            : "border-2 border-[#FFB020]/50 "
                     }`}
                     onClick={onToggleAll}
                     variants={{
@@ -48,10 +48,10 @@ const TermsCardList: FC<TermsCardListProps> = ({
                     }}
                     animate={allAgreed ? "checked" : "unchecked"}
                 >
-                    {allAgreed && <Check className="h-4 w-4 text-white dark:text-gray-900" />}
+                    {allAgreed && <Check className="h-4 w-4 text-white " />}
                 </motion.div>
                 <span
-                    className="font-semibold text-gray-800 dark:text-gray-100 cursor-pointer"
+                    className="font-semibold text-gray-800  cursor-pointer"
                     onClick={onToggleAll}
                 >
           모든 약관에 동의합니다
@@ -64,7 +64,7 @@ const TermsCardList: FC<TermsCardListProps> = ({
                     key={term.id}
                     className={`flex items-center justify-between py-4 ${
                         index < terms.length - 1
-                            ? "border-b border-gray-100 dark:border-gray-700"
+                            ? "border-b border-gray-100 "
                             : ""
                     }`}
                     initial={{ opacity: 0, y: 10 }}
@@ -75,8 +75,8 @@ const TermsCardList: FC<TermsCardListProps> = ({
                         <motion.div
                             className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 cursor-pointer transition-colors duration-200 ${
                                 agreedTerms.includes(term.id)
-                                    ? "bg-[#FFB020] dark:bg-[#FFD485]"
-                                    : "border-2 border-[#FFB020]/40 dark:border-[#FFD485]/40"
+                                    ? "bg-[#FFB020] "
+                                    : "border-2 border-[#FFB020]/40 "
                             } ${!viewedTerms.includes(term.id) ? "opacity-50" : ""}`}
                             onClick={() => onToggleTerm(term.id)}
                             variants={{
@@ -86,13 +86,13 @@ const TermsCardList: FC<TermsCardListProps> = ({
                             animate={agreedTerms.includes(term.id) ? "checked" : "unchecked"}
                         >
                             {agreedTerms.includes(term.id) && (
-                                <Check className="h-3 w-3 text-white dark:text-gray-900" />
+                                <Check className="h-3 w-3 text-white " />
                             )}
                         </motion.div>
                         <div>
                             <label
                                 htmlFor={`term-${term.id}`}
-                                className="text-sm font-medium text-gray-800 dark:text-gray-100 cursor-pointer"
+                                className="text-sm font-medium text-gray-800  cursor-pointer"
                             >
                                 {term.title}
                             </label>
@@ -106,7 +106,7 @@ const TermsCardList: FC<TermsCardListProps> = ({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[#FFB020] hover:text-[#FF9500] dark:text-[#FFD485] dark:hover:text-[#FFCA5A] hover:bg-[#FFF8E8] dark:hover:bg-[#433619] p-2 h-8 rounded-lg transition-all duration-200"
+                        className="text-[#FFB020] hover:text-[#FF9500]   hover:bg-[#FFF8E8]  p-2 h-8 rounded-lg transition-all duration-200"
                         onClick={() => onViewTerm(term.id)}
                     >
                         보기 <Eye className="h-4 w-4 ml-1" />

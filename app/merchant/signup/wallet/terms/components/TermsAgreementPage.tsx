@@ -114,13 +114,13 @@ export default function TermsAgreementPage({ terms, title = "약관 동의", des
     }
 
     return (
-        <motion.div className="min-h-screen flex flex-col bg-[#F8F9FA] dark:bg-gray-900" initial="initial" animate="animate" exit="exit"
+        <motion.div className="min-h-screen flex flex-col bg-[#F8F9FA] " initial="initial" animate="animate" exit="exit"
                     variants={{ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -20 } }} transition={{ duration: 0.3 }}>
-            <header className="p-4 flex items-center border-b border-gray-100 dark:border-gray-800">
-                <Button variant="ghost" size="icon" className="mr-2 text-gray-500 dark:text-gray-400" onClick={() => router.back()}>
+            <header className="p-4 flex items-center border-b border-gray-100 ">
+                <Button variant="ghost" size="icon" className="mr-2 text-gray-500 " onClick={() => router.back()}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <motion.h1 className="text-xl font-bold text-gray-800 dark:text-gray-100"
+                <motion.h1 className="text-xl font-bold text-gray-800 "
                            initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
                     {title}
                 </motion.h1>
@@ -129,13 +129,13 @@ export default function TermsAgreementPage({ terms, title = "약관 동의", des
             <div className="flex-1 flex flex-col justify-center items-center text-center p-6">
                 <div className="w-full max-w-md">
                     <motion.div className="mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-                        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">{title}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">{description}</p>
+                        <h2 className="text-lg font-semibold text-gray-800  mb-2">{title}</h2>
+                        <p className="text-gray-600  text-sm">{description}</p>
                     </motion.div>
 
                     <AnimatePresence>
                         {showAlert && (
-                            <motion.div key="terms-alert" className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center text-red-500 dark:text-red-400 shadow-sm"
+                            <motion.div key="terms-alert" className="mb-4 p-4 bg-red-50  rounded-xl flex items-center text-red-500  shadow-sm"
                                         initial={{ opacity: 0, y: -10, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }}
                                         exit={{ opacity: 0, y: -10, height: 0 }} transition={{ duration: 0.2 }}>
                                 <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />

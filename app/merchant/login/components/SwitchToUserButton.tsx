@@ -13,7 +13,7 @@ export default function SwitchToUserButton() {
             transition={{ delay: 0.5 }}
         >
             <button
-                className="text-sm text-[#666666] dark:text-[#BBBBBB] hover:text-[#FFB020] dark:hover:text-[#FFD485] transition-colors"
+                className="text-sm text-[#666666]  hover:text-[#FFB020]  transition-colors"
                 onClick={() => router.push("/login")}
             >
                 일반 사용자이신가요?

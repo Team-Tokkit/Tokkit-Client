@@ -21,7 +21,7 @@ const categories: Category[] = [
 
 export default function NotificationTabs({ activeTab, onChange }: NotificationTabsProps) {
     return (
-        <div className="px-4 pt-4 pb-2 bg-white dark:bg-[#1A1A1A] shadow-sm">
+        <div className="px-4 pt-4 pb-2 bg-white  shadow-sm">
             <Tabs defaultValue="all" value={activeTab} onValueChange={onChange}>
                 <TabsList className="w-full overflow-x-auto flex justify-center p-0 bg-transparent h-auto">
                     {categories.map((category) => (

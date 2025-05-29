@@ -8,7 +8,7 @@ interface Props {
 
 export default function VoucherSearchBar({ value, onChange }: Props) {
   return (
-    <div className="p-6 bg-white dark:bg-[#1A1A1A] shadow-sm">
+    <div className="p-6 bg-white  shadow-sm">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input

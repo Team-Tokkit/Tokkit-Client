@@ -86,11 +86,11 @@ export default function NotificationSettingsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#121212] flex flex-col">
+        <div className="min-h-screen bg-[#F8F9FA]  flex flex-col">
             <NotificationSettingsHeader />
 
             <div className="flex-1 p-4">
-                <div className="bg-white dark:bg-[#1A1A1A] rounded-xl shadow-sm">
+                <div className="bg-white  rounded-xl shadow-sm">
                     {isLoading ? (
                         <NotificationSettingsSkeleton />
                     ) : (

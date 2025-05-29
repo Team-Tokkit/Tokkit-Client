@@ -15,7 +15,7 @@ export default function MerchantLoginPage() {
 
     return (
         <motion.div
-            className="h-screen bg-[#FAFAFA] dark:bg-[#121212] flex flex-col"
+            className="h-screen bg-[#FAFAFA]  flex flex-col"
             initial="initial"
             animate="animate"
             exit="exit"

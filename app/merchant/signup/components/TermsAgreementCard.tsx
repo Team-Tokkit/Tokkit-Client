@@ -35,24 +35,24 @@ export default function TermsAgreementCard({
 
     return (
         <motion.div
-            className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 mb-6"
+            className="bg-white  p-5 rounded-xl shadow-md border border-gray-100  mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
         >
             {/* 전체 동의 */}
-            <div className="flex items-center border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
+            <div className="flex items-center border-b border-gray-100  pb-4 mb-4">
                 <motion.div
                     className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 cursor-pointer transition-colors duration-200 ${
-                        allAgreed ? "bg-[#FFB020] dark:bg-[#FFD485]" : "border-2 border-[#FFB020]/50 dark:border-[#FFD485]/50"
+                        allAgreed ? "bg-[#FFB020] " : "border-2 border-[#FFB020]/50 "
                     }`}
                     onClick={onToggleAll}
                     variants={checkboxVariants}
                     animate={allAgreed ? "checked" : "unchecked"}
                 >
-                    {allAgreed && <Check className="h-4 w-4 text-white dark:text-gray-900" />}
+                    {allAgreed && <Check className="h-4 w-4 text-white " />}
                 </motion.div>
-                <span className="font-semibold text-gray-800 dark:text-gray-100 cursor-pointer" onClick={onToggleAll}>
+                <span className="font-semibold text-gray-800  cursor-pointer" onClick={onToggleAll}>
           모든 약관에 동의합니다
         </span>
             </div>
@@ -63,7 +63,7 @@ export default function TermsAgreementCard({
                     key={term.id}
                     ref={(el) => { termRefs.current[term.id] = el }}
                     className={`flex items-center justify-between py-4 ${
-                        index < terms.length - 1 ? "border-b border-gray-100 dark:border-gray-700" : ""
+                        index < terms.length - 1 ? "border-b border-gray-100 " : ""
                     }`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -73,19 +73,19 @@ export default function TermsAgreementCard({
                         <motion.div
                             className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 cursor-pointer transition-colors duration-200 ${
                                 agreedTerms.includes(term.id)
-                                    ? "bg-[#FFB020] dark:bg-[#FFD485]"
-                                    : "border-2 border-[#FFB020]/40 dark:border-[#FFD485]/40"
+                                    ? "bg-[#FFB020] "
+                                    : "border-2 border-[#FFB020]/40 "
                             } ${!viewedTerms.includes(term.id) ? "opacity-50" : ""}`}
                             onClick={() => onToggleTerm(term.id)}
                             variants={checkboxVariants}
                             animate={agreedTerms.includes(term.id) ? "checked" : "unchecked"}
                         >
-                            {agreedTerms.includes(term.id) && <Check className="h-3 w-3 text-white dark:text-gray-900" />}
+                            {agreedTerms.includes(term.id) && <Check className="h-3 w-3 text-white " />}
                         </motion.div>
                         <div>
                             <label
                                 htmlFor={`term-${term.id}`}
-                                className="text-sm font-medium text-gray-800 dark:text-gray-100 cursor-pointer"
+                                className="text-sm font-medium text-gray-800  cursor-pointer"
                             >
                                 {term.title}
                             </label>
@@ -99,7 +99,7 @@ export default function TermsAgreementCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[#FFB020] hover:text-[#FF9500] dark:text-[#FFD485] dark:hover:text-[#FFCA5A] hover:bg-[#FFF8E8] dark:hover:bg-[#433619] p-2 h-8 rounded-lg transition-all duration-200"
+                        className="text-[#FFB020] hover:text-[#FF9500]   hover:bg-[#FFF8E8]  p-2 h-8 rounded-lg transition-all duration-200"
                         onClick={() => onViewTerm(term.id)}
                     >
                         보기 <Eye className="h-4 w-4 ml-1" />
@@ -115,7 +115,7 @@ export default function TermsAgreementCard({
                 className="relative mt-6"
             >
                 <Button
-                    className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] dark:bg-[#FFD485] dark:hover:bg-[#FFCA5A] text-white dark:text-gray-900 font-medium rounded-xl shadow-md transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500]   text-white  font-medium rounded-xl shadow-md transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                     onClick={onSubmit}
                     disabled={!terms.filter((t) => t.required).every((t) => agreedTerms.includes(t.id))}
                 >
