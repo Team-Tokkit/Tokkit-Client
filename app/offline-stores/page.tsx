@@ -23,6 +23,7 @@ import StoreCategoryToggleButton from "./components/StoreCategoryToggleButton"
 import StoreSearchInput from "./components/StoreSearchInput"
 import StoreList from "./components/StoreList"
 import { generateOverlayContent, injectOverlayStyles } from "./utils/map-overlay"
+import LoadingSpinner from "./components/LoadingSpinner"
 
 export type Store = StoreType
 
@@ -47,14 +48,15 @@ export default function OfflineStoresPage() {
   const mapBoundsRef = useRef<any>(null)
   const scriptLoadAttemptRef = useRef(0)
   const mapContainerRef = useRef<HTMLDivElement | null>(null)
+  const clustererRef = useRef<any>(null)
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            setCurrentLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-          },
-          () => setCurrentLocation({ lat: 37.5066, lng: 127.0557 })
+        (pos) => {
+          setCurrentLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        },
+        () => setCurrentLocation({ lat: 37.5066, lng: 127.0557 })
       )
     }
   }, [])
@@ -63,12 +65,12 @@ export default function OfflineStoresPage() {
     if (currentLocation) {
       loadKakaoMapScript(setIsMapLoaded, () => {
         initializeMap(
-            mapRef,
-            currentLocation,
-            mapBoundsRef,
-            fetchStores,
-            () => addCurrentLocationMarker(mapRef, currentLocation, currentLocationMarkerRef),
-            5
+          mapRef,
+          currentLocation,
+          mapBoundsRef,
+          fetchStores,
+          () => addCurrentLocationMarker(mapRef, currentLocation, currentLocationMarkerRef),
+          5
         )
       }, scriptLoadAttemptRef, setMapError)
     }
@@ -88,7 +90,7 @@ export default function OfflineStoresPage() {
       ]
 
       const shouldIgnore = ignoreSelectors.some((selector) =>
-          (clickedTarget instanceof Element) && clickedTarget.closest(selector)
+        (clickedTarget instanceof Element) && clickedTarget.closest(selector)
       )
 
       if (mapEl?.contains(clickedTarget) && !shouldIgnore) {
@@ -108,7 +110,7 @@ export default function OfflineStoresPage() {
     try {
       const data = await fetchNearbyStores(params)
       setStores(data)
-      updateMarkers(data, mapRef, markersRef, overlaysRef, setSelectedStore, createOverlay)
+      updateMarkers(data, mapRef, markersRef, overlaysRef, setSelectedStore, createOverlay, clustererRef)
     } catch {
       setError("매장 정보를 불러오는데 실패했습니다.")
     } finally {
@@ -119,20 +121,20 @@ export default function OfflineStoresPage() {
     if (!navigator.geolocation) return
 
     navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude
-          const lng = pos.coords.longitude
+      (pos) => {
+        const lat = pos.coords.latitude
+        const lng = pos.coords.longitude
 
-          setCurrentLocation({ lat, lng }) // 상태도 업데이트
-          if (mapRef.current) {
-            const center = new window.kakao.maps.LatLng(lat, lng)
-            mapRef.current.setCenter(center)
-            searchByMapArea() // 위치 이동 후 검색까지 자동 수행
-          }
-        },
-        () => {
-          alert("현재 위치를 가져올 수 없습니다.")
+        setCurrentLocation({ lat, lng }) // 상태도 업데이트
+        if (mapRef.current) {
+          const center = new window.kakao.maps.LatLng(lat, lng)
+          mapRef.current.setCenter(center)
+          searchByMapArea() // 위치 이동 후 검색까지 자동 수행
         }
+      },
+      () => {
+        alert("현재 위치를 가져올 수 없습니다.")
+      }
     )
   }
   const createOverlay = (store: Store, marker: any) => {
@@ -193,36 +195,37 @@ export default function OfflineStoresPage() {
   }
 
   return (
-      <div className="min-h-screen bg-[#F8F9FA] flex flex-col relative">
-        <header className="bg-white p-4 shadow-sm z-10 sticky top-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center flex-1">
-              <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <StoreSearchInput
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                  onSearch={searchByMapArea}
-              />
-            </div>
-            <StoreCategoryToggleButton show={showFilters} onToggle={() => setShowFilters(!showFilters)} />
+    <div className="min-h-screen bg-[#F8F9FA] flex flex-col relative">
+      <header className="bg-white p-4 shadow-sm z-10 sticky top-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center flex-1">
+            <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <StoreSearchInput
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              onSearch={searchByMapArea}
+            />
           </div>
-        </header>
-
-        <StoreCategoryFilter
-            show={showFilters}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-        />
-
-        <div className="relative h-[calc(100vh-64px)]" ref={mapContainerRef}>
-          <div id="map" className="w-full h-full" />
-          <StoreSearchButton onClick={searchByMapArea} disabled={!isMapLoaded || !!mapError || isLoading} />
-          <StoreListToggleButton showList={showList} onToggle={() => setShowList(!showList)} disabled={!isMapLoaded || !!mapError || isLoading} />
-          <StoreLocateButton onClick={handleLocateUser} disabled={!isMapLoaded || !!mapError || isLoading} />
-          <StoreList stores={stores} selectedStore={selectedStore} onSelect={handleStoreSelect} onClose={() => setShowList(false)} show={showList}  />
+          <StoreCategoryToggleButton show={showFilters} onToggle={() => setShowFilters(!showFilters)} />
         </div>
+      </header>
+
+      <StoreCategoryFilter
+        show={showFilters}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
+
+      <div className="relative h-[calc(100vh-64px)]" ref={mapContainerRef}>
+        <div id="map" className="w-full h-full" />
+        {isLoading && <LoadingSpinner />}
+        <StoreSearchButton onClick={searchByMapArea} disabled={!isMapLoaded || !!mapError || isLoading} />
+        <StoreListToggleButton showList={showList} onToggle={() => setShowList(!showList)} disabled={!isMapLoaded || !!mapError || isLoading} />
+        <StoreLocateButton onClick={handleLocateUser} disabled={!isMapLoaded || !!mapError || isLoading} />
+        <StoreList stores={stores} selectedStore={selectedStore} onSelect={handleStoreSelect} onClose={() => setShowList(false)} show={showList} />
       </div>
+    </div>
   )
 }
