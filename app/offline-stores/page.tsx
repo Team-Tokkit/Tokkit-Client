@@ -163,6 +163,12 @@ export default function OfflineStoresPage() {
           document.removeEventListener("click", onOutsideClick)
         })
       }
+      const detailBtn = document.querySelector(".overlay-detail-btn")
+      if (detailBtn) {
+        detailBtn.addEventListener("click", () => {
+          router.push(`/offline-stores/${store.id}`)
+        })
+      }
       document.addEventListener("click", onOutsideClick)
     }, 100)
   }

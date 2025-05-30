@@ -11,8 +11,8 @@ export default function BusinessSignupPage() {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [roadAddress, setRoadAddress] = useState("");
 
-    return (
-         <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
+  return (
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       {/* 헤더 + 마스코트 이미지 */}
       <BusinessHeader onBack={() => window.history.back()} />
 
@@ -34,8 +34,13 @@ export default function BusinessSignupPage() {
         <AddressSearchModal
           onClose={() => setShowAddressModal(false)}
           initialKeyword={roadAddress}
+          onSelect={(data) => {
+            setRoadAddress(data.businessAddress);
+            setShowAddressModal(false);
+            // 필요하다면 sido, sigungu 등도 처리 가능
+          }}
         />
       )}
     </div>
-    )
+  )
 }
