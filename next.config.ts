@@ -1,12 +1,9 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8080",
+        protocol: "https",
+        hostname: "api.tokkit.site",
         pathname: "/api/s3/images/**",
       },
     ],
@@ -15,10 +12,8 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:8080/api/:path*",
+        destination: "https://api.tokkit.site/api/:path*",
       },
     ];
   },
 };
-
-export default nextConfig;
