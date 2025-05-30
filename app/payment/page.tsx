@@ -220,19 +220,19 @@ export default function PaymentPage() {
     try {
       const response = isToken
         ? await submitTokenPayment(
-            Number(merchantId),
-            amount,
-            verifiedPassword,
-            idempotencyKey
-          )
+          Number(merchantId),
+          amount,
+          verifiedPassword,
+          idempotencyKey
+        )
         : await submitVoucherPayment(
-            Number(selectedVoucher.id),
-            Number(merchantId),
-            Number(storeId),
-            amount,
-            verifiedPassword,
-            idempotencyKey
-          );
+          Number(selectedVoucher.id),
+          Number(merchantId),
+          Number(storeId),
+          amount,
+          verifiedPassword,
+          idempotencyKey
+        );
 
       if (!response.isSuccess) {
         console.error("결제에 실패했습니다.", response);
@@ -354,8 +354,8 @@ export default function PaymentPage() {
             >
               <VerifySimplePassword
                 disabled={isProcessing}
-                onVerified={(password) => {
-                  handlePayment(password);
+                onVerified={async (password) => {
+                  await handlePayment(password);
                 }}
               />
             </motion.div>

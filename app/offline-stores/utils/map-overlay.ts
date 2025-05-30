@@ -4,12 +4,12 @@
  * HTML 오버레이 콘텐츠 생성
  */
 export function generateOverlayContent(store: {
-    storeCategory: string;
-    name: string;
-    roadAddress: string;
-    distance: number;
+  storeCategory: string;
+  name: string;
+  roadAddress: string;
+  distance: number;
 }): string {
-    return `
+  return `
     <div class="custom-overlay">
       <div class="overlay-content">
         <div class="overlay-category">${store.storeCategory}</div>
@@ -17,6 +17,7 @@ export function generateOverlayContent(store: {
         <div class="overlay-address">${store.roadAddress}</div>
         <div class="overlay-distance">${(store.distance / 1000).toFixed(1)}km</div>
         <button class="overlay-close-btn">×</button>
+        <div class="overlay-detail-btn" style="margin-top:8px;cursor:pointer;color:#4F6EF7;text-align:right;">상세보기</div>
       </div>
       <div class="overlay-arrow"></div>
     </div>
@@ -27,11 +28,11 @@ export function generateOverlayContent(store: {
  * 오버레이 스타일 삽입
  */
 export function injectOverlayStyles(): void {
-    const existing = document.getElementById("custom-overlay-style");
-    if (existing) return;
-    const style = document.createElement("style");
-    style.id = "custom-overlay-style";
-    style.textContent = `
+  const existing = document.getElementById("custom-overlay-style");
+  if (existing) return;
+  const style = document.createElement("style");
+  style.id = "custom-overlay-style";
+  style.textContent = `
     .custom-overlay {
       position: relative;
       bottom: 85px;
@@ -96,5 +97,5 @@ export function injectOverlayStyles(): void {
       border-top: 8px solid white;
     }
   `;
-    document.head.appendChild(style);
+  document.head.appendChild(style);
 }
