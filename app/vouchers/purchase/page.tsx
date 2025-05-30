@@ -63,7 +63,18 @@ function PurchaseContent() {
   }
 
   if (!voucher) {
-    return <div className="text-center text-gray-500 mt-10">바우처 정보를 불러오는 중입니다...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-pulse flex flex-col items-center p-6 w-full max-w-lg">
+          <div className="h-8 w-48 bg-gray-200 rounded-lg mb-2"></div>
+          <div className="h-4 w-64 bg-gray-200 rounded-lg mb-8"></div>
+          <div className="h-64 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
+          <div className="h-32 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
+          <div className="h-24 w-full bg-gray-200 rounded-2xl mb-6 shadow-sm"></div>
+          <div className="h-14 w-full bg-gray-200 rounded-xl"></div>
+        </div>
+      </div>
+    )
   }
 
   const hasEnoughBalance = walletInfo && walletInfo.tokenBalance >= voucher.price
@@ -109,8 +120,21 @@ function PurchaseContent() {
           </div>
 
           {/* 1. 바우처 카드 */}
-           <VoucherPurchaseCard voucher={voucher} />
-
+          <motion.div
+            className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 overflow-hidden relative"
+            whileHover={{ y: -5 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full -mt-10 -mr-10"></div>
+            <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+              <span className="bg-[#FFB020]/10 text-[#FFB020] w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">
+                1
+              </span>
+              구매 상품
+            </h2>
+            <VoucherPurchaseCard voucher={voucher} />
+          </motion.div>
+          
           {/* 2. 토큰 잔액 */}
           <motion.div
             className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 overflow-hidden relative"
