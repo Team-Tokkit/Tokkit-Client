@@ -29,8 +29,7 @@ export async function fetchStoreDetail(id: string): Promise<StoreInfo> {
         credentials: "include",
     })
     const data = await response.json()
-    const result = typeof data.result === "string" ? JSON.parse(data.result) : data.result
-    return result
+    return data.result
 }
 
 export async function fetchStoreVouchers(storeId: string, userId: number, page: number): Promise<FetchVouchersResult> {
@@ -39,10 +38,8 @@ export async function fetchStoreVouchers(storeId: string, userId: number, page: 
         credentials: "include",
     })
     const data = await response.json()
-    console.log(data)
-    const result = typeof data.result === "string" ? JSON.parse(data.result) : data.result
     return {
-        content: result.content || [],
-        totalPages: result.totalPages || 1,
+        content: data.result.content || [],
+        totalPages: data.result.totalPages || 1,
     }
 } 
