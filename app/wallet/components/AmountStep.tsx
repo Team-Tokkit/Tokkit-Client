@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import BalanceCard from "@/app/wallet/components/convert/BalanceCard"
@@ -30,7 +29,7 @@ export default function AmountStep({
   onChange,
   onContinue,
 }: AmountStepProps) {
-  const isDepositToToken = type === "deposit-to-token" // 예금 → 토큰
+  const isDepositToToken = type === "deposit-to-token"
   const currentBalance = isDepositToToken ? depositBalance : tokenBalance
 
   const infoText = isDepositToToken
@@ -42,20 +41,22 @@ export default function AmountStep({
     setAmount(String(max))
   }
 
-  // 잔액 초과 여부 확인
   const isExceedingBalance = useMemo(() => {
     const numericAmount = Number(amount)
     return !isNaN(numericAmount) && numericAmount > currentBalance
   }, [amount, currentBalance])
 
-  // 버튼 비활성화 조건
   const isDisabled = !amount || Number(amount) <= 0 || isNaN(Number(amount)) || isExceedingBalance
 
   return (
-    <div className="relative min-h-[calc(100vh-120px)] px-5 pb-6">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+    <div className="h-[calc(100vh-120px)] px-5 pb-6 relative">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="h-full" 
+      >
         {/* 상단 콘텐츠 */}
-        <div className="pb-32">
+        <div className="pb-32 max-w-sm mx-auto w-full">
           <div className="mt-6 mb-6">
             <BalanceCard type={type} depositBalance={depositBalance} tokenBalance={tokenBalance} />
           </div>

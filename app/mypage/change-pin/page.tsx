@@ -12,6 +12,7 @@ import StepConfirmPin from "./components/StepConfirmPin"
 import StepComplete from "./components/StepComplete"
 import { verifySimplePassword, updateSimplePassword } from "./api/verify-simple-password"
 import { getCookie } from "@/lib/cookies"
+import LoadingOverlay from "@/components/common/LoadingOverlay"
 
 export default function ChangePinPage() {
     const router = useRouter()
@@ -136,39 +137,42 @@ export default function ChangePinPage() {
         <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
             <ChangePinHeader />
 
-            <div className="flex-1 flex flex-col items-center justify-start p-6 pt-0">
-                {step !== "complete" && (
-                    <StepIntro
-                        title={stepContent[step]?.title}
-                        subtitle={stepContent[step]?.subtitle}
-                    />
-                )}
+    <div className="flex-1 flex flex-col items-center justify-start p-6 pt-0">
+      {step !== "complete" && (
+        <StepIntro
+          title={stepContent[step]?.title}
+          subtitle={stepContent[step]?.subtitle}
+        />
+      )}
 
-                <div className="w-full max-w-xs">
-                    <motion.div
-                        key={step}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        variants={pageVariants}
-                        transition={{ duration: 0.3 }}
-                    >
-                        {step === "verify-current" && (
-                            <StepVerifyCurrent
-                                onSubmit={handleVerifyCurrent}
-                                onForgot={handleForgotPin}
-                                loading={loading}
-                                error={error}
-                            />
-                        )}
-                        {step === "new-pin" && <StepNewPin onSubmit={handleNewPin} />}
-                        {step === "confirm-pin" && (
-                            <StepConfirmPin onSubmit={handleConfirmPin} loading={loading} />
-                        )}
-                        {step === "complete" && <StepComplete onDone={handleComplete} />}
-                    </motion.div>
-                </div>
-            </div>
-        </div>
-    )
+      <div className="w-full max-w-xs">
+        <motion.div
+          key={step}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={pageVariants}
+          transition={{ duration: 0.3 }}
+        >
+          {step === "verify-current" && (
+            <StepVerifyCurrent
+              onSubmit={handleVerifyCurrent}
+              onForgot={handleForgotPin}
+              loading={loading} // 여전히 전달됨
+              error={error}
+              failCount={attempts}
+            />
+          )}
+          {step === "new-pin" && <StepNewPin onSubmit={handleNewPin} />}
+          {step === "confirm-pin" && (
+            <StepConfirmPin onSubmit={handleConfirmPin} loading={loading} />
+          )}
+          {step === "complete" && <StepComplete onDone={handleComplete} />}
+        </motion.div>
+      </div>
+    </div>
+
+    {loading && <LoadingOverlay message="비밀번호 확인중입니다." />}
+  </div>
+)
 }

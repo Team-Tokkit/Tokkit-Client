@@ -56,7 +56,7 @@ function WalletContent() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <header className="bg-white">
-        <Header title="전자지갑" />
+        <Header title="전자지갑" backHref="/dashboard" />
         {tokenBalance !== null && depositBalance !== null && (
           <WalletCard
             tokenBalance={tokenBalance}
