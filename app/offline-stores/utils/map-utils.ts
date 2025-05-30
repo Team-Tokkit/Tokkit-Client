@@ -122,8 +122,9 @@ export const updateMarkers = (
   overlaysRef.current = []
 
   if (clustererRef && clustererRef.current) {
-    clustererRef.current.setMap(null)
-    clustererRef.current = null
+    clustererRef.current.clear();
+    clustererRef.current.setMap(null);
+    clustererRef.current = null;
   }
 
   const markerImage = new window.kakao.maps.MarkerImage(
@@ -150,7 +151,6 @@ export const updateMarkers = (
       overlaysRef.current.forEach((o: any) => o.setMap(null))
       overlaysRef.current = []
       createOverlay(store, marker)
-      window.location.href = `/offline-stores/${store.id}`
     })
     markers.push(marker)
     markersRef.current.push(marker)
