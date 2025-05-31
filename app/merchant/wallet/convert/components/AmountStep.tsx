@@ -52,8 +52,6 @@ export default function AmountStep({
   return (
       <div className="flex flex-col flex-1 px-5 pb-6">
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
             className="flex flex-col flex-1"
         >
           <div className="mt-4 mb-6">
@@ -61,6 +59,7 @@ export default function AmountStep({
                 type={type}
                 depositBalance={depositBalance}
                 tokenBalance={tokenBalance}
+                className="max-w-sm mx-auto w-full"
             />
           </div>
 
@@ -79,6 +78,7 @@ export default function AmountStep({
                       </motion.span>
                   )
               }
+              className="max-w-sm mx-auto w-full"
           />
 
           <div className="mt-4 mb-6">
