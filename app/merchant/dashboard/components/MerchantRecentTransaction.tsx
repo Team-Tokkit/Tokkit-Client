@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import TransactionList from "./TransactionList"
 import { MerchantTransaction } from "../api/merchant-recent-transactions"
+import TransactionListSkeleton from "@/app/dashboard/loading/TransactionListSkeleton"
 
 interface Props {
     transactions: MerchantTransaction[]
@@ -22,7 +23,7 @@ export default function MerchantRecentTransaction({ transactions, loading }: Pro
             </div>
             <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl mb-8">
                 {loading ? (
-                    <p className="text-sm text-gray-400">최근 거래를 불러오는 중...</p>
+                    <TransactionListSkeleton count={3} />
                 ) : (
                     <TransactionList
                         transactions={transactions.map(t => ({
