@@ -4,13 +4,11 @@ import TransactionCardContent from "./TransactionCardContent"
 import { Transaction } from "@/app/wallet/api/fetch-transactions";
 
 interface TransactionListProps {
-    label?: string;
     transactions: Transaction[];
     limit?: number;
 }
 
 export default function TransactionList({
-                                            label,
                                             transactions,
                                             limit,
                                         }: TransactionListProps) {
@@ -19,9 +17,6 @@ export default function TransactionList({
 
     return (
         <div className="space-y-4">
-            {label && (
-                <h2 className="text-sm font-semibold text-[#333333]">{label}</h2>
-            )}
             {data.length > 0 ? (
                 data.map((tx, index) => {
                     if (typeof tx.id !== "number") {

@@ -1,16 +1,28 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ArrowLeft, ChevronRight, Info } from "lucide-react"
 
 export default function WalletSkeleton() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <header className="bg-white">
-        {/* Header Skeleton */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <Skeleton className="h-6 w-6 rounded animate-pulse" />
-          <Skeleton className="h-6 w-16 animate-pulse" />
-          <div className="w-6" />
+        {/* components/common/Header.tsx와 동일하게 직접 구현 */}
+        <div className="pr-4 py-4 ml-4 flex items-center">
+          <button
+            type="button"
+            className="mr-2 flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.history.back()
+              }
+            }}
+            data-testid="back-button"
+          >
+            <ArrowLeft className="h-5 w-5 text-[#1A1A1A]" />
+          </button>
+          <h1 className="text-xl font-bold text-[#1A1A1A]">전자지갑</h1>
         </div>
 
         {/* Wallet Card Skeleton */}
@@ -76,80 +88,58 @@ export default function WalletSkeleton() {
         </div>
 
         {/* Recent Transactions Skeleton */}
-        <div className="px-4 pb-4">
-          <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+        <div className="px-4">
+        {/* 타이틀과 전체 거래내역 보기 버튼 추가 */}
             <div className="flex items-center mb-4">
-              <Skeleton className="h-5 w-16 animate-pulse" />
+              <div className="w-1 h-5 bg-[#00bd36] rounded-full mr-2"></div>
+              <h2 className="text-lg font-bold text-[#1A1A1A]">최근 거래 내역</h2>
             </div>
-
-            {/* Enhanced Transaction Items Skeleton */}
-            <div className="space-y-4">
-              {[1, 2, 3].map((item, index) => (
-                <div
-                  key={item}
-                  className="bg-white rounded-lg p-4 relative overflow-hidden"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Shimmer effect for each transaction */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-100/80 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"
-                    style={{ animationDelay: `${index * 0.2}s` }}
-                  />
-
-                  <div className="flex items-center justify-between relative z-10">
-                    <div className="flex items-center">
-                      {/* Transaction Icon Skeleton */}
-                      <div className="relative">
-                        <Skeleton className="h-10 w-10 rounded-full bg-blue-100 animate-pulse" />
-                        {/* Inner icon skeleton */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Skeleton className="h-4 w-4 rounded bg-blue-200 animate-pulse" />
-                        </div>
-                      </div>
-
-                      <div className="ml-3 space-y-2">
-                        {/* Transaction type skeleton */}
-                        <Skeleton className="h-4 w-20 animate-pulse" />
-                        {/* Date/time skeleton */}
-                        <Skeleton className="h-3 w-32 animate-pulse" />
-                      </div>
-                    </div>
-
-                    {/* Amount skeleton */}
-                    <div className="text-right space-y-1">
-                      <Skeleton className="h-4 w-16 animate-pulse ml-auto" />
-                      <Skeleton className="h-3 w-8 animate-pulse ml-auto" />
-                    </div>
+          <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+            {/* 거래내역 카드 스켈레톤 */}
+            <div className="space-y-3">
+              {[1,2,3].map((item, idx) => (
+                <div key={item} className="bg-white rounded-xl flex items-center px-4 py-4 shadow-sm">
+                  {/* 좌측 원형 아이콘 스켈레톤 */}
+                  <div className="flex-shrink-0">
+                    <Skeleton className="h-10 w-10 rounded-full bg-blue-100 animate-pulse" />
+                  </div>
+                  {/* 가운데 텍스트 2줄 */}
+                  <div className="flex-1 ml-4">
+                    <Skeleton className="h-4 w-24 mb-2 animate-pulse" />
+                    <Skeleton className="h-3 w-32 animate-pulse" />
+                  </div>
+                  {/* 우측 금액 */}
+                  <div className="flex-shrink-0 ml-4 text-right">
+                    <Skeleton className="h-4 w-14 animate-pulse" />
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* View All Button Skeleton */}
+            {/* 하단 전체 거래내역 보기 버튼 */}
             <div className="flex justify-center items-center h-8 mt-6">
-              <div className="relative overflow-hidden bg-transparent border-0 rounded-lg px-4 py-2 flex items-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-200/30 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-                <div className="flex items-center space-x-1 relative z-10">
-                  <Skeleton className="h-4 w-24 animate-pulse" />
-                  <Skeleton className="h-3 w-3 animate-pulse" />
-                </div>
-              </div>
+              <Button
+                variant="ghost"
+                className="text-[#666666] flex items-center justify-center gap-1 text-base leading-none"
+              >
+                전체 거래내역 보기
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
 
         {/* Wallet Guide Skeleton */}
-        <div className="px-4 pb-6">
-          <div className="bg-white rounded-lg p-4 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-100/50 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-            <div className="flex items-center justify-between relative z-10">
-              <div className="flex items-center">
-                <Skeleton className="h-5 w-5 rounded-full animate-pulse" />
-                <Skeleton className="h-4 w-24 ml-2 animate-pulse" />
-              </div>
-              <Skeleton className="h-4 w-4 animate-pulse" />
-            </div>
-          </div>
+        <div className="mt-6">
+        <Button
+            variant="outline"
+            className="w-full flex items-center justify-between text-[#666666] border-dashed"
+        >
+        <div className="flex items-center">
+          <Info className="h-4 w-4 mr-2" />
+          <span>전자지갑 이용 안내</span>
+        </div>
+         <ChevronRight className="h-4 w-4" />
+         </Button>
         </div>
       </header>
 
