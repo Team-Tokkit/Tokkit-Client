@@ -6,6 +6,7 @@ import BalanceCard from "@/app/wallet/components/convert/BalanceCard";
 import AmountInput from "@/components/common/AmountInput";
 import InfoBox from "@/app/wallet/components/common/InfoBox";
 import { useMemo } from "react";
+import ConvertSkeleton from "@/app/merchant/wallet/convert/components/ConvertSkeleton";
 
 interface AmountStepProps {
   type: "deposit-to-token" | "token-to-deposit";
@@ -17,6 +18,7 @@ interface AmountStepProps {
   onChange: (val: string) => void;
   onContinue: () => void;
   failCount?: number;
+  isFetching?: boolean;
 }
 
 export default function AmountStep({
@@ -29,7 +31,12 @@ export default function AmountStep({
                                      onChange,
                                      onContinue,
                                      failCount = 0,
+                                     isFetching = false,
                                    }: AmountStepProps) {
+  if (isFetching) {
+    return <ConvertSkeleton />;
+  }
+
   const isDepositToToken = type === "deposit-to-token";
   const currentBalance = isDepositToToken ? depositBalance : tokenBalance;
 

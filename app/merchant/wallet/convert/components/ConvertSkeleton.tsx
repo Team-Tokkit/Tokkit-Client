@@ -5,7 +5,6 @@ import InfoBox from "@/app/wallet/components/common/InfoBox";
 export default function ConvertSkeleton() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
-      <Header title="토큰 → 예금" />
       <div className="h-[calc(100vh-120px)] px-5 pb-6 relative">
         <div className="pb-32 max-w-sm mx-auto w-full">
           <div className="mt-6 mb-6">

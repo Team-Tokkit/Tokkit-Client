@@ -20,9 +20,9 @@ export default function ProcessingStep({ type }: ProcessingStepProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex-1 flex flex-col items-center justify-center"
+      className="flex-1 flex items-center justify-center min-h-[calc(100vh-60px)]"
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center justify-center w-full">
         <div className="mb-8">
           <Image
             src={imageSrc}

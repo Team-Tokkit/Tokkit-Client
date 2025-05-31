@@ -21,7 +21,7 @@ export default function MerchantRecentTransaction({ transactions, loading }: Pro
                 <div className="w-1 h-5 bg-[#00bd36] rounded-full mr-2"></div>
                 <h2 className="text-lg font-bold text-[#1A1A1A]">최근 거래 내역</h2>
             </div>
-            <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl mb-8">
+            <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
                 {loading ? (
                     <TransactionListSkeleton count={3} />
                 ) : (

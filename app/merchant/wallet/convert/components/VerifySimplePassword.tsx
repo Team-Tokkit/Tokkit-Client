@@ -40,6 +40,7 @@ export default function VerifySimplePassword({ onVerified }: Props) {
         try {
           setPassword(pinCode)
           await onVerified(pinCode)
+          setFailCount(0)
         } catch (e) {
           keypadRef.current?.reset()
           const nextCount = failCount + 1

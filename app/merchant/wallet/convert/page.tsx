@@ -11,7 +11,6 @@ import VerifySimplePassword from "@/app/merchant/wallet/convert/components/Verif
 import ProcessingStep from "@/app/merchant/wallet/convert/components/ProcessingStep";
 import CompleteStep from "@/app/merchant/wallet/convert/components/CompleteStep";
 import LoadingOverlay from "@/components/common/LoadingOverlay";
-import ConvertSkeleton from "@/app/merchant/wallet/convert/components/ConvertSkeleton";
 
 export default function ConvertPage() {
   const router = useRouter()
@@ -67,62 +66,57 @@ export default function ConvertPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
-      {isFetching ? (
-        <ConvertSkeleton />
-      ) : (
-        <>
-          {isProcessing && <LoadingOverlay message="요청 처리 중입니다..." />}
+      {isProcessing && <LoadingOverlay message="요청 처리 중입니다..." />}
 
-          <Header title={title} />
-          <div className="flex-1 min-h-[calc(90vh-60px)]">
-            {step === "amount" && (
-              <AmountStep
-                type={type}
-                amount={amount}
-                depositBalance={depositBalance}
-                tokenBalance={tokenBalance}
-                setAmount={setAmount}
-                onMax={handleMax}
-                onChange={setAmount}
-                onContinue={() => setStep("confirm")}
-              />
-            )}
+      <Header title={title} />
+      <div className="flex-1 min-h-[calc(90vh-60px)]">
+        {step === "amount" && (
+          <AmountStep
+            type={type}
+            amount={amount}
+            depositBalance={depositBalance}
+            tokenBalance={tokenBalance}
+            setAmount={setAmount}
+            onMax={handleMax}
+            onChange={setAmount}
+            onContinue={() => setStep("confirm")}
+            isFetching={isFetching}
+          />
+        )}
 
-            {step === "confirm" && (
-              <ConfirmStep
-                type={type}
-                amount={amount}
-                depositBalance={depositBalance}
-                tokenBalance={tokenBalance}
-                onBack={() => setStep("amount")}
-                onConfirm={() => setStep("password")}
-              />
-            )}
+        {step === "confirm" && (
+          <ConfirmStep
+            type={type}
+            amount={amount}
+            depositBalance={depositBalance}
+            tokenBalance={tokenBalance}
+            onBack={() => setStep("amount")}
+            onConfirm={() => setStep("password")}
+          />
+        )}
 
-            {step === "password" && (
-              <div className="flex flex-col items-center justify-center h-full px-4 pt-10">
-                <img
-                  src="/images/bunny-lock.png"
-                  alt="간편 비밀번호 입력"
-                  className="w-32 h-auto mb-6"
-                />
-                <VerifySimplePassword onVerified={handlePasswordComplete} />
-              </div>
-            )}
-
-            {step === "processing" && <ProcessingStep type={type} />}
-            {step === "complete" && (
-              <CompleteStep
-                type={type}
-                amount={amount}
-                depositBalance={depositBalance}
-                tokenBalance={tokenBalance}
-                onBackToWallet={() => router.push("/merchant/dashboard")}
-              />
-            )}
+        {step === "password" && (
+          <div className="flex flex-col items-center justify-center h-full px-4 pt-10">
+            <img
+              src="/images/bunny-lock.png"
+              alt="간편 비밀번호 입력"
+              className="w-32 h-auto mb-6"
+            />
+            <VerifySimplePassword onVerified={handlePasswordComplete} />
           </div>
-        </>
-      )}
+        )}
+
+        {step === "processing" && <ProcessingStep type={type} />}
+        {step === "complete" && (
+          <CompleteStep
+            type={type}
+            amount={amount}
+            depositBalance={depositBalance}
+            tokenBalance={tokenBalance}
+            onBackToWallet={() => router.push("/merchant/wallet")}
+          />
+        )}
+      </div>
     </div>
   );
 }
