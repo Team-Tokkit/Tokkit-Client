@@ -82,11 +82,11 @@ export default function WalletSkeleton() {
 
         {/* Recent Transactions Skeleton */}
         <div className="px-4">
-          <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
-            <div className="flex items-center mb-4">
+         <div className="flex items-center mb-4">
               <div className="w-1 h-5 bg-[#00bd36] rounded-full mr-2"></div>
               <h2 className="text-lg font-bold text-[#1A1A1A]">최근 거래 내역</h2>
-            </div>
+          </div>
+          <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
             {/* TransactionList.tsx 스타일의 카드 리스트 스켈레톤 */}
             <div className="space-y-4">
               {[1,2,3].map((item, idx) => (
