@@ -1,10 +1,10 @@
 "use client"
 
-import { ArrowLeft, Settings } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
-export default function NotificationHeader() {
+export default function NotificationSettingsHeader() {
     const router = useRouter()
 
     return (
@@ -14,17 +14,7 @@ export default function NotificationHeader() {
                     <Button variant="ghost" size="icon" className="mr-2 rounded-full" onClick={() => router.back()}>
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
-                    <h1 className="text-xl font-bold">알림</h1>
-                </div>
-                <div className="flex items-center">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full"
-                        onClick={() => router.push("/merchant/notifications/settings")}
-                    >
-                        <Settings className="h-5 w-5" />
-                    </Button>
+                    <h1 className="text-xl font-bold">알림 설정</h1>
                 </div>
             </div>
         </header>
