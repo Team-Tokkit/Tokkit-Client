@@ -16,6 +16,7 @@ interface AmountStepProps {
   onMax: () => void;
   onChange: (val: string) => void;
   onContinue: () => void;
+  failCount?: number;
 }
 
 export default function AmountStep({
@@ -27,6 +28,7 @@ export default function AmountStep({
                                      onMax,
                                      onChange,
                                      onContinue,
+                                     failCount = 0,
                                    }: AmountStepProps) {
   const isDepositToToken = type === "deposit-to-token";
   const currentBalance = isDepositToToken ? depositBalance : tokenBalance;
@@ -50,51 +52,56 @@ export default function AmountStep({
       !amount || Number(amount) <= 0 || isNaN(Number(amount)) || isExceedingBalance;
 
   return (
-      <div className="flex flex-col flex-1 px-5 pb-6">
-        <motion.div
-            className="flex flex-col flex-1"
-        >
-          <div className="mt-4 mb-6">
-            <BalanceCard
-                type={type}
-                depositBalance={depositBalance}
-                tokenBalance={tokenBalance}
-                className="max-w-sm mx-auto w-full"
-            />
+      <div className="h-[calc(100vh-120px)] px-5 pb-6 relative">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="h-full" 
+      >
+        {/* 상단 콘텐츠 */}
+        <div className="pb-32 max-w-sm mx-auto w-full">
+          <div className="mt-6 mb-6">
+            <BalanceCard type={type} depositBalance={depositBalance} tokenBalance={tokenBalance} />
           </div>
 
           <AmountInput
-              amount={amount}
-              onChange={onChange}
-              onMax={handleMaxAmount}
-              bottomRightText={
-                  isExceedingBalance && (
-                      <motion.span
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="text-red-500 font-medium text-xs flex items-center gap-1"
-                      >
-                        <span>⚠</span> 잔액을 초과했습니다
-                      </motion.span>
-                  )
-              }
-              className="max-w-sm mx-auto w-full"
+            amount={amount}
+            onChange={onChange}
+            onMax={handleMaxAmount}
+            bottomRightText={
+              isExceedingBalance && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-red-500 font-medium text-xs flex items-center gap-1"
+                >
+                  <span>⚠</span> 잔액을 초과했습니다
+                </motion.span>
+              )
+            }
           />
+          {failCount > 0 && (
+            <p className="text-xs text-red-500 font-semibold text-center mt-3 mb-5">
+              오류 {failCount}/5
+            </p>
+          )}
+        </div>
 
-          <div className="mt-4 mb-6">
+        {/* 하단 콘텐츠 - 절대 위치로 하단 고정 */}
+        <div className="absolute bottom-6 left-5 right-5">
+          <div className="mb-6">
             <InfoBox>{infoText}</InfoBox>
           </div>
 
-          <div className="mt-auto">
-            <Button
-                className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white font-medium rounded-xl shadow-md shadow-[#FFB020]/20"
-                onClick={onContinue}
-                disabled={isDisabled}
-            >
-              계속하기
-            </Button>
-          </div>
-        </motion.div>
-      </div>
-  );
+          <Button
+            className="w-full h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white font-medium rounded-xl shadow-md shadow-[#FFB020]/20"
+            onClick={onContinue}
+            disabled={isDisabled}
+          >
+            계속하기
+          </Button>
+        </div>
+      </motion.div>
+    </div>
+  )
 }

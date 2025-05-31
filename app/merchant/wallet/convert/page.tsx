@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -14,9 +14,10 @@ import LoadingOverlay from "@/components/common/LoadingOverlay";
 import ConvertSkeleton from "@/app/merchant/wallet/convert/components/ConvertSkeleton";
 
 export default function ConvertPage() {
-  const router = useRouter();
-  const params = useParams();
-  const type = params.type as "token-to-deposit";
+  const router = useRouter()
+  const params = useParams()
+  const type = params.type as "token-to-deposit"
+  const [loading, setLoading] = useState(true)
 
   const [step, setStep] = useState<"amount" | "confirm" | "password" | "processing" | "complete">("amount");
   const [amount, setAmount] = useState("");
@@ -58,8 +59,7 @@ export default function ConvertPage() {
       setStep("processing");
       setTimeout(() => setStep("complete"), 5000);
     } catch (err: any) {
-      alert(err.message);
-      setStep("amount");
+      throw new Error(err.message || "비밀번호가 일치하지 않습니다.");
     } finally {
       setIsProcessing(false);
     }
