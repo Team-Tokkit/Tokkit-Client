@@ -115,7 +115,7 @@ export default function ConvertPage() {
                         amount={amount}
                         depositBalance={depositBalance}
                         tokenBalance={tokenBalance}
-                        onBackToWallet={() => router.push("/merchant/wallet")}
+                        onBackToWallet={() => router.push("/merchant/dashboard")}
                     />
                 )}
             </div>
