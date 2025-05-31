@@ -11,6 +11,7 @@ import StepNewPin from "./components/StepNewPin"
 import StepConfirmPin from "./components/StepConfirmPin"
 import StepComplete from "./components/StepComplete"
 import { verifySimplePassword, updateSimplePassword } from "./api/change-simple-password"
+import LoadingOverlay from "@/components/common/LoadingOverlay"
 
 export default function ChangePinPage() {
     const router = useRouter()
@@ -126,7 +127,12 @@ export default function ChangePinPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto">
+        <div className="min-h-screen bg-[#F9FAFB] flex flex-col max-w-md mx-auto relative">
+            {loading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+                    <LoadingOverlay message="비밀번호 확인 중입니다." />
+                </div>
+            )}
             <ChangePinHeader />
 
             <div className="flex-1 flex flex-col items-center justify-start p-6 pt-0">
@@ -134,10 +140,11 @@ export default function ChangePinPage() {
                     <StepIntro
                         title={stepContent[step]?.title}
                         subtitle={stepContent[step]?.subtitle}
+                        failCount={step === "verify-current" ? attempts : 0}
                     />
                 )}
 
-                <div className="w-full max-w-xs">
+                <div className="w-full max-w-xs relative">
                     <motion.div
                         key={step}
                         initial="initial"
@@ -151,7 +158,8 @@ export default function ChangePinPage() {
                                 onSubmit={handleVerifyCurrent}
                                 onForgot={handleForgotPin}
                                 loading={loading}
-                                error={error}
+                                error={attempts >= 5 ? "비밀번호 입력 횟수를 초과했습니다. 비밀번호 찾기를 이용해주세요." : undefined}
+                                failCount={attempts}
                             />
                         )}
                         {step === "new-pin" && <StepNewPin onSubmit={handleNewPin} />}
