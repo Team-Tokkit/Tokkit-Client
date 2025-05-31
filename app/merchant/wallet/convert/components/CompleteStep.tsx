@@ -105,7 +105,7 @@ export default function CompleteStep({
         className="w-full max-w-xs h-12 bg-[#FFB020] hover:bg-[#FF9500] text-white font-medium rounded-xl shadow-md mt-6"
         onClick={onBackToWallet}
       >
-        지갑으로 돌아가기
+        대시보드로 돌아가기
       </Button>
     </motion.div>
   );
