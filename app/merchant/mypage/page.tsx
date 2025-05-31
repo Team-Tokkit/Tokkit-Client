@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react"
 import { useRouter } from "next/navigation"
 import MerchantMypageHeader from "@/app/merchant/mypage/components/MerchantMypageHeader";
-import ProfileCard from "@/app/merchant/mypage/components/ProfileCard";
+import ProfileCard, { ProfileCardSkeleton } from "@/app/merchant/mypage/components/ProfileCard";
 import MenuList from "@/app/merchant/mypage/components/MenuList";
 import LogoutButton from "@/app/merchant/mypage/components/LogoutButton";
 import {getMerchantInfo} from "@/app/merchant/mypage/api/merchant-info";
@@ -38,7 +38,11 @@ export default function MerchantMyPage() {
                 <MerchantMypageHeader />
 
                 {/* 프로필 카드 */}
-                <ProfileCard merchant={merchant} />
+                {merchant.storeName ? (
+                    <ProfileCard merchant={merchant} />
+                ) : (
+                    <ProfileCardSkeleton />
+                )}
             </header>
 
             {/* 메인 컨텐츠 */}

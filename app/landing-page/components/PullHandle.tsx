@@ -15,11 +15,13 @@ export default function PullHandle({ onPull }: PullHandleProps) {
 
   // CBDC 더 알아보기 텍스트가 들어갈 정도의 최대 너비 (160px)
   const getWidth = () => {
-    if (!isDragging) return "24px"
-
-    // 드래그 거리에 따라 너비 계산 (최대 160px로 제한)
-    const calculatedWidth = 24 + Math.abs(dragDistance * 2)
-    return `${Math.min(calculatedWidth, 160)}px`
+    // 드래그 중일 때만 너비가 늘어나고, 최대 160px까지
+    if (isDragging && Math.abs(dragDistance) > 0) {
+      const calculatedWidth = 24 + Math.abs(dragDistance * 2)
+      return `${Math.min(calculatedWidth, 160)}px`
+    }
+    // 평소에는 항상 24px
+    return "24px"
   }
 
   return (
@@ -27,8 +29,9 @@ export default function PullHandle({ onPull }: PullHandleProps) {
       {/* 단일 핸들 요소 */}
       <motion.div
         className="bg-[#FFB020] h-16 rounded-l-lg flex items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden"
+        initial={{ width: "24px" }}
         animate={{
-          width: getWidth(), // 최대 너비 제한 적용
+          width: getWidth(),
           x: isDragging ? 0 : [0, -2, 0, -3, 0, -1, 0],
           scale: isHovered ? 1.05 : 1,
         }}
@@ -95,17 +98,18 @@ export default function PullHandle({ onPull }: PullHandleProps) {
             <ChevronLeft className="h-4 w-4 text-white" />
           </motion.div>
 
-          {/* Text that appears when dragging */}
-          <motion.span
-            className="text-white text-sm font-medium whitespace-nowrap ml-6"
-            animate={{
-              opacity: isDragging && Math.abs(dragDistance) > 10 ? 1 : 0,
-              x: isDragging && Math.abs(dragDistance) > 10 ? 0 : 10,
-            }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            CBDC 더 알아보기
-          </motion.span>
+          {/* 드래그 중에만 텍스트 노출 */}
+          {isDragging && Math.abs(dragDistance) > 10 && (
+            <motion.span
+              className="text-white text-sm font-medium whitespace-nowrap ml-6"
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              CBDC 더 알아보기
+            </motion.span>
+          )}
         </div>
       </motion.div>
 

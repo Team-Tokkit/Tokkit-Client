@@ -23,7 +23,7 @@ export default function VerifySimplePassword({ onVerified, disabled = false }: P
 
   useEffect(() => {
     if (failCount >= 5) {
-      router.push("/mypage/reset-pin")
+      router.push("/merchant/mypage/change-password")
     }
   }, [failCount, router])
 

@@ -17,11 +17,7 @@ export function VoucherSearch() {
                 <h2 className="text-lg font-bold text-[#1A1A1A]">바우처 조회</h2>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
-            >
+            <div>
                 <Card className="border-none shadow-sm bg-white">
                     <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center">
@@ -41,7 +37,7 @@ export function VoucherSearch() {
                         </Button>
                     </CardContent>
                 </Card>
-            </motion.div>
+            </div>
         </div>
     )
 }

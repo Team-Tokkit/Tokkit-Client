@@ -19,15 +19,7 @@ export default function ProfileCard({ merchant }: Props) {
     const router = useRouter()
 
     return (
-        <motion.div
-            className="relative overflow-hidden rounded-2xl bg-white shadow-sm mx-2 cursor-pointer"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => router.push("/merchant/mypage/info")}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-        >
+        <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm mx-2 cursor-pointer">
             <div className="relative z-10 p-6">
                 <div className="flex items-center mb-2">
                     <div>
@@ -45,6 +37,30 @@ export default function ProfileCard({ merchant }: Props) {
                     <p className="text-sm text-gray-500">{merchant.phoneNumber}</p>
                 </div>
             </div>
-        </motion.div>
+        </div>
+    )
+}
+
+export function ProfileCardSkeleton() {
+    return (
+        <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm mx-2 cursor-pointer">
+            <div className="relative z-10 p-6">
+                <div className="flex items-center mb-2">
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center mb-2">
+                            <span className="h-6 w-28 bg-gray-200 rounded-md animate-pulse" />
+                            <span className="ml-2 px-2 py-1 bg-yellow-100 rounded-full animate-pulse" />
+                        </div>
+                        <span className="h-4 w-32 bg-gray-100 rounded mb-1 block animate-pulse" />
+                    </div>
+                    <ChevronRight className="ml-auto h-5 w-5 text-gray-300" />
+                </div>
+                <div className="mt-2 space-y-2">
+                    <span className="block h-4 w-28 bg-gray-100 rounded animate-pulse" />
+                    <span className="block h-4 w-36 bg-gray-200 rounded animate-pulse" />
+                    <span className="block h-4 w-20 bg-gray-100 rounded animate-pulse" />
+                </div>
+            </div>
+        </div>
     )
 }

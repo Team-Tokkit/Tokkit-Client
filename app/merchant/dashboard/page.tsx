@@ -10,6 +10,7 @@ import NotificationToast from "@/components/common/NotificationToast"
 
 import { MerchantHeader } from "@/app/merchant/dashboard/components/MerchantHeader"
 import { WalletCard } from "@/app/merchant/dashboard/components/WalletCard"
+import WalletCardSkeleton from "@/app/merchant/dashboard/components/WalletCardSkeleton"
 import { SalesStatistics } from "@/app/merchant/dashboard/components/SalesStatistics"
 import { VoucherSearch } from "@/app/merchant/dashboard/components/VoucherSearch"
 import { fetchMerchantWalletInfo } from "@/app/merchant/dashboard/api/merchant-wallet-info"
@@ -18,6 +19,7 @@ import { fetchMerchantRecentTransactions, MerchantTransaction } from "./api/merc
 import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction"
 import NoticesSection from "@/app/merchant/dashboard/components/NoticeSection"
 import { fetchNoticePreview, NoticePreview } from "@/app/merchant/dashboard/api/fetch-merchant-notice-preview"
+import NoticesSkeleton from "@/app/dashboard/loading/NoticeSkeleton"
 
 export default function MerchantDashboardPage() {
     const isMobile = useMobile()
@@ -150,15 +152,19 @@ export default function MerchantDashboardPage() {
             <MerchantHeader />
 
             <div className="flex-1 p-5 pb-8 space-y-5 -mt-6">
-                <WalletCard
-                    storeName={walletInfo?.storeName ?? ''}
-                    accountNumber={walletInfo?.accountNumber ?? ''}
-                    tokenBalance={walletInfo?.tokenBalance ?? 0}
-                    depositBalance={walletInfo?.depositBalance ?? 0}
-                    isLoading={!walletInfo}
-                    onClick={() => router.push("/merchant/wallet")}
-                    onConvertClick={() => router.push("/merchant/wallet/convert")}
-                />
+                {!walletInfo ? (
+                    <WalletCardSkeleton />
+                ) : (
+                    <WalletCard
+                        storeName={walletInfo.storeName}
+                        accountNumber={walletInfo.accountNumber}
+                        tokenBalance={walletInfo.tokenBalance}
+                        depositBalance={walletInfo.depositBalance}
+                        isLoading={false}
+                        onClick={() => router.push("/merchant/wallet")}
+                        onConvertClick={() => router.push("/merchant/wallet/convert")}
+                    />
+                )}
 
                 <SalesStatistics
                     dailyIncome={dailyIncome.dailyIncome}
@@ -172,11 +178,15 @@ export default function MerchantDashboardPage() {
                     loading={loading}
                 />
 
-                <NoticesSection
-                    notices={notices}
-                    currentNotice={currentNotice}
-                    onNoticeChange={handleNoticeChange}
-                />
+                {notices.length == 0 ? (
+                    <NoticesSkeleton />
+                ) : (
+                    <NoticesSection
+                        notices={notices}
+                        currentNotice={currentNotice}
+                        onNoticeChange={handleNoticeChange}
+                    />
+                )}
             </div>
 
             <NotificationToast

@@ -6,9 +6,10 @@ import { motion } from "framer-motion"
 interface Props {
     title: string
     subtitle: string
+    failCount?: number
 }
 
-export default function StepIntro({ title, subtitle }: Props) {
+export default function StepIntro({ title, subtitle, failCount = 0 }: Props) {
     return (
         <motion.div
             className="mb-8 text-center"
@@ -24,7 +25,10 @@ export default function StepIntro({ title, subtitle }: Props) {
                 className="mx-auto mb-6"
             />
             <h2 className="text-xl font-bold text-[#111827] mb-2">{title}</h2>
-            <p className="text-sm text-gray-500 mb-6">{subtitle}</p>
+            <p className="text-sm text-gray-500">{subtitle}</p>
+            {failCount > 0 && (
+                <p className="text-xs text-red-500 font-semibold text-center mt-2">비밀번호 오류 {failCount}/5</p>
+            )}
         </motion.div>
     )
 }
