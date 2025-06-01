@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import {Wallet, Ticket, CreditCard, Bell, FileText, LockKeyholeOpen} from "lucide-react"
+import {Wallet, Ticket, CreditCard, Bell, FileText, LockKeyholeOpen, Zap} from "lucide-react"
 import MyPageHeader from "./components/MypageHeader"
 import MyPageHeaderSkeleton from "./components/MypageSkeleton"
 import MenuList from "./components/MenuList"
@@ -33,6 +33,13 @@ export default function MyPage() {
             action: () => router.push("/wallet"),
             color: "from-[#FFB020]/10 to-[#FF9500]/10",
             iconColor: "text-[#FF9500]",
+        },
+        {
+            title: "토큰 자동 충전",
+            icon: Zap,
+            action: () => router.push("/mypage/auto-charge"),
+            color: "from-[#FFF176]/10 to-[#FFD54F]/10",
+            iconColor: "text-[#F59E0B]",
         },
         {
             title: "내 바우처",
