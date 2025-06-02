@@ -5,7 +5,7 @@ import {
     Repeat,
     ShoppingCart,
     CornerUpLeft,
-    Gift,
+    Gift, AlarmClock,
 } from "lucide-react";
 
 interface Props {
@@ -24,18 +24,6 @@ export default function TransactionCardContent({
                                                }: Props) {
 
     const typeMeta = {
-        DEPOSIT: {
-            icon: <ArrowDown className="text-green-500 h-5 w-5" />,
-            bg: "bg-green-100",
-            color: "text-green-500",
-            sign: "+",
-        },
-        WITHDRAW: {
-            icon: <ArrowUp className="text-red-500 h-5 w-5" />,
-            bg: "bg-red-100",
-            color: "text-red-500",
-            sign: "-",
-        },
         CONVERT: {
             icon: <Repeat className="text-blue-500 h-5 w-5" />,
             bg: "bg-blue-100",
@@ -48,17 +36,17 @@ export default function TransactionCardContent({
             color: "text-red-500",
             sign: "-",
         },
-        REFUND: {
-            icon: <CornerUpLeft className="text-green-500 h-5 w-5" />,
+        RECEIVE: {
+            icon: <Gift className="text-green-500 h-5 w-5" />,
             bg: "bg-green-100",
             color: "text-green-500",
             sign: "+",
         },
-        RECEIVE: {
-            icon: <Gift className="text-yellow-500 h-5 w-5" />,
-            bg: "bg-yellow-100",
-            color: "text-yellow-500",
-            sign: "+",
+        AUTO_CONVERT: {
+            icon: <AlarmClock className="text-amber-500 h-5 w-5" />,
+            bg: "bg-amber-100",
+            color: "text-amber-500",
+            sign: "",
         },
     }[type] || {
         icon: <ArrowDownUp className="text-gray-500 h-5 w-5" />,
