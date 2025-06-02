@@ -37,7 +37,7 @@ export default function MyPage() {
         {
             title: "토큰 자동 충전",
             icon: Zap,
-            action: () => router.push("/mypage/auto-charge"),
+            action: () => router.push("/mypage/auto-convert"),
             color: "from-[#FFF176]/10 to-[#FFD54F]/10",
             iconColor: "text-[#F59E0B]",
         },

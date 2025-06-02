@@ -13,7 +13,7 @@ interface Props {
     onDone: () => void
 }
 
-export default function AutoChargeCompleteStep({ settings, onDone }: Props) {
+export default function AutoConvertCompleteStep({ settings, onDone }: Props) {
     const { dayOfMonth, hour, minute, amount } = settings
     const formattedAmount = Number(amount).toLocaleString()
 

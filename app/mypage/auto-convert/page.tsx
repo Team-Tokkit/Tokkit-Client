@@ -4,9 +4,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import AutoChargeForm from "./components/AutoChargeForm"
-import AutoChargeCompleteStep from "./components/AutoChargeCompleteStep"
+import AutoConvertForm from "./components/AutoConvertForm"
+import AutoConvertCompleteStep from "./components/AutoConvertCompleteStep"
 import LoadingOverlay from "@/components/common/LoadingOverlay"
+import {updateAutoConvertSetting} from "@/app/mypage/auto-convert/api/fetch-auto-convert";
 
 type Step = "form" | "complete"
 
@@ -18,7 +19,7 @@ interface AutoConvertSettingRequest {
     amount: number
 }
 
-export default function AutoChargePage() {
+export default function AutoConvertPage() {
     const router = useRouter()
     const [step, setStep] = useState<Step>("form")
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -34,8 +35,7 @@ export default function AutoChargePage() {
     const handleSave = async () => {
         setIsSubmitting(true)
         try {
-            // 실제 저장 API 호출 부분
-            await new Promise((resolve) => setTimeout(resolve, 1000)) // mock 대기
+            await updateAutoConvertSetting(settings)
 
             setStep("complete") // 완료 단계로 전환
         } catch (err) {
@@ -65,14 +65,14 @@ export default function AutoChargePage() {
             {/* 본문 영역 */}
             <div className="px-4 py-4 flex-1">
                 {step === "form" ? (
-                    <AutoChargeForm
+                    <AutoConvertForm
                         settings={settings}
                         onChange={setSettings}
                         onSubmit={handleSave}
                         isSubmitting={isSubmitting}
                     />
                 ) : (
-                    <AutoChargeCompleteStep
+                    <AutoConvertCompleteStep
                         settings={settings}
                         onDone={() => router.push("/mypage")}
                     />

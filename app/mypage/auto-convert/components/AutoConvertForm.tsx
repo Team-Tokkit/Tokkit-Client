@@ -21,17 +21,17 @@ interface Props {
     isSubmitting: boolean
 }
 
-export default function AutoChargeForm({ settings, onChange, onSubmit, isSubmitting }: Props) {
+export default function AutoConvertForm({ settings, onChange, onSubmit, isSubmitting }: Props) {
     const daysOfMonth = Array.from({ length: 31 }, (_, i) => i + 1)
     const hours = Array.from({ length: 24 }, (_, i) => i)
     const minutes = [0, 15, 30, 45]
     const presetAmounts = [50000, 100000, 200000, 500000]
 
-    const formatNumber = (value: number | string) => new Intl.NumberFormat("ko-KR").format(Number(value))
-
     const handleChange = (key: keyof AutoConvertSettingRequest, value: number | boolean) => {
         onChange({ ...settings, [key]: value })
     }
+    const formatNumber = (value: number | string) =>
+        new Intl.NumberFormat("ko-KR").format(Number(value))
 
     return (
         <div className="space-y-4 pb-24">
@@ -96,16 +96,29 @@ export default function AutoChargeForm({ settings, onChange, onSubmit, isSubmitt
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <Select value={settings.minute.toString()} onValueChange={(v) => handleChange("minute", +v)}>
-                                <SelectTrigger className="h-12 text-base border-gray-200 bg-gray-50 hover:bg-white">
-                                    <SelectValue placeholder="분" />
-                                </SelectTrigger>
-                                <SelectContent className="bg-gray-50">
-                                    {minutes.map((m) => (
-                                        <SelectItem key={m} value={m.toString()} className="bg-white hover:bg-[#FFF8E1]">{m}분</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="relative">
+                                <Input
+                                    type="number"
+                                    min={0}
+                                    max={59}
+                                    inputMode="numeric"
+                                    value={settings.minute.toString()}
+                                    onChange={(e) => {
+                                        const raw = e.target.value
+                                        const cleaned = raw.replace(/^0+(?=\d)/, "") // 앞자리 0 제거
+                                        const val = Number(cleaned)
+
+                                        if (!isNaN(val) && val >= 0 && val <= 59) {
+                                            handleChange("minute", val)
+                                        }
+                                    }}
+                                    className="h-12 text-base pr-12 border-gray-200 bg-gray-50 hover:bg-white focus:bg-white"
+                                    placeholder="0~59"
+                                />
+                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
+                                    분
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -132,16 +145,19 @@ export default function AutoChargeForm({ settings, onChange, onSubmit, isSubmitt
                         </div>
                         <div className="relative">
                             <Input
-                                type="text"
-                                value={formatNumber(settings.amount)}
+                                type="number"
+                                min={0}
+                                inputMode="numeric"
+                                value={settings.amount.toString()}
                                 onChange={(e) => {
-                                    const value = e.target.value.replace(/[^0-9]/g, "")
-                                    if (value) handleChange("amount", parseInt(value))
+                                    const raw = e.target.value.replace(/^0+(?=\d)/, "") // 앞자리 0 제거
+                                    const num = Number(raw)
+                                    if (!isNaN(num)) handleChange("amount", num)
                                 }}
                                 className="h-12 text-base pr-12 border-gray-200 bg-gray-50 hover:bg-white focus:bg-white"
                                 placeholder="직접 입력"
                             />
-                            <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm font-medium">원</span>
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">원</span>
                         </div>
                     </div>
 
