@@ -5,7 +5,7 @@ const API_URL = getApiUrl();
 
 export interface Transaction {
     id: number;
-    type: "PAYMENT" | "CONVERT";
+    type: "PAYMENT" | "CONVERT" | "AUTO_CONVERT";
     amount: number;
     createdAt: string;
     displayDescription: string;

@@ -146,6 +146,8 @@ export default function TransactionDetailPage() {
                 return "변환";
             case "PURCHASE":
                 return "구매";
+            case "AUTO_CONVERT":
+                return "자동 전환";
             default:
                 return type;
         }

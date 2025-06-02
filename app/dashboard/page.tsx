@@ -24,6 +24,7 @@ import {EventSourcePolyfill} from "event-source-polyfill";
 import {getCookie} from "@/lib/cookies";
 import {getApiUrl} from "@/lib/getApiUrl";
 import NotificationToast from "@/components/common/NotificationToast";
+import AutoConvertSummaryCard from "@/app/dashboard/components/AutoConvertSummaryCard";
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -38,6 +39,33 @@ export default function DashboardPage() {
         accountNumber: string
         tokenBalance: number
     } | null>(null)
+
+    // TODO: api 연동 후 수정 예정
+    const [autoConvertSetting, setAutoConvertSetting] = useState<AutoConvertSettingResponse | null>(null)
+    interface AutoConvertSettingResponse {
+        enabled: boolean
+        dayOfMonth: number
+        hour: number
+        minute: number
+        amount: number
+    }
+
+    useEffect(() => {
+        // 💡 실제 API 연결 전 목데이터로 대체
+        const mockSetting = {
+            enabled: true,
+            dayOfMonth: 1,
+            hour: 9,
+            minute: 0,
+            amount: 50000,
+        }
+
+        setAutoConvertSetting(mockSetting)
+
+        // 추후 연결할 때는 이렇게 사용:
+        // fetchAutoConvertSetting().then(setAutoConvertSetting).catch(...)
+    }, [])
+
 
     const [toastVisible, setToastVisible] = useState(false)
     const [toastMessage, setToastMessage] = useState({ title: "", content: "" })
@@ -181,6 +209,9 @@ export default function DashboardPage() {
             <WalletCardSkeleton />
           )}
         </div>
+          {autoConvertSetting && (
+              <AutoConvertSummaryCard {...autoConvertSetting} />
+          )}
         <QuickMenu />
         <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
           <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
