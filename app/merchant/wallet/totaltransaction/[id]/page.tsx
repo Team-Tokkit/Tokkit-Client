@@ -4,12 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/common/Header";
-import TransactionCardContent from "@/components/common/TransactionCardContent";
-import { getApiUrl } from "@/lib/getApiUrl";
-import { getCookie } from "@/lib/cookies";
-import {fetchTransactionDetail} from "@/app/wallet/api/fetch-transactions-detail";
-
-const API_URL = getApiUrl();
+import TransactionCardContent from "@/app/wallet/components/common/TransactionCardContent";
+import Link from "next/link";
+import {fetchMerchantTransactionDetail} from "@/app/merchant/wallet/api/fetch-merchant-transactions-detail";
 
 interface TransactionDetail {
   id: number;
@@ -17,6 +14,7 @@ interface TransactionDetail {
   amount: number;
   displayDescription: string;
   createdAt: string;
+  txHash: string;
 }
 
 export default function TransactionDetailPage() {
@@ -34,7 +32,7 @@ export default function TransactionDetailPage() {
       return;
     }
 
-    fetchTransactionDetail(id)
+    fetchMerchantTransactionDetail(id)
         .then((data) => {
           setTransaction(data);
         })
@@ -86,6 +84,8 @@ export default function TransactionDetailPage() {
         return "결제";
       case "CONVERT":
         return "변환";
+      case "RECEIVE":
+        return "정산";
       default:
         return type;
     }
@@ -103,8 +103,10 @@ export default function TransactionDetailPage() {
       >
         <TransactionCardContent
             displayDescription={transaction.displayDescription}
-          amount={transaction.amount}
-          createdAt={transaction.createdAt}
+            amount={transaction.amount}
+            createdAt={transaction.createdAt}
+            type={transaction.type}
+            isDetail={true}
         />
       </motion.div>
 
@@ -123,7 +125,17 @@ export default function TransactionDetailPage() {
 
         <div className="flex justify-between py-4">
           <div className="text-gray-500">거래 설명</div>
-          <div className="font-medium">{transaction.displayDescription}</div>
+
+          {transaction.txHash ? ( // txHash가 존재하는 경우만 렌더링
+              <Link
+                  href={`/merchant/wallet/blockchain-details/${transaction.txHash}`}
+                  className="text-[#FFB020] underline hover:text-[#f29d00] transition-colors duration-150"
+              >
+                {transaction.txHash.slice(0, 10)}...{transaction.txHash.slice(-6)} 🔗
+              </Link>
+          ) : (
+              <div className="text-gray-400">연결 정보 없음</div> // fallback UI
+          )}
         </div>
       </motion.div>
 
