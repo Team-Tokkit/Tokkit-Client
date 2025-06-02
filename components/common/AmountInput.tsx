@@ -8,6 +8,7 @@ interface AmountInputProps {
   onMax: () => void;
   label?: string;
   bottomRightText?: React.ReactNode;
+  className?: string;
 }
 
 export default function AmountInput({
@@ -16,6 +17,7 @@ export default function AmountInput({
   onMax,
   label = "전환할 금액",
   bottomRightText,
+  className = "max-w-sm mx-auto w-full",
 }: AmountInputProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, "");
@@ -23,7 +25,7 @@ export default function AmountInput({
   };
 
   return (
-      <div className="mb-8">
+      <div className={`mb-8 ${className}`}>
           <div className="flex items-center justify-between mb-2">
               <Label
                   htmlFor="amount"
