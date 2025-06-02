@@ -29,8 +29,7 @@ function PurchaseContent() {
   const [loadingWallet, setLoadingWallet] = useState(true)
   const [walletError, setWalletError] = useState<string | null>(null)
 
-  useEffect(() => {
-    // sessionStorage에서 selectedVoucher 불러오기
+   useEffect(() => {
     const stored = sessionStorage.getItem("selectedVoucher")
     if (stored) {
       try {
@@ -39,22 +38,26 @@ function PurchaseContent() {
           setVoucher(parsed)
         }
       } catch (e) {
-        console.warn("Invalid voucher in storage", e)
+        console.error("❌ selectedVoucher 파싱 에러:", e)
       }
     }
 
-    getMyVouchers().then((res) => setMethods(res.content))
+    getMyVouchers()
 
     fetchWalletInfo()
-      .then((data) =>
+      .then((data) => {
         setWalletInfo({
           name: data.name,
           accountNumber: data.accountNumber,
           tokenBalance: data.tokenBalance,
         })
-      )
-      .catch(() => setWalletError("지갑 정보를 불러올 수 없습니다."))
-      .finally(() => setLoadingWallet(false))
+      })
+      .catch((err) => {
+        setWalletError("지갑 정보를 불러올 수 없습니다.")
+      })
+      .finally(() => {
+        setLoadingWallet(false)
+      })
   }, [voucherId])
 
   const handlePay = () => {
