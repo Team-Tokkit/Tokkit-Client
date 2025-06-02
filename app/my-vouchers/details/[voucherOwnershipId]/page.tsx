@@ -9,6 +9,7 @@ import MyVoucherInfo from "@/app/my-vouchers/components/MyVoucherInfo";
 import { ExpandableSection } from "@/app/vouchers/components/ExpandableSection";
 import { FileText, Building, CreditCard } from "lucide-react";
 import { MyStoreList } from "@/app/my-vouchers/components/MyStoreList";
+import { getImageSrc } from "@/lib/api/getImageSrc";
 
 export default function MyVoucherDetailPage() {
   const { voucherOwnershipId } = useParams();

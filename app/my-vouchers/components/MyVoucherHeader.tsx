@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import StatusBadge from "@/app/my-vouchers/components/StatusBadge"
 import { MyVoucherDetail } from "@/app/my-vouchers/types/my-voucher"
+import { getImageSrc } from "@/lib/api/getImageSrc"
 
 interface Props {
   voucher: MyVoucherDetail
@@ -18,12 +19,13 @@ export default function MyVoucherHeader({ voucher }: Props) {
     <div className="relative h-64">
       <div className="relative h-full w-full">
         <Image
-          src={voucher.imageUrl || "/placeholder.svg"}
+          src={getImageSrc(voucher.imageUrl || "/placeholder.svg")}
           alt={voucher.voucherName || "이미지 설명 없음"}
           fill
           className={`object-cover ${
             isDisabled ? "blur-sm" : ""
           }`}
+          unoptimized
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 pointer-events-none" />
