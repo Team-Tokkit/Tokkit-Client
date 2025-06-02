@@ -168,6 +168,7 @@ export default function TransactionDetailPage() {
                     amount={transaction.amount}
                     createdAt={transaction.createdAt}
                     type={transaction.type}
+                    isDetail={true}
                 />
             </motion.div>
 
