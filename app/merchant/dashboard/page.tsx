@@ -15,7 +15,7 @@ import { SalesStatistics } from "@/app/merchant/dashboard/components/SalesStatis
 import { VoucherSearch } from "@/app/merchant/dashboard/components/VoucherSearch"
 import { fetchMerchantWalletInfo } from "@/app/merchant/dashboard/api/merchant-wallet-info"
 import { fetchDailyIncome } from "@/app/merchant/dashboard/api/daily-income"
-import { fetchMerchantRecentTransactions, MerchantTransaction } from "./api/merchant-recent-transactions"
+import { fetchMerchantRecentTransactions, MerchantTransaction } from "./api/merchant-transactions"
 import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction"
 import NoticesSection from "@/app/merchant/dashboard/components/NoticeSection"
 import { fetchNoticePreview, NoticePreview } from "@/app/merchant/dashboard/api/fetch-merchant-notice-preview"

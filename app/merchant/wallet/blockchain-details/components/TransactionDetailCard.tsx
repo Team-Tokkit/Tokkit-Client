@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Clock } from "lucide-react"
-import { BlockchainTransaction } from "../types/blockchain"
+import {BlockchainTransaction} from "@/app/wallet/blockchain-details/types/blockchain";
 
 interface Props {
     transaction: BlockchainTransaction

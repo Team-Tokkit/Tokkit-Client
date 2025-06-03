@@ -10,7 +10,7 @@ import WalletGuide from "@/app/merchant/wallet/components/WalletGuide"
 import {
   fetchMerchantRecentTransactions,
   type MerchantTransaction,
-} from "@/app/merchant/dashboard/api/merchant-recent-transactions"
+} from "@/app/merchant/dashboard/api/merchant-transactions"
 import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction"
 import WalletSkeleton from "@/app/merchant/wallet/components/WalletSkeleton"
 

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import TransactionList from "./TransactionList"
-import { MerchantTransaction } from "../api/merchant-recent-transactions"
+import { MerchantTransaction } from "../api/merchant-transactions"
 import TransactionListSkeleton from "@/app/dashboard/loading/TransactionListSkeleton"
 
 interface Props {
