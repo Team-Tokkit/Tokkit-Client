@@ -40,32 +40,7 @@ export default function DashboardPage() {
         tokenBalance: number
     } | null>(null)
 
-    // TODO: api 연동 후 수정 예정
-    const [autoConvertSetting, setAutoConvertSetting] = useState<AutoConvertSettingResponse | null>(null)
-    interface AutoConvertSettingResponse {
-        enabled: boolean
-        dayOfMonth: number
-        hour: number
-        minute: number
-        amount: number
-    }
-
-    useEffect(() => {
-        // 💡 실제 API 연결 전 목데이터로 대체
-        const mockSetting = {
-            enabled: true,
-            dayOfMonth: 1,
-            hour: 9,
-            minute: 0,
-            amount: 50000,
-        }
-
-        setAutoConvertSetting(mockSetting)
-
-        // 추후 연결할 때는 이렇게 사용:
-        // fetchAutoConvertSetting().then(setAutoConvertSetting).catch(...)
-    }, [])
-
+    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
     const [toastVisible, setToastVisible] = useState(false)
     const [toastMessage, setToastMessage] = useState({ title: "", content: "" })
@@ -75,9 +50,6 @@ export default function DashboardPage() {
         setToastVisible(true)
         setTimeout(() => setToastVisible(false), 4000)
     }, [])
-
-    // SSE 연결 객체를 전역 Ref로 유지
-    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
     useEffect(() => {
         const API_URL = getApiUrl()
@@ -104,6 +76,27 @@ export default function DashboardPage() {
                 const { title, content } = JSON.parse((event as MessageEvent).data)
                 console.log("📥 알림 수신:", title, content)
                 showToast(title, content)
+
+                // ✅ 알림 수신 시 지갑 정보 갱신
+                fetchWalletInfo()
+                    .then((data) => {
+                        setWalletInfo(data)
+                        console.log("🔁 지갑 정보 갱신 완료")
+                    })
+                    .catch((err) => {
+                        console.error("🔁 지갑 정보 갱신 실패:", err)
+                    })
+
+                // ✅ 최근 거래내역 갱신
+                fetchRecentTransactions(3)
+                    .then((data) => {
+                        setRecentTransactions(data)
+                        console.log("🔁 거래내역 갱신 완료")
+                    })
+                    .catch((err) => {
+                        console.error("🔁 거래내역 갱신 실패:", err)
+                    })
+
             } catch (e) {
                 console.error("❗ 알림 파싱 오류", e)
             }
@@ -209,9 +202,7 @@ export default function DashboardPage() {
             <WalletCardSkeleton />
           )}
         </div>
-          {autoConvertSetting && (
-              <AutoConvertSummaryCard {...autoConvertSetting} />
-          )}
+              <AutoConvertSummaryCard />
         <QuickMenu />
         <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
           <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
