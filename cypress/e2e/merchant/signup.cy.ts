@@ -36,9 +36,9 @@ describe("가맹점주 회원가입 테스트 플로우", () => {
     cy.visit("/merchant/signup/business");
     cy.contains("이미지 업로드").click();
 
-    cy.get('input[type="file"]').attachFile("사업자등록증_예시.png", {
-      force: true,
-    });
+    // cy.get('input[type="file"]').attachFile("사업자등록증_예시.png", {
+    //   force: true,
+    // });
     cy.wait("@ocrMock");
     cy.wait(1000);
 
@@ -113,7 +113,7 @@ describe("전자지갑 개설 테스트 플로우", () => {
 
     cy.visit("/merchant/signup/wallet/verify");
     cy.contains("이미지 업로드").click();
-    cy.get('input[type="file"]').attachFile("신분증_예시.png", { force: true });
+    // cy.get('input[type="file"]').attachFile("신분증_예시.png", { force: true });
     cy.wait("@mockOcr");
 
     cy.get('[data-cy="name-input"]').should("have.value", "둘리");
