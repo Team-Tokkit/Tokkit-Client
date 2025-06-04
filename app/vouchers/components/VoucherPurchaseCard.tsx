@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import type { Voucher } from "@/app/vouchers/types/voucher"
+import { getImageSrc } from "@/lib/api/getImageSrc"
 
 interface Props {
   voucher: Voucher
@@ -46,7 +47,7 @@ export default function VoucherCard({
       onClick={handleCardClick}
     >
       <div className="relative h-40">
-        <Image src={voucher.imageUrl} alt={voucher.name} fill className="object-cover" />
+        <Image src={getImageSrc(voucher.imageUrl)} alt={voucher.name} fill className="object-cover" unoptimized/>
         <div className="absolute top-2 right-2 flex items-center space-x-2 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
           <span>남은 수량: {remainingCount}개</span>
           <div className="w-16 bg-gray-300 rounded-full h-2">

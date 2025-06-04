@@ -44,6 +44,7 @@ export default function TransactionsPage() {
     { label: "전체", value: "전체" },
     { label: "결제", value: "결제" },
     { label: "변환", value: "변환" },
+    { label: "자동 전환", value: "자동 전환"}
   ];
 
   const periodOptions = [
@@ -91,6 +92,7 @@ export default function TransactionsPage() {
       const typeMap: Record<string, string> = {
         결제: "PURCHASE",
         변환: "CONVERT",
+        자동전환: "AUTO_CONVERT",
       };
       if (tx.type !== typeMap[type]) return false;
     }

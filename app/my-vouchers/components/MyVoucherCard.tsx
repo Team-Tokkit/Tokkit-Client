@@ -7,6 +7,7 @@ import { useState } from "react"
 import type { MyVoucher } from "@/app/my-vouchers/types/my-voucher"
 import StatusBadge from "@/app/my-vouchers/components/StatusBadge"
 import { deleteMyVoucher } from "@/lib/api/voucher"
+import { getImageSrc } from "@/lib/api/getImageSrc"
 
 interface Props {
   voucher: MyVoucher
@@ -47,7 +48,7 @@ export default function MyVoucherCard({ voucher, onDelete }: Props) {
       >
         <div className="relative h-40">
           {/* 이미지 */}
-          <Image src={voucher.imageUrl || "/placeholder.svg"} alt={voucher.imageUrl} fill className="object-cover" />
+          <Image src={getImageSrc(voucher.imageUrl || "/placeholder.svg")} alt={voucher.imageUrl} fill className="object-cover" unoptimized/>
 
           {/* 블러 처리 */}
           {isDisabled && <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-10" />}

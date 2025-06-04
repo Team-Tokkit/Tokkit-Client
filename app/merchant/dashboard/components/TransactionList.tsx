@@ -1,6 +1,6 @@
 import {useRouter} from "next/navigation";
 import {Card, CardContent} from "@/components/ui/card";
-import TransactionCardContent from "@/components/common/TransactionCardContent";
+import TransactionCardContent from "@/app/wallet/components/common/TransactionCardContent";
 
 interface MerchantTransaction {
     id?: number;
@@ -51,6 +51,7 @@ export default function TransactionList({
                                     displayDescription={tx.displayDescription}
                                     amount={tx.amount}
                                     createdAt={tx.createdAt}
+                                    type={tx.type}
                                 />
                             </CardContent>
                         </Card>

@@ -24,6 +24,7 @@ import {EventSourcePolyfill} from "event-source-polyfill";
 import {getCookie} from "@/lib/cookies";
 import {getApiUrl} from "@/lib/getApiUrl";
 import NotificationToast from "@/components/common/NotificationToast";
+import AutoConvertSummaryCard from "@/app/dashboard/components/AutoConvertSummaryCard";
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -39,6 +40,8 @@ export default function DashboardPage() {
         tokenBalance: number
     } | null>(null)
 
+    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
+
     const [toastVisible, setToastVisible] = useState(false)
     const [toastMessage, setToastMessage] = useState({ title: "", content: "" })
 
@@ -47,9 +50,6 @@ export default function DashboardPage() {
         setToastVisible(true)
         setTimeout(() => setToastVisible(false), 4000)
     }, [])
-
-    // SSE 연결 객체를 전역 Ref로 유지
-    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
     useEffect(() => {
         const API_URL = getApiUrl()
@@ -76,6 +76,27 @@ export default function DashboardPage() {
                 const { title, content } = JSON.parse((event as MessageEvent).data)
                 console.log("📥 알림 수신:", title, content)
                 showToast(title, content)
+
+                // ✅ 알림 수신 시 지갑 정보 갱신
+                fetchWalletInfo()
+                    .then((data) => {
+                        setWalletInfo(data)
+                        console.log("🔁 지갑 정보 갱신 완료")
+                    })
+                    .catch((err) => {
+                        console.error("🔁 지갑 정보 갱신 실패:", err)
+                    })
+
+                // ✅ 최근 거래내역 갱신
+                fetchRecentTransactions(3)
+                    .then((data) => {
+                        setRecentTransactions(data)
+                        console.log("🔁 거래내역 갱신 완료")
+                    })
+                    .catch((err) => {
+                        console.error("🔁 거래내역 갱신 실패:", err)
+                    })
+
             } catch (e) {
                 console.error("❗ 알림 파싱 오류", e)
             }
@@ -181,6 +202,7 @@ export default function DashboardPage() {
             <WalletCardSkeleton />
           )}
         </div>
+              <AutoConvertSummaryCard />
         <QuickMenu />
         <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
           <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>

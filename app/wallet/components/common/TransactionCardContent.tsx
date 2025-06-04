@@ -1,11 +1,11 @@
+"use client";
+
 import {
     ArrowDownUp,
-    ArrowDown,
-    ArrowUp,
     Repeat,
     ShoppingCart,
-    CornerUpLeft,
-    Gift,
+    AlarmClock,
+    BadgeCent,
 } from "lucide-react";
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
     createdAt: string;
     type: string;
     disableClick?: boolean;
+    isDetail?: boolean; // 상세 페이지 여부 구분용 prop 추가
 }
 
 export default function TransactionCardContent({
@@ -21,26 +22,14 @@ export default function TransactionCardContent({
                                                    amount,
                                                    createdAt,
                                                    type,
+                                                   isDetail = false, // 기본값 false (목록 화면)
                                                }: Props) {
-
     const typeMeta = {
-        DEPOSIT: {
-            icon: <ArrowDown className="text-green-500 h-5 w-5" />,
-            bg: "bg-green-100",
-            color: "text-green-500",
-            sign: "+",
-        },
-        WITHDRAW: {
-            icon: <ArrowUp className="text-red-500 h-5 w-5" />,
-            bg: "bg-red-100",
-            color: "text-red-500",
-            sign: "-",
-        },
         CONVERT: {
             icon: <Repeat className="text-blue-500 h-5 w-5" />,
             bg: "bg-blue-100",
             color: "text-blue-500",
-            sign: "", // 변환은 부호 없이
+            sign: "",
         },
         PURCHASE: {
             icon: <ShoppingCart className="text-red-500 h-5 w-5" />,
@@ -48,17 +37,17 @@ export default function TransactionCardContent({
             color: "text-red-500",
             sign: "-",
         },
-        REFUND: {
-            icon: <CornerUpLeft className="text-green-500 h-5 w-5" />,
+        RECEIVE: {
+            icon: <BadgeCent className="text-green-500 h-5 w-5" />,
             bg: "bg-green-100",
             color: "text-green-500",
             sign: "+",
         },
-        RECEIVE: {
-            icon: <Gift className="text-yellow-500 h-5 w-5" />,
-            bg: "bg-yellow-100",
-            color: "text-yellow-500",
-            sign: "+",
+        AUTO_CONVERT: {
+            icon: <AlarmClock className="text-amber-500 h-5 w-5" />,
+            bg: "bg-amber-100",
+            color: "text-amber-500",
+            sign: "",
         },
     }[type] || {
         icon: <ArrowDownUp className="text-gray-500 h-5 w-5" />,
@@ -75,8 +64,13 @@ export default function TransactionCardContent({
                 >
                     {typeMeta.icon}
                 </div>
-                <div className="min-w-0 w-full"> {/* 줄임처리 핵심 */}
-                    <p className="font-medium text-[#1A1A1A] truncate w-full">
+                <div className="min-w-0 w-full">
+                    {/* ✅ isDetail 여부에 따라 truncate 해제 */}
+                    <p
+                        className={`font-medium text-[#1A1A1A] ${
+                            isDetail ? "" : "truncate"
+                        } w-full`}
+                    >
                         {displayDescription}
                     </p>
                     <p className="text-xs text-[#666666]">
@@ -90,6 +84,5 @@ export default function TransactionCardContent({
                 {Math.abs(amount).toLocaleString()} TKT
             </div>
         </div>
-
     );
 }

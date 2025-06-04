@@ -7,14 +7,12 @@ const nextConfig = {
         hostname: "api.tokkit.site",
         pathname: "/api/s3/images/**",
       },
-    ],
-  },
-  async rewrites() {
-    return [
       {
-        source: "/api/:path*",
-        destination: "https://api.tokkit.site/api/:path*",
+      protocol: "http",
+      hostname: "localhost",
+      port: "8080",
+      pathname: "/api/s3/images/**",
       },
-    ];
+    ],
   },
 };

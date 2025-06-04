@@ -19,13 +19,10 @@ export function SalesStatistics({ dailyIncome, isLoading }: SalesStatisticsProps
 
             <div>
                 {[
-                    { label: "오늘 매출", value: dailyIncome, delay: 0.1, bg: "#EEF2FF", icon: "/images/merchant-bunny.png" },
+                    { label: "오늘 매출", value: dailyIncome, bg: "#EEF2FF", icon: "/images/merchant-bunny.png" },
                 ].map((item, i) => (
-                    <motion.div
+                    <div
                         key={item.label}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: item.delay }}
                     >
                         <Card className="border-none shadow-sm bg-white">
                             <CardContent className="p-4 flex items-center gap-4">
@@ -40,14 +37,23 @@ export function SalesStatistics({ dailyIncome, isLoading }: SalesStatisticsProps
                                 {/* 텍스트 */}
                                 <div className="flex flex-col justify-center">
                                     <p className="text-sm text-[#666666] mb-1">{item.label}</p>
-                                    <p className="text-xl font-bold text-[#1A1A1A]">
-                                        {isLoading ? "-" : item.value.toLocaleString()} TKT
+                                    <p className="text-xl font-bold text-[#1A1A1A] flex items-center">
+                                                {isLoading ? (
+                                                    <>
+                                                        <span className="inline-block h-7 w-20 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-[8px] animate-pulse mr-2" />
+                                                        <span className="text-base text-[#bbb]">TKT</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {item.value.toLocaleString()} <span className="ml-1">TKT</span>
+                                                    </>
+                                                )}
                                     </p>
                                 </div>
                             </CardContent>
                         </Card>
 
-                    </motion.div>
+                    </div>
                 ))}
             </div>
         </div>

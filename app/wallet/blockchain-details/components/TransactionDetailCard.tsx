@@ -50,9 +50,6 @@ export function TransactionDetailCard({ transaction }: Props) {
                 background
             />
 
-            {/* 금액 */}
-            <SimpleRow label="금액" right={<span className="text-[#FFB020] font-medium">{transaction.value}</span>} />
-
             {/* + 더보기 */}
             <div className="px-4 py-4">
                 <button

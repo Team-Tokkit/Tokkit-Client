@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
+import { getImageSrc } from "@/lib/api/getImageSrc"
 
 interface HeaderImageProps {
   image: string
@@ -15,7 +16,7 @@ export default function HeaderImage({ image, title, contact }: HeaderImageProps)
 
   return (
     <div className="relative h-64">
-      <Image src={image} alt={title|| "이미지 설명 없음"} fill className="object-cover" />
+      <Image src={getImageSrc(image)} alt={title|| "이미지 설명 없음"} fill className="object-cover" unoptimized/>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       
 

@@ -10,17 +10,13 @@ import WalletGuide from "@/app/merchant/wallet/components/WalletGuide"
 import {
   fetchMerchantRecentTransactions,
   type MerchantTransaction,
-} from "@/app/merchant/dashboard/api/merchant-recent-transactions"
+} from "@/app/merchant/dashboard/api/merchant-transactions"
 import MerchantRecentTransaction from "@/app/merchant/dashboard/components/MerchantRecentTransaction"
+import WalletSkeleton from "@/app/merchant/wallet/components/WalletSkeleton"
 
-function MerchantWalletContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const refresh = searchParams.get("refresh")
-
-  const [recentMerchantTransactions, setRecentMerchantTransactions] = useState<MerchantTransaction[]>([])
+export default function MerchantWalletPage() {
   const [loading, setLoading] = useState(true)
-
+  const [recentMerchantTransactions, setRecentMerchantTransactions] = useState<MerchantTransaction[]>([])
   const [walletInfo, setWalletInfo] = useState<{
     storeName: string
     accountNumber: string
@@ -28,27 +24,22 @@ function MerchantWalletContent() {
     depositBalance: number
   } | null>(null)
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const refresh = searchParams.get("refresh")
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
-        fetchMerchantWalletInfo()
-          .then((data) => {
-            setWalletInfo(data)
-          })
-          .catch((err) => {
-            console.error("지갑 정보 로딩 실패:", err)
-          })
-
-        fetchMerchantRecentTransactions(3)
-          .then(setRecentMerchantTransactions)
-          .catch((err) => {
-            console.error("거래내역 조회 실패:", err)
-          })
-          .finally(() => {
-            setLoading(false)
-          })
+        const [wallet, transactions] = await Promise.all([
+          fetchMerchantWalletInfo(),
+          fetchMerchantRecentTransactions(3),
+        ])
+        setWalletInfo(wallet)
+        setRecentMerchantTransactions(transactions)
       } catch (error) {
-        console.error("API 요청 오류:", error)
+        console.error("지갑 정보 또는 거래내역 로딩 실패:", error)
         alert("지갑 데이터를 불러오는 중 오류 발생")
       } finally {
         setLoading(false)
@@ -58,34 +49,26 @@ function MerchantWalletContent() {
     fetchData()
   }, [refresh])
 
+  if (loading) return <WalletSkeleton />
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <header className="bg-white">
         <Header title="전자지갑" />
         {walletInfo && (
           <WalletCard
-            storeName={walletInfo?.storeName ?? ""}
-            accountNumber={walletInfo?.accountNumber ?? ""}
-            tokenBalance={walletInfo?.tokenBalance ?? 0}
-            depositBalance={walletInfo.depositBalance ?? 0}
+            storeName={walletInfo.storeName}
+            accountNumber={walletInfo.accountNumber}
+            tokenBalance={walletInfo.tokenBalance}
+            depositBalance={walletInfo.depositBalance}
           />
         )}
         <div className="flex-1 flex flex-col p-4">
           <ConvertButton />
-
-          <MerchantRecentTransaction transactions={recentMerchantTransactions} loading={loading} />
-
+          <MerchantRecentTransaction transactions={recentMerchantTransactions} loading={false} />
           <WalletGuide />
         </div>
       </header>
     </div>
-  )
-}
-
-export default function MerchantWalletPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MerchantWalletContent />
-    </Suspense>
   )
 }

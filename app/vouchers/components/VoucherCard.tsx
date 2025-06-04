@@ -30,9 +30,13 @@ export default function VoucherCard({
   }
 
   const handleActionClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.push(`/vouchers/purchase?voucherId=${voucher.id}`);
-  };
+  e.stopPropagation();
+
+  sessionStorage.setItem("selectedVoucher", JSON.stringify(voucher));
+
+  router.push(`/vouchers/purchase?voucherId=${voucher.id}`);
+};
+
 
   const remainingCount = voucher.remainingCount;
   const fillPercent = Math.round((100 * remainingCount) / voucher.totalCount);

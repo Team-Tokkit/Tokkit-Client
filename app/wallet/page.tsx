@@ -9,7 +9,7 @@ import WalletGuide from "@/app/wallet/components/common/WalletGuide"
 import TransactionList from "@/app/wallet/components/common/TransactionList"
 import ConvertButton from "@/app/wallet/components/common/ConvertButton"
 import WalletCard from "@/app/wallet/components/common/WalletCard"
-import WalletSkeleton from "@/app/wallet/components/common/WalletSkeletion"
+import WalletSkeleton from "@/app/wallet/components/common/WalletSkeleton"
 import { fetchWalletTransactions } from "@/app/wallet/api/wallet"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
 
@@ -68,8 +68,13 @@ function WalletContent() {
         <div className="flex-1 flex flex-col p-4">
           <ConvertButton />
 
-          <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
-            <TransactionList label="최근 거래" transactions={recentTransactions} limit={3} />
+          <div>
+            <div className="flex items-center mb-4">
+                <div className="w-1 h-5 bg-[#00bd36] rounded-full mr-2"></div>
+                <h2 className="text-lg font-bold text-[#1A1A1A]">최근 거래 내역</h2>
+            </div>
+            <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl">
+            <TransactionList transactions={recentTransactions} limit={3} />
             <div className="flex justify-center items-center h-8 mt-5">
               <Button
                 variant="ghost"
@@ -80,6 +85,7 @@ function WalletContent() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+          </div>
           </div>
 
           <WalletGuide />

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchMerchantWalletInfo } from "@/app/merchant/dashboard/api/merchant-wallet-info";
-import fetchMerchantTransactions from "@/app/merchant/dashboard/api/merchant-recent-transactions";
+import fetchMerchantTransactions from "@/app/merchant/dashboard/api/merchant-transactions";
 import Header from "@/components/common/Header";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
