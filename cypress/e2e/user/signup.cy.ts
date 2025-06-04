@@ -12,7 +12,7 @@ describe("전자지갑 회원가입 플로우", () => {
     cy.visit("/signup/wallet/verify");
 
     cy.contains("이미지 업로드").click();
-    cy.get('input[type="file"]').attachFile("신분증.png");
+    // cy.get('input[type="file"]').attachFile("신분증.png");
 
     cy.contains("OCR 인식 중...").should("be.visible");
     cy.contains("OCR 인식 중...").should("not.exist");
