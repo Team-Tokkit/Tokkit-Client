@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Store } from "lucide-react"
 import { motion } from "framer-motion"
