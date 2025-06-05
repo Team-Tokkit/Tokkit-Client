@@ -8,7 +8,7 @@ interface LoadingOverlayProps {
 
 export default function LoadingOverlay({ message = "처리 중입니다. 잠시만 기다려주세요..." }: LoadingOverlayProps) {
   return (
-    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-40">
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
