@@ -7,6 +7,8 @@ import { AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import VirtualKeypad, { VirtualKeypadHandle } from "@/components/virtual-keypad"
 import LoadingOverlay from "@/components/common/LoadingOverlay"
+import Image from "next/image"
+
 
 interface Props {
   onVerified: (password: string) => Promise<void>
@@ -86,8 +88,6 @@ export default function VerifySimplePassword({ onVerified, disabled = false }: P
       >
         비밀번호를 잊으셨나요?
       </p>
-
-      {isLoading && <LoadingOverlay message="비밀번호 확인 중입니다..." />}
     </div>
   )
 }

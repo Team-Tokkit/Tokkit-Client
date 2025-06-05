@@ -75,8 +75,13 @@ function VoucherPurchaseVerifyContent() {
       {/* Content - 나머지 공간에서 중앙 정렬 */}
       <div className="flex-1 flex items-center justify-center px-8">
         <div className="w-full max-w-md flex flex-col items-center">
-          <Image src="/images/bunny-mascot.png" alt="바우처 마스코트" width={80} height={120} className="mb-4" />
-
+          <Image
+                src="/images/bunny-lock.png"
+                alt="Security Mascot"
+                width={120}
+                height={120}
+                className="mx-auto mb-6"
+            />
           <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">간편 비밀번호 입력</h2>
           <p className="text-sm text-gray-500 text-center mb-6">바우처 구매를 위해 간편 비밀번호를 입력해주세요.</p>
 
@@ -89,7 +94,7 @@ function VoucherPurchaseVerifyContent() {
           {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
 
           <p
-            className="text-sm text-gray-500 text-center mt-8 underline cursor-pointer hover:text-gray-700"
+            className="text-sm text-gray-500 text-center mt-8 mb-8 underline cursor-pointer hover:text-gray-700"
             onClick={handleForgotPassword}
           >
             비밀번호를 잊으셨나요?
