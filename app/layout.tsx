@@ -4,6 +4,7 @@ import { Nunito } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { MainLayout } from "./MainLayout"
+import {SseProvider} from "@/components/common/SseProvider";
 
 const nunito = Nunito({
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -34,7 +35,9 @@ export default function RootLayout({
       </head>
       <body className={nunito.className}>
         <ThemeProvider attribute="class"  >
-          <MainLayout>{children}</MainLayout>
+          <SseProvider>
+            <MainLayout>{children}</MainLayout>
+          </SseProvider>
         </ThemeProvider>
       </body>
     </html>

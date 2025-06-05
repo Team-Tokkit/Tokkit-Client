@@ -20,11 +20,10 @@ import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-not
 import type { Transaction as ApiTransaction } from "@/app/dashboard/api/fetch-recent-transactions"
 import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions"
 import { Transaction } from "@/app/wallet/api/fetch-transactions"
-import {EventSourcePolyfill} from "event-source-polyfill";
-import {getCookie} from "@/lib/cookies";
-import {getApiUrl} from "@/lib/getApiUrl";
-import NotificationToast from "@/components/common/NotificationToast";
-import AutoConvertSummaryCard from "@/app/dashboard/components/AutoConvertSummaryCard";
+
+import NotificationToast from "@/components/common/NotificationToast"
+import AutoConvertSummaryCard from "@/app/dashboard/components/AutoConvertSummaryCard"
+import { useSse } from "@/components/common/SseProvider" // 전역 SSE 훅
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -40,10 +39,10 @@ export default function DashboardPage() {
         tokenBalance: number
     } | null>(null)
 
-    const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
-
     const [toastVisible, setToastVisible] = useState(false)
     const [toastMessage, setToastMessage] = useState({ title: "", content: "" })
+
+    const { notification } = useSse() // 알림 수신 감지
 
     const showToast = useCallback((title: string, content: string) => {
         setToastMessage({ title, content })
@@ -51,79 +50,28 @@ export default function DashboardPage() {
         setTimeout(() => setToastVisible(false), 4000)
     }, [])
 
+    // 🔔 알림 수신 시 Toast 표시 + 지갑/거래내역 갱신
     useEffect(() => {
-        const API_URL = getApiUrl()
-        const accessToken = getCookie("accessToken")
-        if (!accessToken) return
+        if (notification) {
+            showToast(notification.title, notification.content)
 
-        if (eventSourceRef.current) {
-            console.log("🔌 기존 SSE 연결 닫기")
-            eventSourceRef.current.close()
-            eventSourceRef.current = null
+            fetchWalletInfo()
+                .then((data) => {
+                    setWalletInfo(data)
+                })
+                .catch((err) => {
+                    console.error("지갑 정보 갱신 실패:", err)
+                })
+
+            fetchRecentTransactions(3)
+                .then((data) => {
+                    setRecentTransactions(data)
+                })
+                .catch((err) => {
+                    console.error("거래내역 갱신 실패:", err)
+                })
         }
-
-        const eventSource = new EventSourcePolyfill(`${API_URL}/api/users/notifications/subscribe`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: false,
-            heartbeatTimeout: 60000,
-        })
-
-        // 알림 이벤트 수신 처리
-        eventSource.addEventListener("notification", (event) => {
-            try {
-                const { title, content } = JSON.parse((event as MessageEvent).data)
-                console.log("📥 알림 수신:", title, content)
-                showToast(title, content)
-
-                // ✅ 알림 수신 시 지갑 정보 갱신
-                fetchWalletInfo()
-                    .then((data) => {
-                        setWalletInfo(data)
-                        console.log("🔁 지갑 정보 갱신 완료")
-                    })
-                    .catch((err) => {
-                        console.error("🔁 지갑 정보 갱신 실패:", err)
-                    })
-
-                // ✅ 최근 거래내역 갱신
-                fetchRecentTransactions(3)
-                    .then((data) => {
-                        setRecentTransactions(data)
-                        console.log("🔁 거래내역 갱신 완료")
-                    })
-                    .catch((err) => {
-                        console.error("🔁 거래내역 갱신 실패:", err)
-                    })
-
-            } catch (e) {
-                console.error("❗ 알림 파싱 오류", e)
-            }
-        })
-
-        // 연결 확인 로그
-        eventSource.addEventListener("connect", (event) => {
-            console.log("✅ SSE 연결 이벤트 전체:", event)
-            console.log("✅ SSE 연결 완료:", (event as MessageEvent).data)
-        })
-
-        // 에러 처리
-        eventSource.onerror = (err) => {
-            console.error("❌ SSE 오류:", err)
-            eventSource.close()
-            eventSourceRef.current = null
-        }
-
-        eventSourceRef.current = eventSource
-
-        return () => {
-            console.log("🚪 DashboardPage unmount, SSE 연결 닫기")
-            eventSourceRef.current?.close()
-            eventSourceRef.current = null
-        }
-    }, [showToast])
-
+    }, [notification, showToast])
 
     useEffect(() => {
         setMounted(true)
@@ -187,65 +135,68 @@ export default function DashboardPage() {
 
     if (!mounted) return null
 
-  return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
-      <HeaderSection />
-      <div className="flex-1 p-4 pb-8 space-y-5 -mt-8">
-        <div className="pb-5">
-          {walletInfo ? (
-            <WalletCard
-              userName={walletInfo.name}
-              accountNumber={walletInfo.accountNumber}
-              tokenBalance={walletInfo.tokenBalance}
+    return (
+        <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
+            <HeaderSection />
+            <div className="flex-1 p-4 pb-8 space-y-5 -mt-8">
+                <div className="pb-5">
+                    {walletInfo ? (
+                        <WalletCard
+                            userName={walletInfo.name}
+                            accountNumber={walletInfo.accountNumber}
+                            tokenBalance={walletInfo.tokenBalance}
+                        />
+                    ) : (
+                        <WalletCardSkeleton />
+                    )}
+                </div>
+                <AutoConvertSummaryCard />
+                <QuickMenu />
+                <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
+                    <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
+                    최근 거래 내역
+                </h3>
+                <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl mb-8">
+                    {loading ? (
+                        <TransactionListSkeleton count={3} />
+                    ) : (
+                        <TransactionList
+                            transactions={recentTransactions.map((t) => ({
+                                ...t,
+                                displayDescription: t.displayDescription || "",
+                            })) as Transaction[]}
+                            limit={3}
+                        />
+                    )}
+                    <div className="flex justify-center items-center h-8 mt-5">
+                        <Button
+                            variant="ghost"
+                            className="text-[#666666] flex items-center justify-center gap-1 text-base leading-none"
+                            onClick={() => router.push("/wallet/totaltransaction")}
+                        >
+                            전체 거래내역 보기
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+                <div className="pb-8">
+                    {notices.length > 0 ? (
+                        <NoticesSection
+                            notices={notices}
+                            currentNotice={currentNotice}
+                            onNoticeChange={handleNoticeChange}
+                        />
+                    ) : (
+                        <NoticesSkeleton />
+                    )}
+                </div>
+            </div>
+            <FloatingPaymentButton />
+            <NotificationToast
+                title={toastMessage.title}
+                content={toastMessage.content}
+                visible={toastVisible}
             />
-          ) : (
-            <WalletCardSkeleton />
-          )}
         </div>
-              <AutoConvertSummaryCard />
-        <QuickMenu />
-        <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
-          <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
-          최근 거래 내역
-        </h3>
-        <div className="bg-[#F5F5F5] px-4 py-5 rounded-xl mb-8">
-          {loading ? (
-            <TransactionListSkeleton count={3} />
-          ) : (
-            <TransactionList
-              transactions={recentTransactions.map((t) => ({ ...t, displayDescription: t.displayDescription || "" })) as Transaction[]}
-              limit={3}
-            />
-          )}
-          <div className="flex justify-center items-center h-8 mt-5">
-            <Button
-              variant="ghost"
-              className="text-[#666666] flex items-center justify-center gap-1 text-base leading-none"
-              onClick={() => router.push("/wallet/totaltransaction")}
-            >
-              전체 거래내역 보기
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        <div className="pb-8">
-          {notices.length > 0 ? (
-            <NoticesSection
-              notices={notices}
-              currentNotice={currentNotice}
-              onNoticeChange={handleNoticeChange}
-            />
-          ) : (
-            <NoticesSkeleton />
-          )}
-        </div>
-      </div>
-      <FloatingPaymentButton />
-      <NotificationToast
-        title={toastMessage.title}
-        content={toastMessage.content}
-        visible={toastVisible}
-      />
-    </div>
-  )
+    )
 }
