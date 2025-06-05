@@ -7,9 +7,9 @@ export interface StoreQRInfo {
 
 export const mockStoreQR: Record<string, StoreQRInfo> = {
   "1": {
-    storeId: "682027",
-    merchantId: "109",
-    storeName: "영재상사",
-    address: "서울 종로구 자하문로 21 1층",
+    storeId: "682036",
+    merchantId: "126",
+    storeName: "코딩 캠프",
+    address: "서울 마포구 성암로 255",
   }
 };
