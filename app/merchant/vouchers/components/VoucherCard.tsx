@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Voucher } from "@/app/vouchers/types/voucher"
+import { getImageSrc } from "@/lib/api/getImageSrc"
 
 interface Props {
   voucher: Voucher
@@ -20,10 +21,11 @@ export default function VoucherCard({ voucher}: Props) {
     >
       <div className="relative h-40">
         <Image
-          src={voucher.imageUrl}
+          src={getImageSrc(voucher.imageUrl)}
           alt={voucher.name}
           fill
           className="object-cover"
+          unoptimized
         />
       </div>
 
