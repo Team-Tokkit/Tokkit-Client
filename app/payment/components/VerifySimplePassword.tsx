@@ -63,6 +63,15 @@ export default function VerifySimplePassword({ onVerified, disabled = false }: P
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
+        <div className="flex justify-center mb-6">
+          <Image
+              src="/images/bunny-lock.png"
+              alt="보안 마스코트"
+              width={120}
+              height={120}
+              className="h-28 w-28"
+           />
+        </div>
         <h2 className="text-xl font-bold text-[#1A1A1A] mb-2">간편 비밀번호 입력</h2>
         <p className="text-sm text-[#666666]">
           서비스를 이용하기 위해 비밀번호를 입력해주세요.
