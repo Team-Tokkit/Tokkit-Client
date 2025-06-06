@@ -19,18 +19,25 @@ export default function AutoConvertSummaryCard() {
         const fetchSetting = async () => {
             try {
                 const res = await fetchAutoConvertSetting()
-                setEnabled(res.enabled)
+
+                // 비정상 값 방지: 필드 중 하나라도 null이면 비활성 처리
+                if (
+                    res == null || !res.enabled || res.dayOfMonth == null || res.hour == null || res.minute == null ||
+                    res.amount == null
+                ) {
+                    setEnabled(false)
+                    return
+                }
+
+                // 정상적으로 설정되어 있다면 값 설정
+                setEnabled(true)
                 setDayOfMonth(res.dayOfMonth)
                 setHour(res.hour)
                 setMinute(res.minute)
                 setAmount(res.amount)
-            } catch (err) {
-                console.error("자동 전환 설정 조회 실패", err)
+            } catch {
+                // 에러가 나더라도 enabled=false만 설정하고 끝 (console.error 제거)
                 setEnabled(false)
-                setDayOfMonth(null)
-                setHour(null)
-                setMinute(null)
-                setAmount(null)
             }
         }
 
@@ -59,9 +66,9 @@ export default function AutoConvertSummaryCard() {
                             </p>
                             <p className="text-xs text-[#A35B00] leading-relaxed">
                                 매월{" "}
-                                <strong>{dayOfMonth ?? "-"}일</strong>{" "}
-                                <strong>{hour ?? "--"}시 {minute ?? "--"}분</strong>에{" "}
-                                <strong>{amount !== null ? amount.toLocaleString() : "-"}원</strong> 전환됩니다.
+                                <strong>{dayOfMonth}일</strong>{" "}
+                                <strong>{hour}시 {minute}분</strong>에{" "}
+                                <strong>{amount?.toLocaleString()}원</strong> 전환됩니다.
                             </p>
                         </>
                     ) : (
