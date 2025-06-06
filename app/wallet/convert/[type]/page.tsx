@@ -97,7 +97,6 @@ export default function ConvertPage() {
 
         {step === "password" && (
           <div className="flex flex-col items-center justify-center h-full px-4 pt-10">
-            <img src="/images/bunny-lock.png" alt="간편 비밀번호 입력" className="w-32 h-auto mb-6" />
             <VerifySimplePassword onVerified={handlePasswordComplete} />
           </div>
         )}

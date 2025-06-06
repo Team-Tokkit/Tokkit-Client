@@ -19,7 +19,9 @@ export default function ProfileCard({ merchant }: Props) {
     const router = useRouter()
 
     return (
-        <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm mx-2 cursor-pointer">
+        <div 
+            onClick={() => router.push ("/merchant/mypage/info") }
+            className="relative overflow-hidden rounded-2xl bg-white shadow-sm mx-2 cursor-pointer">
             <div className="relative z-10 p-6">
                 <div className="flex items-center mb-2">
                     <div>
