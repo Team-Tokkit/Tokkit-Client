@@ -19,7 +19,11 @@ import {
 } from "@/app/merchant/signup/business/api/region";
 import AddressSearchModal from "./AddressSearchModal";
 
-interface InfoStepProps {}
+interface InfoStepProps {
+  onAddressSearch: () => void;
+  roadAddress: string;
+  setRoadAddress: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const STORE_CATEGORIES = [
   { value: "음식점", label: "음식점" },
@@ -30,12 +34,15 @@ const STORE_CATEGORIES = [
   { value: "교육", label: "교육" },
 ];
 
-export default function InfoStep() {
+export default function InfoStep({
+                                    onAddressSearch,
+                                    roadAddress,
+                                    setRoadAddress,
+                                  }: InfoStepProps) {
   const router = useRouter();
   const [businessNumber, setBusinessNumber] = useState("");
   const [storeName, setStoreName] = useState("");
   const [name, setName] = useState("");
-  const [roadAddress, setRoadAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedSigungu, setSelectedSigungu] = useState("");
