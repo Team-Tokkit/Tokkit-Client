@@ -3,103 +3,81 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { fetchWalletInfo } from "@/app/dashboard/api/wallet-info"
-
-import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
-
-import HeaderSection from "@/app/dashboard/components/DashboardHeader"
-import WalletCardSkeleton from "@/app/dashboard/loading/WalletCardSkeleton"
-import WalletCard from "./components/WalletCard"
-import QuickMenu from "@/app/dashboard/components/QuickMenu"
-import NoticesSection from "@/app/dashboard/components/NoticeSection"
-import NoticesSkeleton from "@/app/dashboard/loading/NoticeSkeleton"
-import FloatingPaymentButton from "@/app/dashboard/components/PaymentButton"
-import TransactionList from "@/app/wallet/components/common/TransactionList"
-import TransactionListSkeleton from "@/app/dashboard/loading/TransactionListSkeleton"
+import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions"
 import { fetchNoticePreview, NoticePreview } from "@/app/dashboard/api/fetch-notice-preview"
 import type { Transaction as ApiTransaction } from "@/app/dashboard/api/fetch-recent-transactions"
-import { fetchRecentTransactions } from "@/app/dashboard/api/fetch-recent-transactions"
 import { Transaction } from "@/app/wallet/api/fetch-transactions"
 
+import HeaderSection from "@/app/dashboard/components/DashboardHeader"
+import WalletCard from "./components/WalletCard"
+import WalletCardSkeleton from "@/app/dashboard/loading/WalletCardSkeleton"
+import QuickMenu from "@/app/dashboard/components/QuickMenu"
+import TransactionList from "@/app/wallet/components/common/TransactionList"
+import TransactionListSkeleton from "@/app/dashboard/loading/TransactionListSkeleton"
+import NoticesSection from "@/app/dashboard/components/NoticeSection"
+import NoticesSkeleton from "@/app/dashboard/loading/NoticeSkeleton"
 import NotificationToast from "@/components/common/NotificationToast"
 import AutoConvertSummaryCard from "@/app/dashboard/components/AutoConvertSummaryCard"
-import { useSse } from "@/components/common/SseProvider" // 전역 SSE 훅
+import FloatingPaymentButton from "@/app/dashboard/components/PaymentButton"
+import { Button } from "@/components/ui/button"
+import { ChevronRight } from "lucide-react"
+import { useSse } from "@/components/common/SseProvider"
 
 export default function DashboardPage() {
     const router = useRouter()
+
+    // 상태 정의
     const [loading, setLoading] = useState(true)
+    const [walletInfo, setWalletInfo] = useState<{ name: string; accountNumber: string; tokenBalance: number } | null>(null)
     const [recentTransactions, setRecentTransactions] = useState<ApiTransaction[]>([])
-    const [mounted, setMounted] = useState(false)
+    const [notices, setNotices] = useState<NoticePreview[]>([])
     const [currentNotice, setCurrentNotice] = useState(0)
     const noticeSlideTimerRef = useRef<NodeJS.Timeout | null>(null)
-    const [notices, setNotices] = useState<NoticePreview[]>([])
-    const [walletInfo, setWalletInfo] = useState<{
-        name: string
-        accountNumber: string
-        tokenBalance: number
-    } | null>(null)
 
+    // Toast 관련 상태
     const [toastVisible, setToastVisible] = useState(false)
     const [toastMessage, setToastMessage] = useState({ title: "", content: "" })
 
-    const { notification } = useSse() // 알림 수신 감지
+    // SSE 알림
+    const { notification } = useSse()
 
+    // Toast 출력 함수
     const showToast = useCallback((title: string, content: string) => {
         setToastMessage({ title, content })
         setToastVisible(true)
         setTimeout(() => setToastVisible(false), 4000)
     }, [])
 
-    // 🔔 알림 수신 시 Toast 표시 + 지갑/거래내역 갱신
+    // 데이터 갱신 함수 (지갑정보 + 최근 거래내역)
+    const refreshData = useCallback(async () => {
+        try {
+            const [walletData, txnData] = await Promise.all([
+                fetchWalletInfo(),
+                fetchRecentTransactions(3),
+            ])
+            setWalletInfo(walletData)
+            setRecentTransactions(txnData)
+        } catch (err) {
+            console.error("데이터 갱신 실패:", err)
+        }
+    }, [])
+
+    // 알림 도착 시 Toast와 함께 데이터 갱신
     useEffect(() => {
-        if (notification) {
-            showToast(notification.title, notification.content)
+        if (!notification) return
+        showToast(notification.title, notification.content)
+        const timer = setTimeout(() => {
+            refreshData()
+        }, 10000) // 1초 지연 시간을 주고 최신 상태 반영
+        return () => clearTimeout(timer)
+    }, [notification, showToast, refreshData])
 
-            fetchWalletInfo()
-                .then((data) => {
-                    setWalletInfo(data)
-                })
-                .catch((err) => {
-                    console.error("지갑 정보 갱신 실패:", err)
-                })
-
-            fetchRecentTransactions(3)
-                .then((data) => {
-                    setRecentTransactions(data)
-                })
-                .catch((err) => {
-                    console.error("거래내역 갱신 실패:", err)
-                })
-        }
-    }, [notification, showToast])
-
+    // 초기 로딩
     useEffect(() => {
-        setMounted(true)
+        refreshData().finally(() => setLoading(false))
+    }, [refreshData])
 
-        fetchWalletInfo()
-            .then((data) => {
-                setWalletInfo(data)
-            })
-            .catch((err) => {
-                console.error("지갑 정보 로딩 실패:", err)
-            })
-
-        const startNoticeSlide = () => {
-            if (notices.length === 0) return
-            noticeSlideTimerRef.current = setInterval(() => {
-                setCurrentNotice((prev) => (prev + 1) % notices.length)
-            }, 4000)
-        }
-
-        startNoticeSlide()
-
-        return () => {
-            if (noticeSlideTimerRef.current) {
-                clearInterval(noticeSlideTimerRef.current)
-            }
-        }
-    }, [notices.length])
-
+    // 공지사항 로딩
     useEffect(() => {
         fetchNoticePreview(3)
             .then(setNotices)
@@ -108,32 +86,26 @@ export default function DashboardPage() {
             })
     }, [])
 
+    // 공지사항 자동 슬라이드
     useEffect(() => {
-        fetchRecentTransactions(3)
-            .then(setRecentTransactions)
-            .catch((err) => {
-                console.error("거래내역 조회 실패:", err)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [])
+        if (notices.length === 0) return
+        noticeSlideTimerRef.current = setInterval(() => {
+            setCurrentNotice((prev) => (prev + 1) % notices.length)
+        }, 4000)
+        return () => {
+            if (noticeSlideTimerRef.current) clearInterval(noticeSlideTimerRef.current)
+        }
+    }, [notices.length])
 
+    // 공지 수동 선택 시 타이머 재설정
     const handleNoticeChange = (index: number) => {
         if (notices.length === 0) return
-
         setCurrentNotice(index)
-
-        if (noticeSlideTimerRef.current) {
-            clearInterval(noticeSlideTimerRef.current)
-        }
-
+        if (noticeSlideTimerRef.current) clearInterval(noticeSlideTimerRef.current)
         noticeSlideTimerRef.current = setInterval(() => {
             setCurrentNotice((prev) => (prev + 1) % notices.length)
         }, 4000)
     }
-
-    if (!mounted) return null
 
     return (
         <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
@@ -152,6 +124,8 @@ export default function DashboardPage() {
                 </div>
                 <AutoConvertSummaryCard />
                 <QuickMenu />
+
+                {/* 거래내역 */}
                 <h3 className="text-sm font-medium text-[#111827] flex items-center mb-4">
                     <span className="bg-gradient-to-r from-[#4F6EF7] to-[#3A5BD9] w-1 h-4 rounded-full mr-2 inline-block"></span>
                     최근 거래 내역
@@ -179,6 +153,8 @@ export default function DashboardPage() {
                         </Button>
                     </div>
                 </div>
+
+                {/* 공지사항 */}
                 <div className="pb-8">
                     {notices.length > 0 ? (
                         <NoticesSection
@@ -191,6 +167,7 @@ export default function DashboardPage() {
                     )}
                 </div>
             </div>
+
             <FloatingPaymentButton />
             <NotificationToast
                 title={toastMessage.title}
